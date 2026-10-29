@@ -1,4 +1,4 @@
-
+import io
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -31,10 +31,19 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
     try:
-        if uploaded_file.name.endswith(".csv"):
-            data = pd.read_csv(uploaded_file)
+        raw = uploaded_file.getvalue()
+        name = uploaded_file.name.lower()
+
+        if name.endswith(".csv"):
+            data = pd.read_csv(io.BytesIO(raw))
+        elif raw[:4] == b"PK\x03\x04":
+            data = pd.read_excel(io.BytesIO(raw), engine="openpyxl")
+        elif raw[:8] == b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1":
+            data = pd.read_excel(io.BytesIO(raw), engine="xlrd")
         else:
-            data = pd.read_excel(uploaded_file)
+            data = pd.read_csv(io.BytesIO(raw), sep=None, engine="python")
+
+        data.columns = data.columns.str.strip()
 
         st.subheader("Dataset preview")
         st.write("Dataset shape:", data.shape)
@@ -52,7 +61,7 @@ if uploaded_file is not None:
             "A10": "Q10", "Age_Mons": "Age",
             "Family_mem_with_ASD": "Family_ASD",
             "Who_completed_the_test": "Screener",
-            "Class/ASD Traits ": "ASD"
+            "Class/ASD Traits": "ASD"
         })
 
         if "ASD" not in data.columns:
