@@ -30,9 +30,7 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file is not None:
-
-     
-        try:
+            try:
             uploaded_file.seek(0)
 
             if uploaded_file.name.lower().endswith(".csv"):
@@ -240,11 +238,12 @@ if uploaded_file is not None:
         st.subheader("MLP Training Information")
         st.write("Training iterations:", mlp.n_iter_)
 
-    except Exception as e:
+       except Exception as e:
         st.error(f"Unable to process the dataset: {e}")
         st.info(
             "Check the dataset columns and file format. "
             "If the error persists, share the full error message."
         )
+
 else:
     st.info("Upload your dataset to train and evaluate the models.")
