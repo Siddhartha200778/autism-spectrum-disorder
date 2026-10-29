@@ -107,7 +107,7 @@ if uploaded_file is not None:
         data["A_domain"] = data[questions[:9]].sum(axis=1)
         data["B_domain"] = data["Q10"]
 
-        X = data.drop(columns=["ASD"])
+        X = data.drop(columns=["ASD"]).astype(float)
         y = data["ASD"].astype(int)
 
         if y.nunique() != 2:
