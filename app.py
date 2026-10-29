@@ -31,10 +31,23 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
     try:
-        if uploaded_file.name.endswith(".csv"):
-            data = pd.read_csv(uploaded_file)
-        else:
+       
+try:
+    uploaded_file.seek(0)
+
+    if uploaded_file.name.lower().endswith(".csv"):
+        data = pd.read_csv(uploaded_file)
+    else:
+        try:
             data = pd.read_excel(uploaded_file)
+        except Exception:
+            uploaded_file.seek(0)
+            data = pd.read_csv(uploaded_file)
+
+except Exception as e:
+    st.error(f"Could not read the uploaded dataset: {e}")
+    st.stop()
+
 
         st.subheader("Dataset preview")
         st.write("Dataset shape:", data.shape)
