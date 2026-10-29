@@ -30,23 +30,11 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file is not None:
-            try:
-            uploaded_file.seek(0)
-
-            if uploaded_file.name.lower().endswith(".csv"):
-                data = pd.read_csv(uploaded_file)
-            else:
-                try:
-                    data = pd.read_excel(uploaded_file)
-                except Exception:
-                    uploaded_file.seek(0)
-                    data = pd.read_csv(uploaded_file)
-
-        except Exception as e:
-            st.error(f"Could not read the uploaded dataset: {e}")
-            st.stop()
-
-
+    try:
+        if uploaded_file.name.endswith(".csv"):
+            data = pd.read_csv(uploaded_file)
+        else:
+            data = pd.read_excel(uploaded_file)
 
         st.subheader("Dataset preview")
         st.write("Dataset shape:", data.shape)
@@ -238,12 +226,11 @@ if uploaded_file is not None:
         st.subheader("MLP Training Information")
         st.write("Training iterations:", mlp.n_iter_)
 
-       except Exception as e:
+    except Exception as e:
         st.error(f"Unable to process the dataset: {e}")
         st.info(
             "Check the dataset columns and file format. "
             "If the error persists, share the full error message."
         )
-
 else:
     st.info("Upload your dataset to train and evaluate the models.")
