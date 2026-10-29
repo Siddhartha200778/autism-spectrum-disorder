@@ -31,6 +31,7 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
+     
         try:
             uploaded_file.seek(0)
 
@@ -47,9 +48,6 @@ if uploaded_file is not None:
             st.error(f"Could not read the uploaded dataset: {e}")
             st.stop()
 
-except Exception as e:
-    st.error(f"Could not read the uploaded dataset: {e}")
-    st.stop()
 
 
         st.subheader("Dataset preview")
