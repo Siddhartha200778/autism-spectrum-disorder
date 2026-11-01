@@ -119,31 +119,24 @@ with st.sidebar:
     if "models_result" in st.session_state:
         tab_acc = st.session_state["models_result"]["tabnet"]["accuracy"] * 100
         mlp_acc = st.session_state["models_result"]["mlp"]["accuracy"] * 100
-        status_body = f"""
-        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10B981;"></span>
-            <span style="font-size: 0.8rem; color: #E2E8F0; font-weight: 600;">Models Active & Calibrated</span>
-        </div>
-        <div style="font-size: 0.74rem; color: #94A3B8; margin-left: 14px;">
-            TabNet Acc: {tab_acc:.1f}% &bull; MLP Acc: {mlp_acc:.1f}%
-        </div>
-        """
+        status_html = f"""<div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px; margin-top: 10px;">
+<div style="font-size: 0.72rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">SYSTEM STATUS</div>
+<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10B981;"></span>
+<span style="font-size: 0.8rem; color: #E2E8F0; font-weight: 600;">Models Active & Calibrated</span>
+</div>
+<div style="font-size: 0.74rem; color: #94A3B8; margin-left: 14px;">TabNet Acc: {tab_acc:.1f}% &bull; MLP Acc: {mlp_acc:.1f}%</div>
+</div>"""
     else:
-        status_body = """
-        <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #F59E0B;"></span>
-            <span style="font-size: 0.8rem; color: #E2E8F0; font-weight: 600;">Awaiting Data Training</span>
-        </div>
-        """
+        status_html = """<div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px; margin-top: 10px;">
+<div style="font-size: 0.72rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">SYSTEM STATUS</div>
+<div style="display: flex; align-items: center; gap: 6px;">
+<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #F59E0B;"></span>
+<span style="font-size: 0.8rem; color: #E2E8F0; font-weight: 600;">Awaiting Data Training</span>
+</div>
+</div>"""
 
-    render_html(f"""
-    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px; margin-top: 10px;">
-        <div style="font-size: 0.72rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
-            SYSTEM STATUS
-        </div>
-        {status_body}
-    </div>
-    """)
+    st.markdown(status_html, unsafe_allow_html=True)
 
     # Sidebar Research Attribution
     render_html("""

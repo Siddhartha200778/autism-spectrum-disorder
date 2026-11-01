@@ -65,20 +65,24 @@ def inject_custom_css():
         color: #0F172A !important;
     }
 
-    /* All form widget labels, titles, and text */
-    [data-testid="stWidgetLabel"],
-    [data-testid="stWidgetLabel"] *,
-    [data-testid="stWidgetLabel"] p,
-    [data-testid="stWidgetLabel"] span,
-    label[data-testid="stWidgetLabel"] {
+    /* All form widget labels, titles, and text in MAIN container */
+    .main [data-testid="stWidgetLabel"],
+    .main [data-testid="stWidgetLabel"] *,
+    .main [data-testid="stWidgetLabel"] p,
+    .main [data-testid="stWidgetLabel"] span,
+    .main label[data-testid="stWidgetLabel"],
+    [data-testid="stMain"] [data-testid="stWidgetLabel"],
+    [data-testid="stMain"] [data-testid="stWidgetLabel"] * {
         color: #0A192F !important;
         font-weight: 700 !important;
         opacity: 1 !important;
     }
 
-    /* Radio button option cards & question text */
-    div[data-testid="stRadio"] div[role="radiogroup"] > label,
-    div[data-testid="stRadio"] label[data-baseweb="radio"] {
+    /* Radio button option cards & question text (MAIN CONTAINER ONLY) */
+    .main div[data-testid="stRadio"] div[role="radiogroup"] > label,
+    .main div[data-testid="stRadio"] label[data-baseweb="radio"],
+    [data-testid="stMain"] div[data-testid="stRadio"] div[role="radiogroup"] > label,
+    [data-testid="stMain"] div[data-testid="stRadio"] label[data-baseweb="radio"] {
         background-color: #FFFFFF !important;
         border: 1.5px solid #CBD5E1 !important;
         border-radius: 10px !important;
@@ -89,20 +93,27 @@ def inject_custom_css():
         cursor: pointer !important;
     }
 
-    div[data-testid="stRadio"] div[role="radiogroup"] > label:hover,
-    div[data-testid="stRadio"] label[data-baseweb="radio"]:hover {
+    .main div[data-testid="stRadio"] div[role="radiogroup"] > label:hover,
+    .main div[data-testid="stRadio"] label[data-baseweb="radio"]:hover,
+    [data-testid="stMain"] div[data-testid="stRadio"] div[role="radiogroup"] > label:hover,
+    [data-testid="stMain"] div[data-testid="stRadio"] label[data-baseweb="radio"]:hover {
         border-color: #1D4ED8 !important;
         background-color: #EFF6FF !important;
         transform: translateY(-1px) !important;
     }
 
-    div[data-testid="stRadio"] div[role="radiogroup"] > label p,
-    div[data-testid="stRadio"] div[role="radiogroup"] > label span,
-    div[data-testid="stRadio"] label[data-baseweb="radio"] p,
-    div[data-testid="stRadio"] label[data-baseweb="radio"] span,
-    div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p,
+    .main div[data-testid="stRadio"] div[role="radiogroup"] > label p,
+    .main div[data-testid="stRadio"] div[role="radiogroup"] > label span,
+    .main div[data-testid="stRadio"] label[data-baseweb="radio"] p,
+    .main div[data-testid="stRadio"] label[data-baseweb="radio"] span,
+    .main div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p,
     .main .stRadio label p,
-    .main .stRadio label span {
+    .main .stRadio label span,
+    [data-testid="stMain"] div[data-testid="stRadio"] div[role="radiogroup"] > label p,
+    [data-testid="stMain"] div[data-testid="stRadio"] div[role="radiogroup"] > label span,
+    [data-testid="stMain"] div[data-testid="stRadio"] label[data-baseweb="radio"] p,
+    [data-testid="stMain"] div[data-testid="stRadio"] label[data-baseweb="radio"] span,
+    [data-testid="stMain"] div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {
         color: #0A192F !important;
         font-weight: 700 !important;
         font-size: 0.95rem !important;
@@ -156,37 +167,122 @@ def inject_custom_css():
         background: linear-gradient(180deg, #F8FAFC 0%, #F0F7FF 50%, #F8FAFC 100%);
     }
 
-    /* Sidebar Styling */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0A192F 0%, #0F172A 70%, #1E1B4B 100%) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
+    /* ========================================================
+       SIDEBAR & LEFT NAVIGATION HIGH-CONTRAST STYLING
+       ======================================================== */
+    [data-testid="stSidebar"],
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #071326 0%, #0B192C 60%, #151A30 100%) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
     }
-    
+
+    /* "Platform Navigation" Header Label in Sidebar */
+    [data-testid="stSidebar"] [data-testid="stWidgetLabel"],
+    [data-testid="stSidebar"] [data-testid="stWidgetLabel"] label,
+    [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
+    [data-testid="stSidebar"] [data-testid="stWidgetLabel"] span {
+        color: #60A5FA !important;
+        font-size: 0.78rem !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.08em !important;
+        margin-bottom: 8px !important;
+        opacity: 1 !important;
+    }
+
+    /* Sidebar Navigation Menu Container */
+    [data-testid="stSidebar"] div[data-testid="stRadio"] > div,
+    [data-testid="stSidebar"] div[role="radiogroup"] {
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-radius: 12px !important;
+        padding: 8px 6px !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        gap: 3px !important;
+    }
+
+    /* Sidebar Radio Item Button Base */
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label,
+    [data-testid="stSidebar"] div[role="radiogroup"] > label,
+    [data-testid="stSidebar"] label[data-baseweb="radio"] {
+        background: transparent !important;
+        border: 1px solid transparent !important;
+        border-radius: 8px !important;
+        padding: 9px 14px !important;
+        margin: 2px 0 !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        cursor: pointer !important;
+        box-shadow: none !important;
+    }
+
+    /* Sidebar Navigation Item Text - Luminous Pure White for maximum legibility */
+    [data-testid="stSidebar"] .stRadio label,
+    [data-testid="stSidebar"] .stRadio label *,
+    [data-testid="stSidebar"] .stRadio label p,
+    [data-testid="stSidebar"] .stRadio label span,
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label,
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label *,
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label p,
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label span,
+    [data-testid="stSidebar"] div[role="radiogroup"] label,
+    [data-testid="stSidebar"] div[role="radiogroup"] label *,
+    [data-testid="stSidebar"] div[role="radiogroup"] label p,
+    [data-testid="stSidebar"] div[role="radiogroup"] label span,
+    [data-testid="stSidebar"] div[role="radiogroup"] > label p,
+    [data-testid="stSidebar"] div[role="radiogroup"] > label span,
+    [data-testid="stSidebar"] label[data-baseweb="radio"] p,
+    [data-testid="stSidebar"] label[data-baseweb="radio"] span,
     [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
     [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] span,
     [data-testid="stSidebar"] label {
-        color: #E2E8F0 !important;
+        color: #FFFFFF !important;
+        font-size: 0.95rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.01em !important;
+        opacity: 1 !important;
     }
 
-    /* Sidebar Radio Buttons */
-    [data-testid="stSidebar"] .stRadio > div {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 12px;
-        padding: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.06);
+    /* Active / Selected Sidebar Item */
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked),
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) {
+        background: linear-gradient(135deg, rgba(29, 78, 216, 0.45) 0%, rgba(37, 99, 235, 0.35) 100%) !important;
+        border: 1px solid #3B82F6 !important;
+        border-radius: 8px !important;
     }
-    
-    [data-testid="stSidebar"] .stRadio label {
-        padding: 8px 12px;
-        border-radius: 8px;
-        transition: all 0.25s ease;
-        margin-bottom: 2px;
-    }
-    
-    [data-testid="stSidebar"] .stRadio label:hover {
-        background: rgba(59, 130, 246, 0.15);
+
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) p,
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) span,
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) p,
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) span {
         color: #FFFFFF !important;
-        transform: translateX(4px);
+        font-weight: 800 !important;
+    }
+
+    /* Hover effect on sidebar items: royal blue glow with pure white bold text */
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label:hover,
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:hover,
+    [data-testid="stSidebar"] label[data-baseweb="radio"]:hover {
+        background: rgba(37, 99, 235, 0.28) !important;
+        border-color: rgba(96, 165, 250, 0.45) !important;
+        transform: translateX(4px) !important;
+    }
+
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label:hover p,
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label:hover span {
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
+    }
+
+    /* Radio dot icon in sidebar */
+    [data-testid="stSidebar"] div[role="radiogroup"] svg {
+        fill: #60A5FA !important;
+    }
+
+    /* Sidebar general text headers */
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] h4 {
+        color: #FFFFFF !important;
     }
 
     /* Header & Branding Containers */
