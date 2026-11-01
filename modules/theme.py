@@ -360,6 +360,58 @@ def inject_custom_css():
         transition: width 0.6s ease;
     }
 
+    /* Step-by-Step Wizard Stepper */
+    .stepper-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        padding: 14px 22px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+        overflow-x: auto;
+    }
+
+    .step-node {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.84rem;
+        font-weight: 700;
+        color: #64748B;
+        white-space: nowrap;
+    }
+
+    .step-node.active {
+        color: #1D4ED8;
+    }
+
+    .step-circle {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #F1F5F9;
+        color: #475569;
+        font-size: 0.82rem;
+        font-weight: 800;
+    }
+
+    .step-node.active .step-circle {
+        background: #1D4ED8;
+        color: #FFFFFF;
+        box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.2);
+    }
+
+    .step-node.completed .step-circle {
+        background: #059669;
+        color: #FFFFFF;
+    }
+
     /* Official Printable Report Styling */
     .printable-report {
         background: #FFFFFF;

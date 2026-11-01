@@ -4,114 +4,399 @@ import datetime
 from modules.theme import render_section_header, render_disclaimer
 from modules.ml_pipeline import run_single_patient_inference
 
+def init_wizard_state():
+    """Initializes session state for the step-by-step screening wizard."""
+    if "wiz_step" not in st.session_state:
+        st.session_state["wiz_step"] = 1
+    if "wiz_age" not in st.session_state:
+        st.session_state["wiz_age"] = 24
+    if "wiz_sex" not in st.session_state:
+        st.session_state["wiz_sex"] = "m"
+    if "wiz_ethnicity" not in st.session_state:
+        st.session_state["wiz_ethnicity"] = "White-European"
+    if "wiz_jaundice" not in st.session_state:
+        st.session_state["wiz_jaundice"] = "no"
+    if "wiz_family_asd" not in st.session_state:
+        st.session_state["wiz_family_asd"] = "no"
+    if "wiz_screener" not in st.session_state:
+        st.session_state["wiz_screener"] = "family member"
+    if "wiz_q" not in st.session_state:
+        st.session_state["wiz_q"] = {f"Q{i}": 0 for i in range(1, 11)}
+    if "wiz_results" not in st.session_state:
+        st.session_state["wiz_results"] = None
+
+def render_stepper(current_step):
+    """Renders visual multi-step progress indicator at the top."""
+    steps = [
+        (1, "1. Age", "👶"),
+        (2, "2. Gender", "🚻"),
+        (3, "3. History", "📋"),
+        (4, "4. Social (Q1-Q5)", "🗣️"),
+        (5, "5. Motor (Q6-Q10)", "🔄"),
+        (6, "6. AI Results", "🧠")
+    ]
+    
+    html = '<div class="stepper-container">'
+    for step_num, label, icon in steps:
+        if step_num == current_step:
+            cls = "step-node active"
+        elif step_num < current_step:
+            cls = "step-node completed"
+        else:
+            cls = "step-node"
+        
+        circle_content = "✓" if step_num < current_step else str(step_num)
+        html += f"""
+        <div class="{cls}">
+            <div class="step-circle">{circle_content}</div>
+            <span>{icon} {label}</span>
+        </div>
+        """
+        if step_num < 6:
+            html += '<span style="color: #CBD5E1; font-weight: bold; margin: 0 4px;">➔</span>'
+    html += '</div>'
+    st.markdown(html, unsafe_allow_html=True)
+
 def render():
     render_section_header(
-        "Early ASD Clinical Screening Tool",
-        "Interactive pediatric assessment powered by calibrated TabNet and Multi-Layer Perceptron neural networks.",
-        badge="INTERACTIVE AI SCREENING"
+        "Step-by-Step Guided ASD Clinical Screener",
+        "Interactive developmental assessment guiding you sequentially from child age and demographics to behavioral screening.",
+        badge="STEP-BY-STEP CLINICAL WIZARD"
     )
 
     if "models_result" not in st.session_state or "prepared_data" not in st.session_state:
         st.info("💡 The predictive AI models are initializing on the research benchmark dataset...")
         return
 
-    models_dict = st.session_state["models_result"]
-    prepared_data = st.session_state["prepared_data"]
+    init_wizard_state()
+    step = st.session_state["wiz_step"]
 
-    st.markdown("""
-    <div class="med-card" style="margin-bottom: 25px;">
-        <div class="med-card-body">
-            Please complete the standardized <strong>Q-CHAT-10</strong> behavioral screening questions below based on the child's typical behaviors over recent weeks. 
-            The system analyzes responses alongside demographic and developmental risk factors.
+    # Top Stepper Ribbon
+    render_stepper(step)
+
+    # -------------------------------------------------------------
+    # STEP 1: CHILD'S AGE
+    # -------------------------------------------------------------
+    if step == 1:
+        st.markdown("""
+        <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
+            <div class="med-card-header">
+                <div class="med-card-icon">👶</div>
+                <span class="pill-badge pill-blue">Step 1 of 5</span>
+            </div>
+            <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+                What is the child's chronological age in months?
+            </div>
+            <div class="med-card-body" style="font-size: 1rem; color: #475569;">
+                Standardized pediatric screening via the Q-CHAT protocol is calibrated for toddlers between <strong>12 and 36 months</strong> of age. 
+                This period represents the golden developmental window of maximal neural plasticity.
+            </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
-    with st.form("clinical_screening_form"):
-        st.subheader("1. Patient Profile & Demographics")
-        d_col1, d_col2, d_col3 = st.columns(3)
-        with d_col1:
-            age_months = st.slider("Child's Age (in Months)", min_value=12, max_value=36, value=24, step=1)
-            sex = st.selectbox("Biological Sex", options=["m", "f"], format_func=lambda x: "Male" if x == "m" else "Female")
-        with d_col2:
-            ethnicity = st.selectbox(
-                "Ethnicity",
-                options=[
-                    "White-European", "Asian", "Middle Eastern", "black",
-                    "South Asian", "Hispanic", "Latino", "mixed", "others"
-                ],
-                format_func=lambda x: x.title()
+        col_input, col_info = st.columns([2, 1.5])
+        with col_input:
+            age_val = st.slider(
+                "Select Child's Age (in Months):",
+                min_value=12,
+                max_value=36,
+                value=int(st.session_state["wiz_age"]),
+                step=1,
+                help="Select the exact age in months of the child at the time of screening."
             )
-            screener = st.selectbox(
-                "Screener / Informant",
-                options=["family member", "Health Care Professional", "Others"],
-                format_func=lambda x: x.title()
-            )
-        with d_col3:
-            jaundice = st.radio("Born with neonatal jaundice?", options=["yes", "no"], index=1, horizontal=True)
-            family_asd = st.radio("Immediate family member with ASD?", options=["no", "yes"], index=0, horizontal=True)
+            st.session_state["wiz_age"] = age_val
 
-        st.markdown("<hr style='margin: 25px 0; border: none; border-top: 1px solid #E2E8F0;'>", unsafe_allow_html=True)
-
-        st.subheader("2. Q-CHAT-10 Behavioral Screening Questions")
-        st.caption("Select whether the atypical/autistic trait is present (1) or typical response (0).")
-
-        questions_meta = [
-            ("Q1", "Does your child look at you when you call his/her name?", "Always/Usually (0)", "Rarely/Never (1)"),
-            ("Q2", "How easy is it for you to establish eye contact with your child?", "Very easy/Easy (0)", "Difficult/Very difficult (1)"),
-            ("Q3", "Does your child point to indicate that s/he wants something (e.g. a toy out of reach)?", "Many times a day (0)", "Rarely or never (1)"),
-            ("Q4", "Does your child point to share interest with you (e.g. pointing at an airplane)?", "Many times a day (0)", "Rarely or never (1)"),
-            ("Q5", "Does your child engage in pretend play (e.g. feeding a doll, talking into a toy phone)?", "Frequently (0)", "Rarely or never (1)"),
-            ("Q6", "Does your child follow where you look (gaze tracking)?", "Many times a day (0)", "Rarely or never (1)"),
-            ("Q7", "If someone in the family is upset, does the child show empathy or comfort them?", "Frequently (0)", "Rarely or never (1)"),
-            ("Q8", "Would you describe your child's first words / vocalizations as:", "Typical & communicative (0)", "Absent or atypical echoes (1)"),
-            ("Q9", "Does your child use simple communicative gestures (e.g. waving goodbye)?", "Many times a day (0)", "Rarely or never (1)"),
-            ("Q10", "Does your child stare at objects with no apparent purpose or show repetitive motor mannerisms?", "Never/Rarely (0)", "Frequently/Constantly (1)")
-        ]
-
-        answers = {}
-        for i in range(0, 10, 2):
-            q_col1, q_col2 = st.columns(2)
-            with q_col1:
-                qid, qtext, opt0, opt1 = questions_meta[i]
-                choice = st.radio(f"**{qid}:** {qtext}", options=[0, 1], format_func=lambda x, o0=opt0, o1=opt1: o0 if x == 0 else o1, key=qid)
-                answers[qid] = choice
-            with q_col2:
-                qid, qtext, opt0, opt1 = questions_meta[i+1]
-                choice = st.radio(f"**{qid}:** {qtext}", options=[0, 1], format_func=lambda x, o0=opt0, o1=opt1: o0 if x == 0 else o1, key=qid)
-                answers[qid] = choice
-
-        submit_btn = st.form_submit_button("🧠 Evaluate Developmental Risk with AI", type="primary", use_container_width=True)
-
-    if submit_btn:
-        patient_dict = {
-            "Age": age_months,
-            "Sex": sex,
-            "Ethnicity": ethnicity,
-            "Jaundice": jaundice,
-            "Family_ASD": family_asd,
-            "Screener": screener,
-            **answers
-        }
-
-        with st.spinner("Executing dual-model inference across TabNet and MLP networks..."):
-            res = run_single_patient_inference(patient_dict, models_dict, prepared_data)
-
-        # Store in session state for Clinical Test Report
-        st.session_state["latest_patient_report"] = {
-            "patient_name": "Screened Toddler",
-            "mrn": "MRN-" + datetime.date.today().strftime("%Y%m%d") + "-01",
-            "date": datetime.date.today().strftime("%B %d, %Y"),
-            "examiner": "Pediatric Screening Specialist",
-            "institution": "Pediatric Neurodevelopmental Clinical Center",
-            **patient_dict,
-            **res
-        }
+        with col_info:
+            st.markdown(f"""
+            <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 18px; margin-top: 5px;">
+                <div style="font-size: 0.8rem; font-weight: 700; color: #1D4ED8; text-transform: uppercase;">Selected Milestone</div>
+                <div style="font-size: 2rem; font-weight: 800; color: #1D4ED8; margin: 4px 0;">{age_val} Months</div>
+                <div style="font-size: 0.85rem; color: #334155;">
+                    Approx. <strong>{age_val // 12} year(s) and {age_val % 12} month(s)</strong> old.
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
-        render_section_header("AI Screening Evaluation Report", "Integrated results from TabNet and Multi-Layer Perceptron models.")
+        nav_col1, nav_col2 = st.columns([1.5, 4])
+        with nav_col1:
+            if st.button("Next: Biological Sex ➔", type="primary", use_container_width=True):
+                st.session_state["wiz_step"] = 2
+                st.rerun()
 
-        # Summary risk alert
+    # -------------------------------------------------------------
+    # STEP 2: BIOLOGICAL SEX
+    # -------------------------------------------------------------
+    elif step == 2:
+        st.markdown("""
+        <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
+            <div class="med-card-header">
+                <div class="med-card-icon">🚻</div>
+                <span class="pill-badge pill-blue">Step 2 of 5</span>
+            </div>
+            <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+                What is the child's biological sex?
+            </div>
+            <div class="med-card-body" style="font-size: 1rem; color: #475569;">
+                Biological sex is evaluated by the models to normalize normative developmental behavioral trajectories and account for known prevalence ratios.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        c_sex1, c_sex2 = st.columns(2)
+        curr_sex = st.session_state["wiz_sex"]
+        with c_sex1:
+            is_male = (curr_sex == "m")
+            st.markdown(f"""
+            <div style="border: 2px solid {'#1D4ED8' if is_male else '#E2E8F0'}; background: {'#EFF6FF' if is_male else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 6px;">👦</div>
+                <div style="font-size: 1.25rem; font-weight: 800; color: #0A192F;">Male</div>
+                <div style="font-size: 0.82rem; color: #64748B; margin-top: 4px;">Biological Male</div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Select Male", use_container_width=True, type="primary" if is_male else "secondary"):
+                st.session_state["wiz_sex"] = "m"
+                st.rerun()
+
+        with c_sex2:
+            is_female = (curr_sex == "f")
+            st.markdown(f"""
+            <div style="border: 2px solid {'#1D4ED8' if is_female else '#E2E8F0'}; background: {'#EFF6FF' if is_female else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 6px;">👧</div>
+                <div style="font-size: 1.25rem; font-weight: 800; color: #0A192F;">Female</div>
+                <div style="font-size: 0.82rem; color: #64748B; margin-top: 4px;">Biological Female</div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Select Female", use_container_width=True, type="primary" if is_female else "secondary"):
+                st.session_state["wiz_sex"] = "f"
+                st.rerun()
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 1.8, 3.5])
+        with nav_col1:
+            if st.button("⬅️ Back: Age", use_container_width=True):
+                st.session_state["wiz_step"] = 1
+                st.rerun()
+        with nav_col2:
+            if st.button("Next: Clinical History ➔", type="primary", use_container_width=True):
+                st.session_state["wiz_step"] = 3
+                st.rerun()
+
+    # -------------------------------------------------------------
+    # STEP 3: CLINICAL & PERINATAL BACKGROUND
+    # -------------------------------------------------------------
+    elif step == 3:
+        st.markdown("""
+        <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
+            <div class="med-card-header">
+                <div class="med-card-icon">📋</div>
+                <span class="pill-badge pill-blue">Step 3 of 5</span>
+            </div>
+            <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+                Clinical, Perinatal & Family Background
+            </div>
+            <div class="med-card-body" style="font-size: 1rem; color: #475569;">
+                Please provide demographic and clinical history details. These are encoded as non-linear priors by TabNet and MLP neural networks.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
+        with col1:
+            eth_options = [
+                "White-European", "Asian", "Middle Eastern", "black",
+                "South Asian", "Hispanic", "Latino", "mixed", "others"
+            ]
+            current_eth = st.session_state["wiz_ethnicity"]
+            eth_idx = eth_options.index(current_eth) if current_eth in eth_options else 0
+            st.session_state["wiz_ethnicity"] = st.selectbox(
+                "Ethnicity:",
+                options=eth_options,
+                index=eth_idx,
+                format_func=lambda x: x.title()
+            )
+
+            screener_options = ["family member", "Health Care Professional", "Others"]
+            curr_scr = st.session_state["wiz_screener"]
+            scr_idx = screener_options.index(curr_scr) if curr_scr in screener_options else 0
+            st.session_state["wiz_screener"] = st.selectbox(
+                "Who is completing this screening questionnaire?",
+                options=screener_options,
+                index=scr_idx,
+                format_func=lambda x: x.title()
+            )
+
+        with col2:
+            st.session_state["wiz_jaundice"] = st.radio(
+                "Was the child born with neonatal jaundice?",
+                options=["no", "yes"],
+                index=0 if st.session_state["wiz_jaundice"] == "no" else 1,
+                horizontal=True,
+                format_func=lambda x: "Yes (Jaundice diagnosed)" if x == "yes" else "No"
+            )
+
+            st.session_state["wiz_family_asd"] = st.radio(
+                "Does any immediate family member have diagnosed ASD?",
+                options=["no", "yes"],
+                index=0 if st.session_state["wiz_family_asd"] == "no" else 1,
+                horizontal=True,
+                format_func=lambda x: "Yes (Parent or sibling)" if x == "yes" else "No"
+            )
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 2.2, 3])
+        with nav_col1:
+            if st.button("⬅️ Back: Gender", use_container_width=True):
+                st.session_state["wiz_step"] = 2
+                st.rerun()
+        with nav_col2:
+            if st.button("Next: Social Questions (Q1-Q5) ➔", type="primary", use_container_width=True):
+                st.session_state["wiz_step"] = 4
+                st.rerun()
+
+    # -------------------------------------------------------------
+    # STEP 4: SOCIAL COMMUNICATION QUESTIONS (Q1 TO Q5)
+    # -------------------------------------------------------------
+    elif step == 4:
+        st.markdown("""
+        <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
+            <div class="med-card-header">
+                <div class="med-card-icon">🗣️</div>
+                <span class="pill-badge pill-blue">Step 4 of 5 &bull; Domain A</span>
+            </div>
+            <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+                Social Communication & Interaction (Q1 to Q5)
+            </div>
+            <div class="med-card-body" style="font-size: 1rem; color: #475569;">
+                Evaluate the child's typical communicative behaviors. Select whether the response indicates a <strong>typical developmental trait (0)</strong> or an <strong>atypical screening marker (1)</strong>.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        q_list_1 = [
+            ("Q1", "Does your child look at you when you call his/her name?", "Always / Usually (0)", "Rarely or Never (1)"),
+            ("Q2", "How easy is it for you to establish mutual eye contact with your child?", "Very easy / Typical (0)", "Difficult / Rare (1)"),
+            ("Q3", "Does your child point to indicate that s/he wants something (e.g. out of reach)?", "Many times a day (0)", "Rarely or Never (1)"),
+            ("Q4", "Does your child point to share interest with you (e.g. pointing at an airplane)?", "Many times a day (0)", "Rarely or Never (1)"),
+            ("Q5", "Does your child engage in pretend play (e.g. caring for a doll, talking on a toy phone)?", "Frequently / Often (0)", "Rarely or Never (1)")
+        ]
+
+        for qid, qtext, opt0, opt1 in q_list_1:
+            st.markdown(f"**{qid}: {qtext}**")
+            curr_val = st.session_state["wiz_q"].get(qid, 0)
+            choice = st.radio(
+                f"Selection for {qid}",
+                options=[0, 1],
+                index=curr_val,
+                format_func=lambda x, o0=opt0, o1=opt1: o0 if x == 0 else o1,
+                horizontal=True,
+                key=f"radio_{qid}",
+                label_visibility="collapsed"
+            )
+            st.session_state["wiz_q"][qid] = choice
+            st.markdown("<hr style='margin: 10px 0 16px 0; border: none; border-top: 1px solid #F1F5F9;'>", unsafe_allow_html=True)
+
+        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 2.2, 3])
+        with nav_col1:
+            if st.button("⬅️ Back: History", use_container_width=True):
+                st.session_state["wiz_step"] = 3
+                st.rerun()
+        with nav_col2:
+            if st.button("Next: Motor Traits (Q6-Q10) ➔", type="primary", use_container_width=True):
+                st.session_state["wiz_step"] = 5
+                st.rerun()
+
+    # -------------------------------------------------------------
+    # STEP 5: MOTOR & BEHAVIORAL QUESTIONS (Q6 TO Q10)
+    # -------------------------------------------------------------
+    elif step == 5:
+        st.markdown("""
+        <div class="med-card" style="border-left: 5px solid #7C3AED; margin-bottom: 20px;">
+            <div class="med-card-header">
+                <div class="med-card-icon">🔄</div>
+                <span class="pill-badge pill-purple">Step 5 of 5 &bull; Domains A & B</span>
+            </div>
+            <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+                Affective, Motor & Communicative Traits (Q6 to Q10)
+            </div>
+            <div class="med-card-body" style="font-size: 1rem; color: #475569;">
+                Final screening indicators assessing gaze tracking, empathy, speech sounds, communicative gestures, and repetitive motor mannerisms.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        q_list_2 = [
+            ("Q6", "Does your child follow where you look (gaze tracking)?", "Many times a day (0)", "Rarely or Never (1)"),
+            ("Q7", "If someone in the family is upset, does the child show empathy or try to comfort them?", "Frequently (0)", "Rarely or Never (1)"),
+            ("Q8", "Would you describe your child's first words or vocalizations as:", "Typical & communicative (0)", "Absent or atypical echoes (1)"),
+            ("Q9", "Does your child use simple communicative gestures (e.g. waving bye-bye, shaking head)?", "Many times a day (0)", "Rarely or Never (1)"),
+            ("Q10", "Does your child stare at objects with no apparent purpose or show repetitive motor mannerisms?", "Never or Rarely (0)", "Frequently or Constantly (1)")
+        ]
+
+        for qid, qtext, opt0, opt1 in q_list_2:
+            st.markdown(f"**{qid}: {qtext}**")
+            curr_val = st.session_state["wiz_q"].get(qid, 0)
+            choice = st.radio(
+                f"Selection for {qid}",
+                options=[0, 1],
+                index=curr_val,
+                format_func=lambda x, o0=opt0, o1=opt1: o0 if x == 0 else o1,
+                horizontal=True,
+                key=f"radio_{qid}",
+                label_visibility="collapsed"
+            )
+            st.session_state["wiz_q"][qid] = choice
+            st.markdown("<hr style='margin: 10px 0 16px 0; border: none; border-top: 1px solid #F1F5F9;'>", unsafe_allow_html=True)
+
+        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 2.5, 2.5])
+        with nav_col1:
+            if st.button("⬅️ Back: Q1–Q5", use_container_width=True):
+                st.session_state["wiz_step"] = 4
+                st.rerun()
+        with nav_col2:
+            if st.button("🧠 Evaluate Developmental Risk with AI ➔", type="primary", use_container_width=True):
+                # Execute inference
+                patient_dict = {
+                    "Age": st.session_state["wiz_age"],
+                    "Sex": st.session_state["wiz_sex"],
+                    "Ethnicity": st.session_state["wiz_ethnicity"],
+                    "Jaundice": st.session_state["wiz_jaundice"],
+                    "Family_ASD": st.session_state["wiz_family_asd"],
+                    "Screener": st.session_state["wiz_screener"],
+                    **st.session_state["wiz_q"]
+                }
+                models_dict = st.session_state["models_result"]
+                prepared_data = st.session_state["prepared_data"]
+
+                with st.spinner("Executing dual-model inference across TabNet and MLP networks..."):
+                    res = run_single_patient_inference(patient_dict, models_dict, prepared_data)
+
+                # Save results & patient report for the Clinical Test Report page
+                st.session_state["wiz_results"] = res
+                st.session_state["latest_patient_report"] = {
+                    "patient_name": f"Patient ({'Male' if patient_dict['Sex']=='m' else 'Female'}, {patient_dict['Age']}m)",
+                    "mrn": "MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01",
+                    "date": datetime.date.today().strftime("%B %d, %Y"),
+                    "examiner": "Pediatric Screening Specialist",
+                    "institution": "Pediatric Neurodevelopmental Clinical Center",
+                    **patient_dict,
+                    **res
+                }
+                st.session_state["wiz_step"] = 6
+                st.rerun()
+
+    # -------------------------------------------------------------
+    # STEP 6: AI CLINICAL RESULTS & PRINT REPORT
+    # -------------------------------------------------------------
+    elif step == 6:
+        res = st.session_state.get("wiz_results")
+        if res is None:
+            st.warning("No evaluation results found. Please start from Step 1.")
+            if st.button("Start Screening"):
+                st.session_state["wiz_step"] = 1
+                st.rerun()
+            return
+
         is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
         
         if is_elevated:
@@ -209,12 +494,17 @@ def render():
             </div>
             """, unsafe_allow_html=True)
 
-        # Call to Action: Open and Print Clinical Report
+        # Actions: Open and Print Clinical Report OR Start New Screening
         st.markdown("<br>", unsafe_allow_html=True)
-        r_btn_col1, r_btn_col2 = st.columns([2.5, 3.5])
+        r_btn_col1, r_btn_col2, r_spacer = st.columns([2.5, 2, 2.5])
         with r_btn_col1:
-            if st.button("📄 Generate & Print Official Patient Report", type="primary", use_container_width=True):
+            if st.button("📄 View & Print Official Patient Report", type="primary", use_container_width=True):
                 st.session_state["nav_selection"] = "Clinical Test Report"
+                st.rerun()
+        with r_btn_col2:
+            if st.button("🔄 Start New Screening", use_container_width=True):
+                st.session_state["wiz_step"] = 1
+                st.session_state["wiz_results"] = None
                 st.rerun()
 
         # Guidance Recommendation
