@@ -717,47 +717,44 @@ def inject_custom_css():
 
 def render_html(content):
     """Safely renders HTML without markdown treating leading indentation as code blocks."""
-    st.markdown(dedent(content).strip(), unsafe_allow_html=True)
+    if not content:
+        return
+    cleaned_lines = [line.strip() for line in str(content).splitlines() if line.strip()]
+    cleaned_html = "\n".join(cleaned_lines)
+    st.markdown(cleaned_html, unsafe_allow_html=True)
 
 def render_section_header(title, subtitle=None, badge=None):
     """Renders a consistent, high-impact clinical section header."""
     badge_html = f'<div class="clinical-brand-badge">{badge}</div>' if badge else ""
     subtitle_html = f'<p style="color: #475569 !important; font-size: 1.05rem; margin-top: 4px; margin-bottom: 24px; line-height: 1.5;">{subtitle}</p>' if subtitle else ""
-    
-    html = f"""
-    <div style="margin-bottom: 16px;">
-        {badge_html}
-        <h2 style="font-size: 1.9rem; font-weight: 800; color: #0A192F !important; letter-spacing: -0.02em; margin: 0;">{title}</h2>
-        {subtitle_html}
-    </div>
-    """
+    html = f"""<div style="margin-bottom: 16px;">
+{badge_html}
+<h2 style="font-size: 1.9rem; font-weight: 800; color: #0A192F !important; letter-spacing: -0.02em; margin: 0;">{title}</h2>
+{subtitle_html}
+</div>"""
     render_html(html)
 
 def render_disclaimer():
     """Renders the standard healthcare AI clinical disclaimer banner."""
-    html = """
-    <div class="disclaimer-banner">
-        <div class="disclaimer-title"><span>⚠️</span> RESEARCH & CLINICAL DECISION SUPPORT NOTICE</div>
-        <p class="disclaimer-text">
-            This system is an academic research platform designed for developmental risk stratification using machine learning and deep tabular networks. 
-            It is <strong>not</strong> a certified diagnostic medical device and does <strong>not</strong> substitute for comprehensive multidisciplinary evaluation by pediatricians, child psychiatrists, or developmental specialists.
-        </p>
-    </div>
-    """
+    html = """<div class="disclaimer-banner">
+<div class="disclaimer-title"><span>⚠️</span> RESEARCH & CLINICAL DECISION SUPPORT NOTICE</div>
+<p class="disclaimer-text">
+This system is an academic research platform designed for developmental risk stratification using machine learning and deep tabular networks. 
+It is <strong>not</strong> a certified diagnostic medical device and does <strong>not</strong> substitute for comprehensive multidisciplinary evaluation by pediatricians, child psychiatrists, or developmental specialists.
+</p>
+</div>"""
     render_html(html)
 
 def render_footer():
     """Renders the modern platform footer."""
-    html = """
-    <div class="clinical-footer">
-        <p style="font-weight: 600; color: #0F172A; margin-bottom: 4px;">
-            Interpretable Deep Learning for Early ASD Detection
-        </p>
-        <p style="margin: 0; color: #64748B; font-size: 0.82rem;">
-            Academic Clinical AI Research Initiative &bull; Powered by PyTorch TabNet & Multi-Layer Perceptrons &bull; Streamlit Cloud
-        </p>
-    </div>
-    """
+    html = """<div class="clinical-footer">
+<p style="font-weight: 600; color: #0F172A; margin-bottom: 4px;">
+Interpretable Deep Learning for Early ASD Detection
+</p>
+<p style="margin: 0; color: #64748B; font-size: 0.82rem;">
+Academic Clinical AI Research Initiative &bull; Powered by PyTorch TabNet & Multi-Layer Perceptrons &bull; Streamlit Cloud
+</p>
+</div>"""
     render_html(html)
 
 def apply_chart_theme(fig, ax):

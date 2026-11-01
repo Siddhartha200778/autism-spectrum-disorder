@@ -98,21 +98,26 @@ with st.sidebar:
     </div>
     """)
 
-    # Sync selection between buttons and radio
-    if "nav_radio" not in st.session_state:
-        st.session_state["nav_radio"] = "Home"
+    # Synchronize programmatic navigation (buttons) with sidebar radio
+    if "nav_target" in st.session_state:
+        target = st.session_state.pop("nav_target")
+        if target in PAGES:
+            st.session_state["nav_radio"] = target
+    elif "nav_selection" in st.session_state:
+        target = st.session_state.pop("nav_selection")
+        if target in PAGES:
+            st.session_state["nav_radio"] = target
 
-    if "nav_selection" in st.session_state and st.session_state["nav_selection"] != st.session_state["nav_radio"]:
-        st.session_state["nav_radio"] = st.session_state["nav_selection"]
+    if "nav_radio" not in st.session_state or st.session_state["nav_radio"] not in PAGES:
+        st.session_state["nav_radio"] = "Home"
 
     selected_page = st.radio(
         "Platform Navigation",
         options=PAGES,
-        index=PAGES.index(st.session_state["nav_radio"]) if st.session_state["nav_radio"] in PAGES else 0,
-        format_func=lambda x: f"{PAGE_ICONS.get(x, '•')}  {x}",
-        key="nav_radio"
+        key="nav_radio",
+        format_func=lambda x: f"{PAGE_ICONS.get(x, '•')}  {x}"
     )
-    st.session_state["nav_selection"] = selected_page
+    st.session_state["active_page"] = selected_page
 
     # Model & Data Status Badge in Sidebar
     st.markdown("<br>", unsafe_allow_html=True)
@@ -136,7 +141,7 @@ with st.sidebar:
 </div>
 </div>"""
 
-    st.markdown(status_html, unsafe_allow_html=True)
+    render_html(status_html)
 
     # Sidebar Research Attribution
     render_html("""
@@ -166,24 +171,20 @@ if selected_page != "Home":
     with top_c1:
         if st.button(f"⬅️ Back ({prev_target})", key="global_top_back", help=f"Return to {prev_target}"):
             dest = st.session_state["nav_history"].pop() if st.session_state["nav_history"] else "Home"
-            st.session_state["nav_selection"] = dest
-            st.session_state["nav_radio"] = dest
+            st.session_state["nav_target"] = dest
             st.rerun()
     with top_c2:
         if st.button("🏠 Home", key="global_top_home", help="Navigate to Home page"):
-            st.session_state["nav_selection"] = "Home"
-            st.session_state["nav_radio"] = "Home"
+            st.session_state["nav_target"] = "Home"
             st.rerun()
     with top_c3:
         if selected_page != "Early ASD Detection":
             if st.button("🩺 Early Detection", key="global_top_screener", help="Open ASD Screener"):
-                st.session_state["nav_selection"] = "Early ASD Detection"
-                st.session_state["nav_radio"] = "Early ASD Detection"
+                st.session_state["nav_target"] = "Early ASD Detection"
                 st.rerun()
         else:
             if st.button("📄 Test Report", key="global_top_report", help="Open Clinical Test Report"):
-                st.session_state["nav_selection"] = "Clinical Test Report"
-                st.session_state["nav_radio"] = "Clinical Test Report"
+                st.session_state["nav_target"] = "Clinical Test Report"
                 st.rerun()
     st.markdown("<div style='margin-bottom: 12px;'></div>", unsafe_allow_html=True)
 
@@ -213,24 +214,20 @@ if selected_page != "Home":
     with b_c1:
         if st.button(f"⬅️ Go Back ({prev_target})", key="global_bot_back"):
             dest = st.session_state["nav_history"].pop() if st.session_state["nav_history"] else "Home"
-            st.session_state["nav_selection"] = dest
-            st.session_state["nav_radio"] = dest
+            st.session_state["nav_target"] = dest
             st.rerun()
     with b_c2:
         if st.button("🏠 Return to Home", key="global_bot_home"):
-            st.session_state["nav_selection"] = "Home"
-            st.session_state["nav_radio"] = "Home"
+            st.session_state["nav_target"] = "Home"
             st.rerun()
     with b_c3:
         if selected_page != "Early ASD Detection":
             if st.button("🩺 Early ASD Detection", key="global_bot_screener"):
-                st.session_state["nav_selection"] = "Early ASD Detection"
-                st.session_state["nav_radio"] = "Early ASD Detection"
+                st.session_state["nav_target"] = "Early ASD Detection"
                 st.rerun()
         else:
             if st.button("📄 Clinical Test Report", key="global_bot_report"):
-                st.session_state["nav_selection"] = "Clinical Test Report"
-                st.session_state["nav_radio"] = "Clinical Test Report"
+                st.session_state["nav_target"] = "Clinical Test Report"
                 st.rerun()
 
 # Global Footer

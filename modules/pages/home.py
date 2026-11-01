@@ -43,15 +43,15 @@ def render():
     c_btn1, c_btn2, c_btn3, c_spacer = st.columns([1.4, 1.4, 1.7, 3])
     with c_btn1:
         if st.button("🚀 Start Detection", use_container_width=True, type="primary"):
-            st.session_state["nav_selection"] = "Early ASD Detection"
+            st.session_state["nav_target"] = "Early ASD Detection"
             st.rerun()
     with c_btn2:
         if st.button("🔬 Explore Project", use_container_width=True):
-            st.session_state["nav_selection"] = "Research Methodology"
+            st.session_state["nav_target"] = "Research Methodology"
             st.rerun()
     with c_btn3:
         if st.button("📄 Clinical Test Report", use_container_width=True):
-            st.session_state["nav_selection"] = "Clinical Test Report"
+            st.session_state["nav_target"] = "Clinical Test Report"
             st.rerun()
 
     st.markdown("<br>", unsafe_allow_html=True)

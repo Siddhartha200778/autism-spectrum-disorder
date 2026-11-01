@@ -341,12 +341,12 @@ def render():
 
     with t_col3:
         if st.button("🏠 Return to Home", use_container_width=True, help="Navigate back to the main homepage"):
-            st.session_state["nav_selection"] = "Home"
+            st.session_state["nav_target"] = "Home"
             st.rerun()
 
     with t_col4:
         if st.button("🩺 Back to Screener", use_container_width=True, help="Return to the ASD screening wizard"):
-            st.session_state["nav_selection"] = "Early ASD Detection"
+            st.session_state["nav_target"] = "Early ASD Detection"
             st.rerun()
 
     report_data = st.session_state["latest_patient_report"]
@@ -386,11 +386,11 @@ def render():
         )
     with p_col2:
         # Client side JavaScript print helper
-        st.markdown("""
+        render_html("""
         <button onclick="window.print()" style="background: linear-gradient(135deg, #0A192F 0%, #1D4ED8 100%); color: #FFFFFF; font-weight: 700; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; width: 100%; box-shadow: 0 4px 12px rgba(29,78,216,0.3);">
             🖨️ Open Print Dialog (PDF)
         </button>
-        """, unsafe_allow_html=True)
+        """)
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.subheader("3. Document Preview (Official Clinical Screening Report)")
@@ -616,11 +616,11 @@ def render():
     b_col1, b_col2, b_spacer = st.columns([1.6, 2.0, 3.4])
     with b_col1:
         if st.button("🏠 Return to Home Page", use_container_width=True, type="primary"):
-            st.session_state["nav_selection"] = "Home"
+            st.session_state["nav_target"] = "Home"
             st.rerun()
     with b_col2:
         if st.button("🔄 Start New Screening Test", use_container_width=True):
-            st.session_state["nav_selection"] = "Early ASD Detection"
+            st.session_state["nav_target"] = "Early ASD Detection"
             st.session_state["wiz_step"] = 1
             st.rerun()
 

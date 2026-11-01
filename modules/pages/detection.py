@@ -123,8 +123,7 @@ def render():
         nav_col1, nav_col2, nav_spacer = st.columns([1.5, 1.8, 3.5])
         with nav_col1:
             if st.button("🏠 Back to Home", use_container_width=True):
-                st.session_state["nav_selection"] = "Home"
-                st.session_state["nav_radio"] = "Home"
+                st.session_state["nav_target"] = "Home"
                 st.rerun()
         with nav_col2:
             if st.button("Next: Biological Sex ➔", type="primary", use_container_width=True):
@@ -186,8 +185,7 @@ def render():
                 st.rerun()
         with nav_col2:
             if st.button("🏠 Home", use_container_width=True, key="step2_home_btn"):
-                st.session_state["nav_selection"] = "Home"
-                st.session_state["nav_radio"] = "Home"
+                st.session_state["nav_target"] = "Home"
                 st.rerun()
         with nav_col3:
             if st.button("Next: Clinical History ➔", type="primary", use_container_width=True):
@@ -271,8 +269,7 @@ def render():
                 st.rerun()
         with nav_col2:
             if st.button("🏠 Home", use_container_width=True, key="step3_home_btn"):
-                st.session_state["nav_selection"] = "Home"
-                st.session_state["nav_radio"] = "Home"
+                st.session_state["nav_target"] = "Home"
                 st.rerun()
         with nav_col3:
             if st.button("Next: Social Questions (Q1-Q5) ➔", type="primary", use_container_width=True):
@@ -335,8 +332,7 @@ def render():
                 st.rerun()
         with nav_col2:
             if st.button("🏠 Home", use_container_width=True, key="step4_home_btn"):
-                st.session_state["nav_selection"] = "Home"
-                st.session_state["nav_radio"] = "Home"
+                st.session_state["nav_target"] = "Home"
                 st.rerun()
         with nav_col3:
             if st.button("Next: Motor Traits (Q6-Q10) ➔", type="primary", use_container_width=True):
@@ -399,8 +395,7 @@ def render():
                 st.rerun()
         with nav_col2:
             if st.button("🏠 Home", use_container_width=True, key="step5_home_btn"):
-                st.session_state["nav_selection"] = "Home"
-                st.session_state["nav_radio"] = "Home"
+                st.session_state["nav_target"] = "Home"
                 st.rerun()
         with nav_col3:
             if st.button("🧠 Evaluate Developmental Risk with AI ➔", type="primary", use_container_width=True):
@@ -548,8 +543,7 @@ def render():
         r_btn_col1, r_btn_col2, r_btn_col3, r_spacer = st.columns([2.5, 1.8, 1.8, 1.9])
         with r_btn_col1:
             if st.button("📄 View & Print Official Patient Report", type="primary", use_container_width=True):
-                st.session_state["nav_selection"] = "Clinical Test Report"
-                st.session_state["nav_radio"] = "Clinical Test Report"
+                st.session_state["nav_target"] = "Clinical Test Report"
                 st.rerun()
         with r_btn_col2:
             if st.button("🔄 Start New Screening", use_container_width=True):
@@ -558,24 +552,19 @@ def render():
                 st.rerun()
         with r_btn_col3:
             if st.button("🏠 Return to Home", use_container_width=True, key="step6_home_btn"):
-                st.session_state["nav_selection"] = "Home"
-                st.session_state["nav_radio"] = "Home"
+                st.session_state["nav_target"] = "Home"
                 st.rerun()
 
         # Guidance Recommendation
         st.markdown("<br>", unsafe_allow_html=True)
         st.subheader("Clinical Recommendation & Next Steps")
         if is_elevated:
-            st.markdown("""
-            1. **Pediatric Consultation:** Present these screening findings to your child's pediatrician or family physician.
-            2. **Multidisciplinary Assessment:** Request a formal evaluation with a developmental pediatrician, child psychologist, or pediatric neurologist.
-            3. **Early Intervention Services:** Initiate county/state early intervention programs immediately; referral does not require a finalized formal diagnosis.
-            """)
+            st.markdown("""1. **Pediatric Consultation:** Present these screening findings to your child's pediatrician or family physician.
+2. **Multidisciplinary Assessment:** Request a formal evaluation with a developmental pediatrician, child psychologist, or pediatric neurologist.
+3. **Early Intervention Services:** Initiate county/state early intervention programs immediately; referral does not require a finalized formal diagnosis.""")
         else:
-            st.markdown("""
-            1. **Maintain Routine Checkups:** Continue standard 18- and 24-month well-child pediatric checkups.
-            2. **Monitor Emerging Milestones:** Keep tracking speech, social smiling, and motor milestone progressions.
-            3. **Re-Screen if Concerns Arise:** Re-evaluate if you observe any regression in acquired social or communicative abilities.
-            """)
+            st.markdown("""1. **Maintain Routine Checkups:** Continue standard 18- and 24-month well-child pediatric checkups.
+2. **Monitor Emerging Milestones:** Keep tracking speech, social smiling, and motor milestone progressions.
+3. **Re-Screen if Concerns Arise:** Re-evaluate if you observe any regression in acquired social or communicative abilities.""")
 
     render_disclaimer()
