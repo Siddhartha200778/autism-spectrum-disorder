@@ -120,8 +120,13 @@ def render():
             """)
 
         st.markdown("<br>", unsafe_allow_html=True)
-        nav_col1, nav_col2 = st.columns([1.5, 4])
+        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 1.8, 3.5])
         with nav_col1:
+            if st.button("🏠 Back to Home", use_container_width=True):
+                st.session_state["nav_selection"] = "Home"
+                st.session_state["nav_radio"] = "Home"
+                st.rerun()
+        with nav_col2:
             if st.button("Next: Biological Sex ➔", type="primary", use_container_width=True):
                 st.session_state["wiz_step"] = 2
                 st.rerun()
@@ -174,12 +179,17 @@ def render():
                 st.rerun()
 
         st.markdown("<br>", unsafe_allow_html=True)
-        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 1.8, 3.5])
+        nav_col1, nav_col2, nav_col3, nav_spacer = st.columns([1.5, 1.5, 1.8, 2.2])
         with nav_col1:
             if st.button("⬅️ Back: Age", use_container_width=True):
                 st.session_state["wiz_step"] = 1
                 st.rerun()
         with nav_col2:
+            if st.button("🏠 Home", use_container_width=True, key="step2_home_btn"):
+                st.session_state["nav_selection"] = "Home"
+                st.session_state["nav_radio"] = "Home"
+                st.rerun()
+        with nav_col3:
             if st.button("Next: Clinical History ➔", type="primary", use_container_width=True):
                 st.session_state["wiz_step"] = 3
                 st.rerun()
@@ -254,12 +264,17 @@ def render():
             )
 
         st.markdown("<br>", unsafe_allow_html=True)
-        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 2.2, 3])
+        nav_col1, nav_col2, nav_col3, nav_spacer = st.columns([1.5, 1.5, 2.2, 1.8])
         with nav_col1:
             if st.button("⬅️ Back: Gender", use_container_width=True):
                 st.session_state["wiz_step"] = 2
                 st.rerun()
         with nav_col2:
+            if st.button("🏠 Home", use_container_width=True, key="step3_home_btn"):
+                st.session_state["nav_selection"] = "Home"
+                st.session_state["nav_radio"] = "Home"
+                st.rerun()
+        with nav_col3:
             if st.button("Next: Social Questions (Q1-Q5) ➔", type="primary", use_container_width=True):
                 st.session_state["wiz_step"] = 4
                 st.rerun()
@@ -313,12 +328,17 @@ def render():
             st.session_state["wiz_q"][qid] = choice
             st.markdown("<div style='margin-bottom: 14px;'></div>", unsafe_allow_html=True)
 
-        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 2.2, 3])
+        nav_col1, nav_col2, nav_col3, nav_spacer = st.columns([1.5, 1.5, 2.2, 1.8])
         with nav_col1:
             if st.button("⬅️ Back: History", use_container_width=True):
                 st.session_state["wiz_step"] = 3
                 st.rerun()
         with nav_col2:
+            if st.button("🏠 Home", use_container_width=True, key="step4_home_btn"):
+                st.session_state["nav_selection"] = "Home"
+                st.session_state["nav_radio"] = "Home"
+                st.rerun()
+        with nav_col3:
             if st.button("Next: Motor Traits (Q6-Q10) ➔", type="primary", use_container_width=True):
                 st.session_state["wiz_step"] = 5
                 st.rerun()
@@ -372,12 +392,17 @@ def render():
             st.session_state["wiz_q"][qid] = choice
             st.markdown("<div style='margin-bottom: 14px;'></div>", unsafe_allow_html=True)
 
-        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 2.5, 2.5])
+        nav_col1, nav_col2, nav_col3, nav_spacer = st.columns([1.5, 1.5, 2.5, 1.5])
         with nav_col1:
             if st.button("⬅️ Back: Q1–Q5", use_container_width=True):
                 st.session_state["wiz_step"] = 4
                 st.rerun()
         with nav_col2:
+            if st.button("🏠 Home", use_container_width=True, key="step5_home_btn"):
+                st.session_state["nav_selection"] = "Home"
+                st.session_state["nav_radio"] = "Home"
+                st.rerun()
+        with nav_col3:
             if st.button("🧠 Evaluate Developmental Risk with AI ➔", type="primary", use_container_width=True):
                 # Execute inference
                 patient_dict = {
@@ -520,15 +545,21 @@ def render():
 
         # Actions: Open and Print Clinical Report OR Start New Screening
         st.markdown("<br>", unsafe_allow_html=True)
-        r_btn_col1, r_btn_col2, r_spacer = st.columns([2.5, 2, 2.5])
+        r_btn_col1, r_btn_col2, r_btn_col3, r_spacer = st.columns([2.5, 1.8, 1.8, 1.9])
         with r_btn_col1:
             if st.button("📄 View & Print Official Patient Report", type="primary", use_container_width=True):
                 st.session_state["nav_selection"] = "Clinical Test Report"
+                st.session_state["nav_radio"] = "Clinical Test Report"
                 st.rerun()
         with r_btn_col2:
             if st.button("🔄 Start New Screening", use_container_width=True):
                 st.session_state["wiz_step"] = 1
                 st.session_state["wiz_results"] = None
+                st.rerun()
+        with r_btn_col3:
+            if st.button("🏠 Return to Home", use_container_width=True, key="step6_home_btn"):
+                st.session_state["nav_selection"] = "Home"
+                st.session_state["nav_radio"] = "Home"
                 st.rerun()
 
         # Guidance Recommendation

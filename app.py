@@ -146,6 +146,47 @@ with st.sidebar:
     </div>
     """)
 
+# Navigation History Tracking
+if "nav_history" not in st.session_state:
+    st.session_state["nav_history"] = []
+
+if "current_page_tracked" not in st.session_state:
+    st.session_state["current_page_tracked"] = "Home"
+
+if selected_page != st.session_state["current_page_tracked"]:
+    old_p = st.session_state["current_page_tracked"]
+    if not st.session_state["nav_history"] or st.session_state["nav_history"][-1] != old_p:
+        st.session_state["nav_history"].append(old_p)
+    st.session_state["current_page_tracked"] = selected_page
+
+# Universal Top Navigation Bar (on every page except Home)
+if selected_page != "Home":
+    prev_target = st.session_state["nav_history"][-1] if st.session_state["nav_history"] else "Home"
+    top_c1, top_c2, top_c3, top_spacer = st.columns([1.6, 1.6, 1.8, 5.0])
+    with top_c1:
+        if st.button(f"⬅️ Back ({prev_target})", key="global_top_back", help=f"Return to {prev_target}"):
+            dest = st.session_state["nav_history"].pop() if st.session_state["nav_history"] else "Home"
+            st.session_state["nav_selection"] = dest
+            st.session_state["nav_radio"] = dest
+            st.rerun()
+    with top_c2:
+        if st.button("🏠 Home", key="global_top_home", help="Navigate to Home page"):
+            st.session_state["nav_selection"] = "Home"
+            st.session_state["nav_radio"] = "Home"
+            st.rerun()
+    with top_c3:
+        if selected_page != "Early ASD Detection":
+            if st.button("🩺 Early Detection", key="global_top_screener", help="Open ASD Screener"):
+                st.session_state["nav_selection"] = "Early ASD Detection"
+                st.session_state["nav_radio"] = "Early ASD Detection"
+                st.rerun()
+        else:
+            if st.button("📄 Test Report", key="global_top_report", help="Open Clinical Test Report"):
+                st.session_state["nav_selection"] = "Clinical Test Report"
+                st.session_state["nav_radio"] = "Clinical Test Report"
+                st.rerun()
+    st.markdown("<div style='margin-bottom: 12px;'></div>", unsafe_allow_html=True)
+
 # Page Router
 PAGE_ROUTERS = {
     "Home": home.render,
@@ -163,6 +204,34 @@ PAGE_ROUTERS = {
 
 render_fn = PAGE_ROUTERS.get(selected_page, home.render)
 render_fn()
+
+# Universal Bottom Navigation Bar (on every page except Home)
+if selected_page != "Home":
+    st.markdown("<br><hr style='border: none; border-top: 1px solid #E2E8F0; margin: 25px 0 15px 0;'>", unsafe_allow_html=True)
+    prev_target = st.session_state["nav_history"][-1] if st.session_state["nav_history"] else "Home"
+    b_c1, b_c2, b_c3, b_spacer = st.columns([1.6, 1.6, 2.0, 4.8])
+    with b_c1:
+        if st.button(f"⬅️ Go Back ({prev_target})", key="global_bot_back"):
+            dest = st.session_state["nav_history"].pop() if st.session_state["nav_history"] else "Home"
+            st.session_state["nav_selection"] = dest
+            st.session_state["nav_radio"] = dest
+            st.rerun()
+    with b_c2:
+        if st.button("🏠 Return to Home", key="global_bot_home"):
+            st.session_state["nav_selection"] = "Home"
+            st.session_state["nav_radio"] = "Home"
+            st.rerun()
+    with b_c3:
+        if selected_page != "Early ASD Detection":
+            if st.button("🩺 Early ASD Detection", key="global_bot_screener"):
+                st.session_state["nav_selection"] = "Early ASD Detection"
+                st.session_state["nav_radio"] = "Early ASD Detection"
+                st.rerun()
+        else:
+            if st.button("📄 Clinical Test Report", key="global_bot_report"):
+                st.session_state["nav_selection"] = "Clinical Test Report"
+                st.session_state["nav_radio"] = "Clinical Test Report"
+                st.rerun()
 
 # Global Footer
 render_footer()
