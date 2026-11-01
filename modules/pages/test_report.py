@@ -1,6 +1,6 @@
 import streamlit as st
 import datetime
-from modules.theme import render_section_header, render_disclaimer
+from modules.theme import render_section_header, render_disclaimer, render_html
 
 def get_default_sample_report(risk_type="elevated"):
     """Generates a realistic clinical sample report for instant testing & printing."""
@@ -378,7 +378,7 @@ def render():
     # Render Clean High-Fidelity Medical Document Preview
     is_elevated = (report_data.get("tabnet_pred") == 1) or (report_data.get("mlp_pred") == 1) or (report_data.get("aq10_score", 0) >= 3)
     
-    st.markdown(f"""
+    render_html(f"""
     <div class="printable-report">
         <!-- Header -->
         <div class="report-header-banner">
@@ -590,6 +590,6 @@ def render():
             </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     render_disclaimer()

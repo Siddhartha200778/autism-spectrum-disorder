@@ -1,5 +1,5 @@
 import streamlit as st
-from modules.theme import render_section_header, render_disclaimer
+from modules.theme import render_section_header, render_disclaimer, render_html
 
 def render():
     render_section_header(
@@ -9,7 +9,7 @@ def render():
     )
 
     # Visual Workflow Diagram (High-Fidelity CSS & SVG Architecture)
-    st.markdown("""
+    render_html("""
     <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 28px 20px; box-shadow: 0 4px 16px rgba(15,23,42,0.04); margin-bottom: 30px;">
         <h4 style="color: #0A192F; font-size: 1.15rem; font-weight: 700; margin-bottom: 20px; text-align: center;">
             End-to-End Clinical Deep Learning Pipeline
@@ -56,7 +56,7 @@ def render():
             </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Detailed Step Explanations
     st.subheader("Detailed Pipeline Stages")
@@ -64,7 +64,7 @@ def render():
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">1. Dataset Collection</div>
             <div class="med-card-body">
@@ -72,9 +72,9 @@ def render():
                 Features encompass 10 core behavioral indicators, child age (months), biological sex, ethnicity, neonatal jaundice history, immediate family ASD history, and who completed the questionnaire.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">2. Data Cleaning & Preprocessing</div>
             <div class="med-card-body">
@@ -83,9 +83,9 @@ def render():
                 Categorical demographic attributes (<code>Sex</code>, <code>Ethnicity</code>, <code>Jaundice</code>, <code>Family_ASD</code>, <code>Screener</code>) are encoded via deterministic Label Encoding.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
-        st.markdown(r"""
+        render_html(r"""
         <div class="med-card">
             <div class="med-card-title">3. Feature Engineering & Clinical Domains</div>
             <div class="med-card-body">
@@ -97,9 +97,9 @@ def render():
                 </ul>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">4. Stratified Train-Test Splitting</div>
             <div class="med-card-body">
@@ -107,10 +107,10 @@ def render():
                 Continuous covariates such as <code>Age</code> are normalized via <code>StandardScaler</code> fitted strictly on training data.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with col2:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">5. SMOTE Resampling (Training Fold Only)</div>
             <div class="med-card-body">
@@ -118,9 +118,9 @@ def render():
                 Synthesizing plausible borderline cases in feature space enhances sensitivity and safeguards against diagnostic bias without contaminating the test set.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">6. Deep Neural Architecture Training</div>
             <div class="med-card-body">
@@ -131,9 +131,9 @@ def render():
                 </ul>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">7. Model Evaluation & Discrimination</div>
             <div class="med-card-body">
@@ -141,15 +141,15 @@ def render():
                 Decision thresholds are calibrated (e.g. 0.60 for MLP) to optimize clinical specificity.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">8. Result Visualization & Interpretability</div>
             <div class="med-card-body">
                 TabNet feature importances are extracted and visualized alongside confusion matrices and receiver operating characteristic curves, delivering transparent clinical audit trails.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     render_disclaimer()

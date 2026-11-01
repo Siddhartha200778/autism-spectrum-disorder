@@ -3,7 +3,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
-from modules.theme import render_section_header, apply_chart_theme, render_disclaimer
+from modules.theme import render_section_header, apply_chart_theme, render_disclaimer, render_html
 
 def render():
     render_section_header(
@@ -26,7 +26,7 @@ def render():
 
     if "TabNet" in tab_choice:
         # TabNet Section
-        st.markdown("""
+        render_html("""
         <div class="med-card" style="border-left: 5px solid #1D4ED8;">
             <div class="med-card-title" style="font-size: 1.3rem; color: #0A192F;">
                 TabNet: Attentive Interpretable Tabular Learning
@@ -37,7 +37,7 @@ def render():
                 This provides intrinsic interpretability, enabling researchers to quantify precisely how much weight each Q-Chat behavioral question carries during diagnosis.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         st.markdown("<br>", unsafe_allow_html=True)
         st.subheader("TabNet Evaluation Metrics (Actual Test Set Results)")
@@ -95,7 +95,7 @@ def render():
 
     else:
         # MLP Section
-        st.markdown("""
+        render_html("""
         <div class="med-card" style="border-left: 5px solid #7C3AED;">
             <div class="med-card-title" style="font-size: 1.3rem; color: #0A192F;">
                 Multi-Layer Perceptron (MLP) Neural Network
@@ -105,7 +105,7 @@ def render():
                 Equipped with ReLU non-linear activations, L2 regularization ($\alpha = 0.1$), and early stopping validation monitoring, the MLP effectively learns high-level non-linear feature representations for robust developmental trait classification.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         st.markdown("<br>", unsafe_allow_html=True)
         st.subheader("MLP Evaluation Metrics (Actual Test Set Results)")

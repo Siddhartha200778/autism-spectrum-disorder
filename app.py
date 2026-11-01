@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 
-from modules.theme import inject_custom_css, render_footer
+from modules.theme import inject_custom_css, render_footer, render_html
 from modules.ml_pipeline import load_default_dataset, preprocess_and_prepare, train_models_pipeline
 
 # Page Configuration
@@ -80,7 +80,7 @@ if "models_result" not in st.session_state and "raw_dataset" in st.session_state
 
 # Sidebar Branding & Navigation
 with st.sidebar:
-    st.markdown("""
+    render_html("""
     <div style="padding: 10px 0 18px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px;">
         <div style="display: flex; align-items: center; gap: 10px;">
             <div style="background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(37,99,235,0.4);">
@@ -96,7 +96,7 @@ with st.sidebar:
             </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Sync selection between buttons and radio
     if "nav_radio" not in st.session_state:
@@ -116,17 +116,10 @@ with st.sidebar:
 
     # Model & Data Status Badge in Sidebar
     st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("""
-    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px; margin-top: 10px;">
-        <div style="font-size: 0.72rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
-            SYSTEM STATUS
-        </div>
-    """, unsafe_allow_html=True)
-
     if "models_result" in st.session_state:
         tab_acc = st.session_state["models_result"]["tabnet"]["accuracy"] * 100
         mlp_acc = st.session_state["models_result"]["mlp"]["accuracy"] * 100
-        st.markdown(f"""
+        status_body = f"""
         <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
             <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10B981;"></span>
             <span style="font-size: 0.8rem; color: #E2E8F0; font-weight: 600;">Models Active & Calibrated</span>
@@ -134,26 +127,31 @@ with st.sidebar:
         <div style="font-size: 0.74rem; color: #94A3B8; margin-left: 14px;">
             TabNet Acc: {tab_acc:.1f}% &bull; MLP Acc: {mlp_acc:.1f}%
         </div>
-        """, unsafe_allow_html=True)
+        """
     else:
-        st.markdown("""
+        status_body = """
         <div style="display: flex; align-items: center; gap: 6px;">
             <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #F59E0B;"></span>
             <span style="font-size: 0.8rem; color: #E2E8F0; font-weight: 600;">Awaiting Data Training</span>
         </div>
-        """, unsafe_allow_html=True)
+        """
 
-    st.markdown("""
+    render_html(f"""
+    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px; margin-top: 10px;">
+        <div style="font-size: 0.72rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
+            SYSTEM STATUS
+        </div>
+        {status_body}
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Sidebar Research Attribution
-    st.markdown("""
+    render_html("""
     <div style="padding: 16px 4px 4px 4px; font-size: 0.74rem; color: #64748B; text-align: center; margin-top: 15px;">
         Interpretable Deep Learning for Early ASD Detection<br>
         Research Platform &bull; Streamlit Cloud
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 # Page Router
 PAGE_ROUTERS = {

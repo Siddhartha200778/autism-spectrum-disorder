@@ -1,5 +1,5 @@
 import streamlit as st
-from modules.theme import render_section_header, render_disclaimer
+from modules.theme import render_section_header, render_disclaimer, render_html
 
 def render():
     render_section_header(
@@ -37,7 +37,7 @@ def render():
 
     with c_info:
         st.subheader("Research Hub Details")
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">Research Inquiries</div>
             <div class="med-card-body">
@@ -46,7 +46,7 @@ def render():
                 <strong>Field:</strong> Biomedical Informatics & Deep Learning
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         st.subheader("Frequently Asked Questions")
         with st.expander("Can this tool replace a pediatric diagnostic evaluation?"):

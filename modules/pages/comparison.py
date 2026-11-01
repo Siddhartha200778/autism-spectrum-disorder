@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from modules.theme import render_section_header, apply_chart_theme, render_disclaimer
+from modules.theme import render_section_header, apply_chart_theme, render_disclaimer, render_html
 
 def render():
     render_section_header(
@@ -26,7 +26,7 @@ def render():
     
     col_tab, col_mlp = st.columns(2)
     with col_tab:
-        st.markdown("""
+        render_html("""
         <div class="med-card" style="border-top: 4px solid #1D4ED8;">
             <div class="med-card-header">
                 <div class="med-card-icon">🧠</div>
@@ -34,7 +34,7 @@ def render():
             </div>
             <div class="med-card-title">TabNet Performance</div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
         c1, c2 = st.columns(2)
         c1.metric("Accuracy", f"{tabnet['accuracy'] * 100:.2f}%")
         c2.metric("F1-Score", f"{tabnet['f1'] * 100:.2f}%")
@@ -43,7 +43,7 @@ def render():
         c4.metric("Recall", f"{tabnet['recall'] * 100:.2f}%")
 
     with col_mlp:
-        st.markdown("""
+        render_html("""
         <div class="med-card" style="border-top: 4px solid #7C3AED;">
             <div class="med-card-header">
                 <div class="med-card-icon">⚡</div>
@@ -51,7 +51,7 @@ def render():
             </div>
             <div class="med-card-title">MLP Network Performance</div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
         c1, c2 = st.columns(2)
         c1.metric("Accuracy", f"{mlp['accuracy'] * 100:.2f}%")
         c2.metric("F1-Score", f"{mlp['f1'] * 100:.2f}%")

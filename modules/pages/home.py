@@ -1,9 +1,9 @@
 import streamlit as st
-from modules.theme import render_disclaimer, render_section_header
+from modules.theme import render_disclaimer, render_section_header, render_html
 
 def render():
     # Hero Section
-    st.markdown("""
+    render_html("""
     <div class="hero-container">
         <div class="clinical-brand-badge" style="background: rgba(255,255,255,0.15); color: #93C5FD; border-color: rgba(255,255,255,0.25);">
             CLINICAL AI &bull; DEEP LEARNING FRAMEWORK
@@ -37,7 +37,7 @@ def render():
             </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Hero Action Buttons
     c_btn1, c_btn2, c_btn3, c_spacer = st.columns([1.4, 1.4, 1.7, 3])
@@ -64,7 +64,7 @@ def render():
     
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-header">
                 <div class="med-card-icon">🧠</div>
@@ -75,10 +75,10 @@ def render():
                 Leverages sequential sparse attention masks to dynamically identify which behavioral markers (Q1–Q10) contribute most to risk classification at each decision step.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
     
     with col2:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-header">
                 <div class="med-card-icon">⚡</div>
@@ -89,10 +89,10 @@ def render():
                 Employs regularized multi-layer perceptrons with non-linear activations and early stopping, providing robust baseline discrimination across pediatric cohorts.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with col3:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-header">
                 <div class="med-card-icon">⚖️</div>
@@ -103,7 +103,7 @@ def render():
                 Synthetic Minority Over-sampling Technique is rigorously restricted to training folds to prevent diagnostic bias and data leakage while optimizing recall.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -112,39 +112,39 @@ def render():
     
     kf1, kf2 = st.columns(2)
     with kf1:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">🎯 Instant Behavioral Risk Assessment</div>
             <div class="med-card-body">
                 Interactive Q-Chat-10 questionnaire allowing parents and clinicians to screen toddlers across A-domain (Social Communication) and B-domain (Repetitive Behaviors) with real-time confidence scores.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
         
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">📊 Multi-Format Dataset Processing</div>
             <div class="med-card-body">
                 Seamless drag-and-drop ingestion of CSV, XLS, and XLSX files with automatic schema validation, automated categorical encoding, and zero-configuration preprocessing.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with kf2:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">🔬 Comparative Analytics Dashboard</div>
             <div class="med-card-body">
                 Side-by-side performance benchmarking across Accuracy, Precision, Recall, and F1-score with interactive ROC-AUC curves and dynamic confusion matrices.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-title">📈 Feature Salience Attribution</div>
             <div class="med-card-body">
                 Direct extraction of TabNet feature importances, unveiling which questions and demographic indicators drive predictive variance without black-box opacity.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)

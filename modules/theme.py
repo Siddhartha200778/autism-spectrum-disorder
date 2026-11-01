@@ -2,6 +2,7 @@ import streamlit as st
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from textwrap import dedent
 
 # Primary Color Constants
 COLOR_NAVY = "#0A192F"
@@ -40,6 +41,114 @@ def inject_custom_css():
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         color: #0F172A;
+    }
+
+    /* Universal High-Contrast Main Content Text Rules */
+    .stApp,
+    .main,
+    [data-testid="stAppViewContainer"],
+    [data-testid="stMain"],
+    [data-testid="stMainBlockContainer"] {
+        color: #0F172A !important;
+    }
+
+    /* Force all text elements in the main body to be deep navy/slate */
+    .main p,
+    .main span,
+    .main div,
+    .main label,
+    .main li,
+    [data-testid="stMain"] p,
+    [data-testid="stMain"] span,
+    [data-testid="stMain"] label,
+    [data-testid="stMain"] li {
+        color: #0F172A !important;
+    }
+
+    /* All form widget labels, titles, and text */
+    [data-testid="stWidgetLabel"],
+    [data-testid="stWidgetLabel"] *,
+    [data-testid="stWidgetLabel"] p,
+    [data-testid="stWidgetLabel"] span,
+    label[data-testid="stWidgetLabel"] {
+        color: #0A192F !important;
+        font-weight: 700 !important;
+        opacity: 1 !important;
+    }
+
+    /* Radio button option cards & question text */
+    div[data-testid="stRadio"] div[role="radiogroup"] > label,
+    div[data-testid="stRadio"] label[data-baseweb="radio"] {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 10px !important;
+        padding: 8px 16px !important;
+        margin: 4px 10px 6px 0 !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        cursor: pointer !important;
+    }
+
+    div[data-testid="stRadio"] div[role="radiogroup"] > label:hover,
+    div[data-testid="stRadio"] label[data-baseweb="radio"]:hover {
+        border-color: #1D4ED8 !important;
+        background-color: #EFF6FF !important;
+        transform: translateY(-1px) !important;
+    }
+
+    div[data-testid="stRadio"] div[role="radiogroup"] > label p,
+    div[data-testid="stRadio"] div[role="radiogroup"] > label span,
+    div[data-testid="stRadio"] label[data-baseweb="radio"] p,
+    div[data-testid="stRadio"] label[data-baseweb="radio"] span,
+    div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p,
+    .main .stRadio label p,
+    .main .stRadio label span {
+        color: #0A192F !important;
+        font-weight: 700 !important;
+        font-size: 0.95rem !important;
+        opacity: 1 !important;
+        line-height: 1.4 !important;
+    }
+
+    /* Slider labels and values */
+    .main .stSlider,
+    .main .stSlider label,
+    .main .stSlider label p,
+    .main .stSlider div[data-baseweb="slider"],
+    .main .stSlider span,
+    div[data-testid="stSlider"] [data-testid="stWidgetLabel"] p {
+        color: #0A192F !important;
+        font-weight: 700 !important;
+    }
+
+    /* Dropdown/Selectbox labels and text */
+    .main .stSelectbox,
+    .main .stSelectbox label,
+    .main .stSelectbox label p,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 10px !important;
+    }
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
+        color: #0A192F !important;
+        font-weight: 700 !important;
+    }
+    div[data-baseweb="popover"] ul,
+    div[data-baseweb="popover"] ul li {
+        background-color: #FFFFFF !important;
+        color: #0A192F !important;
+    }
+    div[data-baseweb="popover"] ul li:hover {
+        background-color: #EFF6FF !important;
+        color: #1D4ED8 !important;
+    }
+
+    /* Headings in main body */
+    h1, h2, h3, h4, h5, h6,
+    .main h1, .main h2, .main h3, .main h4, .main h5, .main h6 {
+        color: #0A192F !important;
+        font-weight: 800 !important;
     }
 
     /* Overall Background */
@@ -510,38 +619,40 @@ def inject_custom_css():
     """
     st.markdown(custom_css, unsafe_allow_html=True)
 
+def render_html(content):
+    """Safely renders HTML without markdown treating leading indentation as code blocks."""
+    st.markdown(dedent(content).strip(), unsafe_allow_html=True)
+
 def render_section_header(title, subtitle=None, badge=None):
     """Renders a consistent, high-impact clinical section header."""
     badge_html = f'<div class="clinical-brand-badge">{badge}</div>' if badge else ""
-    subtitle_html = f'<p style="color: #64748B; font-size: 1.05rem; margin-top: 4px; margin-bottom: 24px; line-height: 1.5;">{subtitle}</p>' if subtitle else ""
+    subtitle_html = f'<p style="color: #475569 !important; font-size: 1.05rem; margin-top: 4px; margin-bottom: 24px; line-height: 1.5;">{subtitle}</p>' if subtitle else ""
     
-    st.markdown(f"""
+    html = f"""
     <div style="margin-bottom: 16px;">
         {badge_html}
-        <h2 style="font-size: 1.9rem; font-weight: 800; color: #0A192F; letter-spacing: -0.02em; margin: 0;">
-            {title}
-        </h2>
+        <h2 style="font-size: 1.9rem; font-weight: 800; color: #0A192F !important; letter-spacing: -0.02em; margin: 0;">{title}</h2>
         {subtitle_html}
     </div>
-    """, unsafe_allow_html=True)
+    """
+    render_html(html)
 
 def render_disclaimer():
     """Renders the standard healthcare AI clinical disclaimer banner."""
-    st.markdown("""
+    html = """
     <div class="disclaimer-banner">
-        <div class="disclaimer-title">
-            <span>⚠️</span> RESEARCH & CLINICAL DECISION SUPPORT NOTICE
-        </div>
+        <div class="disclaimer-title"><span>⚠️</span> RESEARCH & CLINICAL DECISION SUPPORT NOTICE</div>
         <p class="disclaimer-text">
             This system is an academic research platform designed for developmental risk stratification using machine learning and deep tabular networks. 
             It is <strong>not</strong> a certified diagnostic medical device and does <strong>not</strong> substitute for comprehensive multidisciplinary evaluation by pediatricians, child psychiatrists, or developmental specialists.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """
+    render_html(html)
 
 def render_footer():
     """Renders the modern platform footer."""
-    st.markdown("""
+    html = """
     <div class="clinical-footer">
         <p style="font-weight: 600; color: #0F172A; margin-bottom: 4px;">
             Interpretable Deep Learning for Early ASD Detection
@@ -550,7 +661,8 @@ def render_footer():
             Academic Clinical AI Research Initiative &bull; Powered by PyTorch TabNet & Multi-Layer Perceptrons &bull; Streamlit Cloud
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """
+    render_html(html)
 
 def apply_chart_theme(fig, ax):
     """Applies modern styling to Matplotlib/Seaborn plots."""

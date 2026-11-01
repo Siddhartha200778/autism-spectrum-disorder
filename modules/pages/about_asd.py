@@ -1,5 +1,5 @@
 import streamlit as st
-from modules.theme import render_section_header, render_disclaimer
+from modules.theme import render_section_header, render_disclaimer, render_html
 
 def render():
     render_section_header(
@@ -9,7 +9,7 @@ def render():
     )
 
     # Core Definition Card
-    st.markdown("""
+    render_html("""
     <div class="med-card" style="background: linear-gradient(135deg, #FFFFFF 0%, #F0F7FF 100%); border-left: 5px solid #1D4ED8;">
         <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">What is Autism Spectrum Disorder?</div>
         <div class="med-card-body" style="font-size: 1.02rem; color: #334155;">
@@ -17,7 +17,7 @@ def render():
             The term <em>"spectrum"</em> reflects the wide variety in challenges, presentation, and distinct strengths that each individual experiences across cognitive, verbal, and sensory dimensions.
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -26,7 +26,7 @@ def render():
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-header">
                 <div class="med-card-icon">🗣️</div>
@@ -43,10 +43,10 @@ def render():
                 </ul>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with col2:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-header">
                 <div class="med-card-icon">🔄</div>
@@ -62,7 +62,7 @@ def render():
                 </ul>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -71,7 +71,7 @@ def render():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-header">
                 <div class="med-card-icon">🌱</div>
@@ -82,10 +82,10 @@ def render():
                 Between 12 and 36 months, the infant brain forms neural connections at its highest historical rate. Interventions delivered during this golden window yield the greatest improvements in language and social reciprocity.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with c2:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-header">
                 <div class="med-card-icon">⏳</div>
@@ -96,10 +96,10 @@ def render():
                 While parents frequently observe atypical signs before 18 months, clinical diagnosis often occurs at 4 to 5 years. Standardized AI screening tools empower primary healthcare providers to flag risk years earlier.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with c3:
-        st.markdown("""
+        render_html("""
         <div class="med-card">
             <div class="med-card-header">
                 <div class="med-card-icon">🤝</div>
@@ -110,13 +110,13 @@ def render():
                 Timely risk identification connects parents with speech therapy, occupational therapy, and behavioral guidance early, significantly reducing caregiver anxiety and financial stress.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Role of AI in Screening
     st.subheader("The Role of Artificial Intelligence in Modern Screening")
-    st.markdown("""
+    render_html("""
     <div class="med-card">
         <div class="med-card-body" style="font-size: 0.98rem; line-height: 1.7;">
             Traditional screening questionnaires like the Q-CHAT (Quantitative Checklist for Autism in Toddlers) rely on manual threshold summation. 
@@ -130,6 +130,6 @@ def render():
             </ul>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     render_disclaimer()

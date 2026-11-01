@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import datetime
-from modules.theme import render_section_header, render_disclaimer
+from modules.theme import render_section_header, render_disclaimer, render_html
 from modules.ml_pipeline import run_single_patient_inference
 
 def init_wizard_state():
@@ -55,7 +55,7 @@ def render_stepper(current_step):
         if step_num < 6:
             html += '<span style="color: #CBD5E1; font-weight: bold; margin: 0 4px;">➔</span>'
     html += '</div>'
-    st.markdown(html, unsafe_allow_html=True)
+    render_html(html)
 
 def render():
     render_section_header(
@@ -78,7 +78,7 @@ def render():
     # STEP 1: CHILD'S AGE
     # -------------------------------------------------------------
     if step == 1:
-        st.markdown("""
+        render_html("""
         <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
             <div class="med-card-header">
                 <div class="med-card-icon">👶</div>
@@ -92,22 +92,24 @@ def render():
                 This period represents the golden developmental window of maximal neural plasticity.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         col_input, col_info = st.columns([2, 1.5])
         with col_input:
+            render_html("<p style='font-size: 1.05rem; font-weight: 800; color: #0A192F !important; margin-bottom: 8px;'>Select Child's Age (in Months):</p>")
             age_val = st.slider(
                 "Select Child's Age (in Months):",
                 min_value=12,
                 max_value=36,
                 value=int(st.session_state["wiz_age"]),
                 step=1,
+                label_visibility="collapsed",
                 help="Select the exact age in months of the child at the time of screening."
             )
             st.session_state["wiz_age"] = age_val
 
         with col_info:
-            st.markdown(f"""
+            render_html(f"""
             <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 18px; margin-top: 5px;">
                 <div style="font-size: 0.8rem; font-weight: 700; color: #1D4ED8; text-transform: uppercase;">Selected Milestone</div>
                 <div style="font-size: 2rem; font-weight: 800; color: #1D4ED8; margin: 4px 0;">{age_val} Months</div>
@@ -115,7 +117,7 @@ def render():
                     Approx. <strong>{age_val // 12} year(s) and {age_val % 12} month(s)</strong> old.
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
         st.markdown("<br>", unsafe_allow_html=True)
         nav_col1, nav_col2 = st.columns([1.5, 4])
@@ -128,7 +130,7 @@ def render():
     # STEP 2: BIOLOGICAL SEX
     # -------------------------------------------------------------
     elif step == 2:
-        st.markdown("""
+        render_html("""
         <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
             <div class="med-card-header">
                 <div class="med-card-icon">🚻</div>
@@ -141,32 +143,32 @@ def render():
                 Biological sex is evaluated by the models to normalize normative developmental behavioral trajectories and account for known prevalence ratios.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         c_sex1, c_sex2 = st.columns(2)
         curr_sex = st.session_state["wiz_sex"]
         with c_sex1:
             is_male = (curr_sex == "m")
-            st.markdown(f"""
+            render_html(f"""
             <div style="border: 2px solid {'#1D4ED8' if is_male else '#E2E8F0'}; background: {'#EFF6FF' if is_male else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center;">
                 <div style="font-size: 2.5rem; margin-bottom: 6px;">👦</div>
                 <div style="font-size: 1.25rem; font-weight: 800; color: #0A192F;">Male</div>
                 <div style="font-size: 0.82rem; color: #64748B; margin-top: 4px;">Biological Male</div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
             if st.button("Select Male", use_container_width=True, type="primary" if is_male else "secondary"):
                 st.session_state["wiz_sex"] = "m"
                 st.rerun()
 
         with c_sex2:
             is_female = (curr_sex == "f")
-            st.markdown(f"""
+            render_html(f"""
             <div style="border: 2px solid {'#1D4ED8' if is_female else '#E2E8F0'}; background: {'#EFF6FF' if is_female else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center;">
                 <div style="font-size: 2.5rem; margin-bottom: 6px;">👧</div>
                 <div style="font-size: 1.25rem; font-weight: 800; color: #0A192F;">Female</div>
                 <div style="font-size: 0.82rem; color: #64748B; margin-top: 4px;">Biological Female</div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
             if st.button("Select Female", use_container_width=True, type="primary" if is_female else "secondary"):
                 st.session_state["wiz_sex"] = "f"
                 st.rerun()
@@ -186,7 +188,7 @@ def render():
     # STEP 3: CLINICAL & PERINATAL BACKGROUND
     # -------------------------------------------------------------
     elif step == 3:
-        st.markdown("""
+        render_html("""
         <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
             <div class="med-card-header">
                 <div class="med-card-icon">📋</div>
@@ -199,10 +201,11 @@ def render():
                 Please provide demographic and clinical history details. These are encoded as non-linear priors by TabNet and MLP neural networks.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         col1, col2 = st.columns(2)
         with col1:
+            render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Ethnicity / Cultural Background:</p>")
             eth_options = [
                 "White-European", "Asian", "Middle Eastern", "black",
                 "South Asian", "Hispanic", "Latino", "mixed", "others"
@@ -213,9 +216,11 @@ def render():
                 "Ethnicity:",
                 options=eth_options,
                 index=eth_idx,
-                format_func=lambda x: x.title()
+                format_func=lambda x: x.title(),
+                label_visibility="collapsed"
             )
 
+            render_html("<div style='margin-top: 14px;'></div><p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Who is completing this screening questionnaire?</p>")
             screener_options = ["family member", "Health Care Professional", "Others"]
             curr_scr = st.session_state["wiz_screener"]
             scr_idx = screener_options.index(curr_scr) if curr_scr in screener_options else 0
@@ -223,24 +228,29 @@ def render():
                 "Who is completing this screening questionnaire?",
                 options=screener_options,
                 index=scr_idx,
-                format_func=lambda x: x.title()
+                format_func=lambda x: x.title(),
+                label_visibility="collapsed"
             )
 
         with col2:
+            render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Was the child born with neonatal jaundice?</p>")
             st.session_state["wiz_jaundice"] = st.radio(
                 "Was the child born with neonatal jaundice?",
                 options=["no", "yes"],
                 index=0 if st.session_state["wiz_jaundice"] == "no" else 1,
                 horizontal=True,
-                format_func=lambda x: "Yes (Jaundice diagnosed)" if x == "yes" else "No"
+                format_func=lambda x: "Yes (Jaundice diagnosed)" if x == "yes" else "No",
+                label_visibility="collapsed"
             )
 
+            render_html("<div style='margin-top: 14px;'></div><p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Does any immediate family member have diagnosed ASD?</p>")
             st.session_state["wiz_family_asd"] = st.radio(
                 "Does any immediate family member have diagnosed ASD?",
                 options=["no", "yes"],
                 index=0 if st.session_state["wiz_family_asd"] == "no" else 1,
                 horizontal=True,
-                format_func=lambda x: "Yes (Parent or sibling)" if x == "yes" else "No"
+                format_func=lambda x: "Yes (Parent or sibling)" if x == "yes" else "No",
+                label_visibility="collapsed"
             )
 
         st.markdown("<br>", unsafe_allow_html=True)
@@ -258,7 +268,7 @@ def render():
     # STEP 4: SOCIAL COMMUNICATION QUESTIONS (Q1 TO Q5)
     # -------------------------------------------------------------
     elif step == 4:
-        st.markdown("""
+        render_html("""
         <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
             <div class="med-card-header">
                 <div class="med-card-icon">🗣️</div>
@@ -271,7 +281,7 @@ def render():
                 Evaluate the child's typical communicative behaviors. Select whether the response indicates a <strong>typical developmental trait (0)</strong> or an <strong>atypical screening marker (1)</strong>.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         q_list_1 = [
             ("Q1", "Does your child look at you when you call his/her name?", "Always / Usually (0)", "Rarely or Never (1)"),
@@ -282,8 +292,15 @@ def render():
         ]
 
         for qid, qtext, opt0, opt1 in q_list_1:
-            st.markdown(f"**{qid}: {qtext}**")
             curr_val = st.session_state["wiz_q"].get(qid, 0)
+            render_html(f"""
+            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 14px 18px 12px 18px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+                <div style="font-size: 1.05rem; font-weight: 800; color: #0A192F !important; line-height: 1.5;">
+                    <span style="background: #1D4ED8; color: #FFFFFF !important; padding: 3px 10px; border-radius: 6px; font-weight: 800; font-size: 0.88rem; margin-right: 8px;">{qid}</span>
+                    <span style="color: #0A192F !important;">{qtext}</span>
+                </div>
+            </div>
+            """)
             choice = st.radio(
                 f"Selection for {qid}",
                 options=[0, 1],
@@ -294,7 +311,7 @@ def render():
                 label_visibility="collapsed"
             )
             st.session_state["wiz_q"][qid] = choice
-            st.markdown("<hr style='margin: 10px 0 16px 0; border: none; border-top: 1px solid #F1F5F9;'>", unsafe_allow_html=True)
+            st.markdown("<div style='margin-bottom: 14px;'></div>", unsafe_allow_html=True)
 
         nav_col1, nav_col2, nav_spacer = st.columns([1.5, 2.2, 3])
         with nav_col1:
@@ -310,7 +327,7 @@ def render():
     # STEP 5: MOTOR & BEHAVIORAL QUESTIONS (Q6 TO Q10)
     # -------------------------------------------------------------
     elif step == 5:
-        st.markdown("""
+        render_html("""
         <div class="med-card" style="border-left: 5px solid #7C3AED; margin-bottom: 20px;">
             <div class="med-card-header">
                 <div class="med-card-icon">🔄</div>
@@ -323,7 +340,7 @@ def render():
                 Final screening indicators assessing gaze tracking, empathy, speech sounds, communicative gestures, and repetitive motor mannerisms.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
         q_list_2 = [
             ("Q6", "Does your child follow where you look (gaze tracking)?", "Many times a day (0)", "Rarely or Never (1)"),
@@ -334,8 +351,15 @@ def render():
         ]
 
         for qid, qtext, opt0, opt1 in q_list_2:
-            st.markdown(f"**{qid}: {qtext}**")
             curr_val = st.session_state["wiz_q"].get(qid, 0)
+            render_html(f"""
+            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 14px 18px 12px 18px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+                <div style="font-size: 1.05rem; font-weight: 800; color: #0A192F !important; line-height: 1.5;">
+                    <span style="background: #7C3AED; color: #FFFFFF !important; padding: 3px 10px; border-radius: 6px; font-weight: 800; font-size: 0.88rem; margin-right: 8px;">{qid}</span>
+                    <span style="color: #0A192F !important;">{qtext}</span>
+                </div>
+            </div>
+            """)
             choice = st.radio(
                 f"Selection for {qid}",
                 options=[0, 1],
@@ -346,7 +370,7 @@ def render():
                 label_visibility="collapsed"
             )
             st.session_state["wiz_q"][qid] = choice
-            st.markdown("<hr style='margin: 10px 0 16px 0; border: none; border-top: 1px solid #F1F5F9;'>", unsafe_allow_html=True)
+            st.markdown("<div style='margin-bottom: 14px;'></div>", unsafe_allow_html=True)
 
         nav_col1, nav_col2, nav_spacer = st.columns([1.5, 2.5, 2.5])
         with nav_col1:
@@ -400,7 +424,7 @@ def render():
         is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
         
         if is_elevated:
-            st.markdown("""
+            render_html("""
             <div style="background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%); border: 2px solid #EF4444; border-radius: 16px; padding: 24px; margin-bottom: 25px;">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <div>
@@ -415,9 +439,9 @@ def render():
                     <div style="font-size: 3rem; margin-left: 20px;">⚠️</div>
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
         else:
-            st.markdown("""
+            render_html("""
             <div style="background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); border: 2px solid #10B981; border-radius: 16px; padding: 24px; margin-bottom: 25px;">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <div>
@@ -432,12 +456,12 @@ def render():
                     <div style="font-size: 3rem; margin-left: 20px;">✅</div>
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
         # Model Metric Breakdown Cards
         c1, c2, c3 = st.columns(3)
         with c1:
-            st.markdown(f"""
+            render_html(f"""
             <div class="med-card">
                 <div class="med-card-header">
                     <div class="med-card-icon">🧠</div>
@@ -454,10 +478,10 @@ def render():
                     Sequential sparse attention analysis.
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
         with c2:
-            st.markdown(f"""
+            render_html(f"""
             <div class="med-card">
                 <div class="med-card-header">
                     <div class="med-card-icon">⚡</div>
@@ -474,10 +498,10 @@ def render():
                     Threshold cutoff applied at 0.60.
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
         with c3:
-            st.markdown(f"""
+            render_html(f"""
             <div class="med-card">
                 <div class="med-card-header">
                     <div class="med-card-icon">📋</div>
@@ -492,7 +516,7 @@ def render():
                     <strong>Domain B (Repetitive):</strong> {res['b_domain']} / 1
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
         # Actions: Open and Print Clinical Report OR Start New Screening
         st.markdown("<br>", unsafe_allow_html=True)
