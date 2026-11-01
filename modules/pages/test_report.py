@@ -195,10 +195,20 @@ def generate_standalone_html_report(data):
     </style>
 </head>
 <body>
-    <div class="no-print" style="margin-bottom: 20px; text-align: right;">
-        <button onclick="window.print()" style="background: #1D4ED8; color: #FFFFFF; font-weight: bold; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">
-            🖨️ Print This Clinical Report
-        </button>
+    <div class="no-print" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; border: 1.5px solid #E2E8F0; padding: 12px 18px; border-radius: 12px;">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="https://autism-spectrum-disorder.streamlit.app" style="display: inline-flex; align-items: center; gap: 6px; background: #0A192F; color: #FFFFFF; font-weight: 700; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-size: 0.9rem;">
+                🏠 Back to ASD Platform Website
+            </a>
+            <button onclick="if(window.history.length &gt; 1) {{ window.history.back(); }} else {{ window.location.href='https://autism-spectrum-disorder.streamlit.app'; }}" style="background: #FFFFFF; color: #0F172A; font-weight: 700; padding: 8px 16px; border: 1.5px solid #CBD5E1; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">
+                ⬅️ Previous Page
+            </button>
+        </div>
+        <div>
+            <button onclick="window.print()" style="background: #1D4ED8; color: #FFFFFF; font-weight: 700; padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; box-shadow: 0 2px 8px rgba(29,78,216,0.3);">
+                🖨️ Print Clinical Report
+            </button>
+        </div>
     </div>
 
     <div class="report-header">
@@ -317,7 +327,7 @@ def render():
     # Action Toolbar
     st.subheader("1. Report Settings & Patient Case")
     
-    t_col1, t_col2, t_col3, t_col4 = st.columns([1.5, 1.5, 1.2, 1.2])
+    t_col1, t_col2, t_col3, t_col4 = st.columns([1.5, 1.5, 1.3, 1.3])
     
     with t_col1:
         if st.button("📋 Load Elevated Risk Sample", use_container_width=True, help="Load representative toddler case with ASD traits"):
@@ -327,6 +337,16 @@ def render():
     with t_col2:
         if st.button("📋 Load Typical Child Sample", use_container_width=True, help="Load representative toddler case with typical development"):
             st.session_state["latest_patient_report"] = get_default_sample_report("typical")
+            st.rerun()
+
+    with t_col3:
+        if st.button("🏠 Return to Home", use_container_width=True, help="Navigate back to the main homepage"):
+            st.session_state["nav_selection"] = "Home"
+            st.rerun()
+
+    with t_col4:
+        if st.button("🩺 Back to Screener", use_container_width=True, help="Return to the ASD screening wizard"):
+            st.session_state["nav_selection"] = "Early ASD Detection"
             st.rerun()
 
     report_data = st.session_state["latest_patient_report"]
@@ -591,5 +611,17 @@ def render():
         </div>
     </div>
     """)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    b_col1, b_col2, b_spacer = st.columns([1.6, 2.0, 3.4])
+    with b_col1:
+        if st.button("🏠 Return to Home Page", use_container_width=True, type="primary"):
+            st.session_state["nav_selection"] = "Home"
+            st.rerun()
+    with b_col2:
+        if st.button("🔄 Start New Screening Test", use_container_width=True):
+            st.session_state["nav_selection"] = "Early ASD Detection"
+            st.session_state["wiz_step"] = 1
+            st.rerun()
 
     render_disclaimer()
