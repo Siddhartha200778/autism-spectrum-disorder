@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import datetime
 from modules.theme import render_section_header, render_disclaimer
 from modules.ml_pipeline import run_single_patient_inference
 
@@ -95,6 +96,17 @@ def render():
 
         with st.spinner("Executing dual-model inference across TabNet and MLP networks..."):
             res = run_single_patient_inference(patient_dict, models_dict, prepared_data)
+
+        # Store in session state for Clinical Test Report
+        st.session_state["latest_patient_report"] = {
+            "patient_name": "Screened Toddler",
+            "mrn": "MRN-" + datetime.date.today().strftime("%Y%m%d") + "-01",
+            "date": datetime.date.today().strftime("%B %d, %Y"),
+            "examiner": "Pediatric Screening Specialist",
+            "institution": "Pediatric Neurodevelopmental Clinical Center",
+            **patient_dict,
+            **res
+        }
 
         st.markdown("<br>", unsafe_allow_html=True)
         render_section_header("AI Screening Evaluation Report", "Integrated results from TabNet and Multi-Layer Perceptron models.")
@@ -196,6 +208,14 @@ def render():
                 </div>
             </div>
             """, unsafe_allow_html=True)
+
+        # Call to Action: Open and Print Clinical Report
+        st.markdown("<br>", unsafe_allow_html=True)
+        r_btn_col1, r_btn_col2 = st.columns([2.5, 3.5])
+        with r_btn_col1:
+            if st.button("📄 Generate & Print Official Patient Report", type="primary", use_container_width=True):
+                st.session_state["nav_selection"] = "Clinical Test Report"
+                st.rerun()
 
         # Guidance Recommendation
         st.markdown("<br>", unsafe_allow_html=True)

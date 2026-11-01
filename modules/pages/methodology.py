@@ -85,7 +85,7 @@ def render():
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("""
+        st.markdown(r"""
         <div class="med-card">
             <div class="med-card-title">3. Feature Engineering & Clinical Domains</div>
             <div class="med-card-body">

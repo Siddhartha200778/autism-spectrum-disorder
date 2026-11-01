@@ -344,6 +344,107 @@ def inject_custom_css():
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
+    /* Clinical Progress & Meter Bars */
+    .domain-meter-container {
+        background: #E2E8F0;
+        border-radius: 9999px;
+        height: 10px;
+        width: 100%;
+        overflow: hidden;
+        margin: 6px 0 12px 0;
+    }
+
+    .domain-meter-fill {
+        height: 100%;
+        border-radius: 9999px;
+        transition: width 0.6s ease;
+    }
+
+    /* Official Printable Report Styling */
+    .printable-report {
+        background: #FFFFFF;
+        border: 2px solid #CBD5E1;
+        border-radius: 16px;
+        padding: 36px 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        color: #0F172A;
+        font-family: 'Inter', -apple-system, sans-serif;
+        margin-bottom: 30px;
+    }
+
+    .report-header-banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid #1D4ED8;
+        padding-bottom: 18px;
+        margin-bottom: 22px;
+    }
+
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0 20px 0;
+        font-size: 0.92rem;
+    }
+
+    .report-table th {
+        background: #F1F5F9;
+        color: #0F172A;
+        font-weight: 700;
+        text-align: left;
+        padding: 10px 14px;
+        border-bottom: 2px solid #CBD5E1;
+    }
+
+    .report-table td {
+        padding: 9px 14px;
+        border-bottom: 1px solid #E2E8F0;
+        color: #334155;
+    }
+
+    .report-table tr:hover {
+        background: #F8FAFC;
+    }
+
+    /* Print Stylesheet */
+    @media print {
+        [data-testid="stSidebar"],
+        [data-testid="stHeader"],
+        .stButton,
+        .no-print,
+        header,
+        footer,
+        .clinical-footer {
+            display: none !important;
+        }
+
+        body, .stApp {
+            background: #FFFFFF !important;
+            color: #000000 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .printable-report {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+        }
+
+        .report-header-banner {
+            border-bottom: 2px solid #000000 !important;
+        }
+
+        .med-card {
+            box-shadow: none !important;
+            border: 1px solid #CCCCCC !important;
+            page-break-inside: avoid;
+        }
+    }
+
     /* Footer */
     .clinical-footer {
         text-align: center;

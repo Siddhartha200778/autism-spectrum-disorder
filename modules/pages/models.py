@@ -84,7 +84,7 @@ def render():
 
         st.markdown("<br>", unsafe_allow_html=True)
         st.subheader("TabNet Hyperparameter Configuration")
-        st.markdown("""
+        st.markdown(r"""
         - **Decision Steps ($N_{steps}$):** 5
         - **Feature Dimension ($N_d$) / Attention Dimension ($N_a$):** 16 / 16
         - **Sparsity Regularization Factor ($\lambda_{sparse}$):** $1 \times 10^{-4}$
@@ -140,7 +140,7 @@ def render():
                 annot=True, fmt="d", cmap="Purples", cbar=False, ax=ax,
                 annot_kws={"size": 14, "weight": "bold"}
             )
-            ax.set_xlabel("Predicted Label (Threshold $\ge$ 0.60)", fontweight="bold", fontsize=10, labelpad=8)
+            ax.set_xlabel(r"Predicted Label (Threshold $\ge$ 0.60)", fontweight="bold", fontsize=10, labelpad=8)
             ax.set_ylabel("Actual Label", fontweight="bold", fontsize=10, labelpad=8)
             ax.set_xticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")
             ax.set_yticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")

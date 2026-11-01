@@ -13,17 +13,18 @@ An advanced clinical healthcare AI web platform for early Autism Spectrum Disord
 ## 🚀 Key Highlights & Capabilities
 
 - **Clinical Healthcare AI Theme**: Custom-engineered design system with deep navy, royal blue, and soft purple accents, rounded glassmorphic cards, responsive layouts, and medical badges.
-- **10 Intuitive Navigation Sections**:
+- **11 Intuitive Navigation Sections**:
   1. **Home**: Hero section, research statistics, key features, and formal clinical disclaimer.
   2. **About Autism**: Clinical definitions, behavioral domains (Social Communication vs. Repetitive Behaviors), neuroplasticity, and AI screening benefits.
   3. **Early ASD Detection**: Interactive pediatric questionnaire with live dual-model inference and behavioral domain risk breakdown.
-  4. **Dataset Analysis**: Drag-and-drop CSV, XLS, and XLSX file ingestion, missing value diagnostics, and demographic distributions with one-click benchmark data loading.
-  5. **AI Models**: In-depth architectural inspection of TabNet and MLP with genuine evaluation metrics, confusion matrices, and ROC curves.
-  6. **Model Comparison**: Side-by-side performance benchmarking (Accuracy, Precision, Recall, F1-score) with comparative bar charts.
-  7. **Results & Visualization**: Comprehensive analytics dashboard featuring ROC-AUC curves, feature importance ranking, and classification reports.
-  8. **Research Methodology**: Complete 8-stage interactive pipeline flowchart and technical walkthrough.
-  9. **About Us**: Research mission, deep learning stack, and ethical AI governance.
-  10. **Contact**: Academic inquiry portal and clinician FAQ.
+  4. **Clinical Test Report**: Official standardized pediatric screening report with browser print dialog (`window.print()`), downloadable HTML report, and custom patient metadata.
+  5. **Dataset Analysis**: Drag-and-drop CSV, XLS, and XLSX file ingestion, missing value diagnostics, and demographic distributions with one-click benchmark data loading.
+  6. **AI Models**: In-depth architectural inspection of TabNet and MLP with genuine evaluation metrics, confusion matrices, and ROC curves.
+  7. **Model Comparison**: Side-by-side performance benchmarking (Accuracy, Precision, Recall, F1-score) with comparative bar charts.
+  8. **Results & Visualization**: Comprehensive analytics dashboard featuring ROC-AUC curves, feature importance ranking, and classification reports.
+  9. **Research Methodology**: Complete 8-stage interactive pipeline flowchart and technical walkthrough.
+  10. **About Us**: Research mission, deep learning stack, and ethical AI governance.
+  11. **Contact**: Academic inquiry portal and clinician FAQ.
 - **Zero Synthetic Fluff**: All displayed metrics (91.0% TabNet accuracy, 100% MLP accuracy, AUC curves, confusion matrices) are 100% computed dynamically from the dataset using genuine PyTorch and Scikit-Learn training pipelines.
 
 ---

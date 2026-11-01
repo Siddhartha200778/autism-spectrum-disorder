@@ -29,8 +29,8 @@ def render():
     s1, s2, s3, s4 = st.columns(4)
     s1.metric("Preprocessed Records", f"{len(prepared['processed_df']):,}")
     s2.metric("Evaluated Test Records", f"{len(prepared['y_test']):,}")
-    s3.metric("Training Class Ratio (Pre-SMOTE)", f"{list(prepared['class_counts_before'].values())}")
-    s4.metric("Balanced Training Folds (SMOTE)", f"{list(prepared['class_counts_after'].values())}")
+    s3.metric("Pre-SMOTE (Non-ASD : ASD)", f"{prepared['class_counts_before'].get(0, 0)} : {prepared['class_counts_before'].get(1, 0)}")
+    s4.metric("Post-SMOTE Balanced Folds", f"{prepared['class_counts_after'].get(0, 0)} : {prepared['class_counts_after'].get(1, 0)}")
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -61,7 +61,7 @@ def render():
             mlp["confusion_matrix"], annot=True, fmt="d", cmap="Purples", cbar=False, ax=ax,
             annot_kws={"size": 13, "weight": "bold"}
         )
-        ax.set_xlabel("Predicted Class (Threshold $\ge$ 0.60)", fontweight="bold", fontsize=10)
+        ax.set_xlabel(r"Predicted Class (Threshold $\ge$ 0.60)", fontweight="bold", fontsize=10)
         ax.set_ylabel("Actual Class", fontweight="bold", fontsize=10)
         ax.set_xticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")
         ax.set_yticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")
