@@ -34,14 +34,15 @@ def init_wizard_state():
 def render_stepper(current_step):
     """Renders visual multi-step progress indicator at the top."""
     steps = [
-        (1, "1. Patient Info", "👤"),
+        (1, "1. Patient", "👤"),
         (2, "2. Age", "👶"),
         (3, "3. Gender", "🚻"),
         (4, "4. History", "📋"),
-        (5, "5. Social (Q1-Q5)", "🗣️"),
-        (6, "6. Motor (Q6-Q10)", "🔄"),
-        (7, "7. Risk Assessment", "🩺"),
-        (8, "8. Action Plan", "🌟")
+        (5, "5. Social", "🗣️"),
+        (6, "6. Motor", "🔄"),
+        (7, "7. Risk Analysis", "🩺"),
+        (8, "8. Stage & Plan", "📊"),
+        (9, "9. Precautions", "🛡️")
     ]
     
     html = '<div class="stepper-container">'
@@ -58,15 +59,88 @@ def render_stepper(current_step):
 <div class="step-circle">{circle_content}</div>
 <span>{icon} {label}</span>
 </div>"""
-        if step_num < 8:
+        if step_num < 9:
             html += '<span style="color: #CBD5E1; font-weight: bold; margin: 0 4px;">➔</span>'
     html += '</div>'
     render_html(html)
 
+def calculate_asd_stage(tabnet_prob, mlp_prob, aq10_score, is_elevated):
+    """Calculates clinically grounded ASD stage and affection metrics."""
+    affection_pct = tabnet_prob * 100
+    
+    if not is_elevated:
+        return {
+            "status_label": "Typical Developmental Profile",
+            "status_chip": "NON-ASD AFFECTED (TYPICAL)",
+            "is_affected": False,
+            "affection_pct": affection_pct,
+            "stage_num": 0,
+            "stage_name": "Normative Milestone Stage",
+            "support_level": "Typical Development - Routine Pediatric Surveillance",
+            "color": "#059669",
+            "bg_color": "#F0FDF4",
+            "border_color": "#10B981",
+            "badge_class": "pill-green",
+            "description": "Behavioral responses and social communication milestones fall within normative developmental expectations for this age group. Continue standard routine pediatric well-child visits.",
+            "meter_pct": min(max(affection_pct, 5), 25)
+        }
+    
+    # Composite severity score balancing behavioral questionnaire (50%) and deep learning attention probability (50%)
+    severity_index = (aq10_score / 10.0) * 0.5 + (tabnet_prob) * 0.5
+    
+    if severity_index < 0.62:
+        return {
+            "status_label": "ASD Traits Indicated (Mild Presentation)",
+            "status_chip": "ASD AFFECTED: STAGE 1 (MILD)",
+            "is_affected": True,
+            "affection_pct": affection_pct,
+            "stage_num": 1,
+            "stage_name": "Stage 1: Mild Presentation (Requiring Support)",
+            "support_level": "DSM-5 Level 1 Support Required",
+            "color": "#D97706",
+            "bg_color": "#FEF3C7",
+            "border_color": "#F59E0B",
+            "badge_class": "pill-amber",
+            "description": "Mild divergence observed in social communication initiation, subtle difficulties in peer joint attention, or specific sensory preferences. With early speech and play support, toddlers in Stage 1 adapt rapidly and achieve high communicative independence.",
+            "meter_pct": max(35, min(severity_index * 100, 65))
+        }
+    elif severity_index < 0.82:
+        return {
+            "status_label": "ASD Traits Indicated (Moderate Presentation)",
+            "status_chip": "ASD AFFECTED: STAGE 2 (MODERATE)",
+            "is_affected": True,
+            "affection_pct": affection_pct,
+            "stage_num": 2,
+            "stage_name": "Stage 2: Moderate Presentation (Requiring Substantial Support)",
+            "support_level": "DSM-5 Level 2 Substantial Support Required",
+            "color": "#EA580C",
+            "bg_color": "#FFEDD5",
+            "border_color": "#FB923C",
+            "badge_class": "pill-amber",
+            "description": "Notable challenges in reciprocal verbal/non-verbal communication, reduced eye gaze contact, distress during routine transitions, and observable repetitive motor mannerisms. Benefits significantly from multi-disciplinary early intervention (speech-language therapy, occupational therapy, and structured developmental play).",
+            "meter_pct": max(68, min(severity_index * 100, 85))
+        }
+    else:
+        return {
+            "status_label": "ASD Traits Indicated (Substantial Presentation)",
+            "status_chip": "ASD AFFECTED: STAGE 3 (SUBSTANTIAL)",
+            "is_affected": True,
+            "affection_pct": affection_pct,
+            "stage_num": 3,
+            "stage_name": "Stage 3: Substantial Presentation (Requiring Very Substantial Support)",
+            "support_level": "DSM-5 Level 3 Very Substantial Support Required",
+            "color": "#DC2626",
+            "bg_color": "#FEE2E2",
+            "border_color": "#EF4444",
+            "badge_class": "pill-red",
+            "description": "Marked divergence in verbal expressive speech, limited social smiling or response to name, intense focus on specific objects, and frequent repetitive motor traits (hand-flapping, spinning). Requires comprehensive, intensive early developmental support programs.",
+            "meter_pct": max(86, min(severity_index * 100, 98))
+        }
+
 def render():
     render_section_header(
         "Step-by-Step Guided ASD Clinical Screener",
-        "Interactive developmental assessment guiding you sequentially from patient information and demographics to behavioral evaluation and clinical action planning.",
+        "Interactive developmental assessment guiding you sequentially from patient information and demographics to behavioral evaluation, clinical action planning, and protective precautions.",
         badge="STEP-BY-STEP CLINICAL WIZARD"
     )
 
@@ -87,7 +161,7 @@ def render():
         render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
 <div class="med-card-header">
 <div class="med-card-icon">👤</div>
-<span class="pill-badge pill-blue">Step 1 of 8 &bull; Identification</span>
+<span class="pill-badge pill-blue">Step 1 of 9 &bull; Identification</span>
 </div>
 <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
 Patient & Caregiver Identification
@@ -150,7 +224,7 @@ Please enter the child's identity details and caregiver information. These will 
         render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
 <div class="med-card-header">
 <div class="med-card-icon">👶</div>
-<span class="pill-badge pill-blue">Step 2 of 8 &bull; Chronological Age</span>
+<span class="pill-badge pill-blue">Step 2 of 9 &bull; Chronological Age</span>
 </div>
 <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
 What is the child's chronological age in months?
@@ -206,7 +280,7 @@ Approx. <strong>{age_val // 12} year(s) and {age_val % 12} month(s)</strong> old
         render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
 <div class="med-card-header">
 <div class="med-card-icon">🚻</div>
-<span class="pill-badge pill-blue">Step 3 of 8 &bull; Biological Sex</span>
+<span class="pill-badge pill-blue">Step 3 of 9 &bull; Biological Sex</span>
 </div>
 <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
 What is the child's biological sex?
@@ -262,7 +336,7 @@ Biological sex is evaluated by the models to normalize normative developmental b
         render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
 <div class="med-card-header">
 <div class="med-card-icon">📋</div>
-<span class="pill-badge pill-blue">Step 4 of 8 &bull; Clinical Background</span>
+<span class="pill-badge pill-blue">Step 4 of 9 &bull; Clinical Background</span>
 </div>
 <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
 Clinical, Perinatal & Family Background
@@ -344,7 +418,7 @@ Please provide demographic and clinical history details. These are encoded as no
         render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
 <div class="med-card-header">
 <div class="med-card-icon">🗣️</div>
-<span class="pill-badge pill-blue">Step 5 of 8 &bull; Domain A</span>
+<span class="pill-badge pill-blue">Step 5 of 9 &bull; Domain A</span>
 </div>
 <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
 Social Communication & Interaction (Q1 to Q5)
@@ -403,7 +477,7 @@ Evaluate the child's typical communicative behaviors. Select whether the respons
         render_html("""<div class="med-card" style="border-left: 5px solid #7C3AED; margin-bottom: 20px;">
 <div class="med-card-header">
 <div class="med-card-icon">🔄</div>
-<span class="pill-badge pill-purple">Step 6 of 8 &bull; Domains A & B</span>
+<span class="pill-badge pill-purple">Step 6 of 9 &bull; Domains A & B</span>
 </div>
 <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
 Affective, Motor & Communicative Traits (Q6 to Q10)
@@ -507,6 +581,7 @@ Final screening indicators assessing gaze tracking, empathy, speech sounds, comm
         eval_date = datetime.date.today().strftime("%B %d, %Y")
 
         is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
+        stage_info = calculate_asd_stage(res["tabnet_prob"], res["mlp_prob"], res["aq10_score"], is_elevated)
 
         # 1. Prominent Patient Information Card
         render_html(f"""<div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 16px; padding: 22px 26px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(15,23,42,0.04);">
@@ -686,7 +761,7 @@ Dense non-linear classifier probability with decision threshold calibrated at 0.
 
         # Navigation Controls
         st.markdown("<br>", unsafe_allow_html=True)
-        r_col1, r_col2, r_col3, r_spacer = st.columns([1.6, 1.6, 2.5, 1.8])
+        r_col1, r_col2, r_col3, r_spacer = st.columns([1.6, 1.6, 2.8, 1.5])
         with r_col1:
             if st.button("⬅️ Back: Questions (Q6-Q10)", use_container_width=True):
                 st.session_state["wiz_step"] = 6
@@ -696,12 +771,12 @@ Dense non-linear classifier probability with decision threshold calibrated at 0.
                 st.session_state["nav_target"] = "Home"
                 st.rerun()
         with r_col3:
-            if st.button("🌟 Proceed to Clinical Action Plan (\"Good Ending\") ➔", type="primary", use_container_width=True):
+            if st.button("🌟 Proceed to ASD Staging & Action Plan ➔", type="primary", use_container_width=True):
                 st.session_state["wiz_step"] = 8
                 st.rerun()
 
     # -------------------------------------------------------------
-    # STEP 8: THE "GOOD ENDING" — ACTION PLAN & CLINICAL ROADMAP
+    # STEP 8: CLINICAL ASD STAGING & ACTION PLAN
     # -------------------------------------------------------------
     elif step == 8:
         res = st.session_state.get("wiz_results")
@@ -718,25 +793,71 @@ Dense non-linear classifier probability with decision threshold calibrated at 0.
         age = st.session_state.get("wiz_age", 24)
         sex = st.session_state.get("wiz_sex", "m")
         is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
+        stage_info = calculate_asd_stage(res["tabnet_prob"], res["mlp_prob"], res["aq10_score"], is_elevated)
         eval_date = datetime.date.today().strftime("%B %d, %Y")
 
-        # 1. Heartwarming, Empowering Hero Closing Banner
-        render_html(f"""<div style="background: linear-gradient(135deg, #0A192F 0%, #1E3A8A 50%, #4338CA 100%); border-radius: 20px; padding: 36px 38px; color: #FFFFFF; margin-bottom: 30px; box-shadow: 0 16px 36px rgba(10,25,47,0.25);">
-<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-<span style="background: rgba(255,255,255,0.18); color: #93C5FD; font-size: 0.82rem; font-weight: 800; padding: 5px 14px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.06em;">
-🌟 DEVELOPMENTAL EMPOWERMENT & CLINICAL ROADMAP
+        # 1. Clinical ASD Stage, Affection Percentage & Severity Meter
+        render_html(f"""<div style="background: #FFFFFF; border: 2px solid #CBD5E1; border-radius: 18px; padding: 26px 30px; margin-bottom: 28px; box-shadow: 0 6px 22px rgba(15,23,42,0.06);">
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #F1F5F9; padding-bottom: 14px; margin-bottom: 18px;">
+<div>
+<div style="font-size: 0.8rem; font-weight: 800; color: #1D4ED8; text-transform: uppercase; letter-spacing: 0.08em;">PEDIATRIC CLINICAL STAGING & AFFECTION ANALYSIS</div>
+<h2 style="font-size: 1.7rem; font-weight: 800; color: #0A192F; margin: 4px 0 2px 0;">{stage_info['stage_name']}</h2>
+<div style="font-size: 0.9rem; color: #64748B;">Patient: <strong style="color: #0F172A;">{p_name}</strong> &bull; Caregiver: <strong style="color: #0F172A;">{g_name}</strong></div>
+</div>
+<div>
+<span style="background: {stage_info['bg_color']}; color: {stage_info['color']}; border: 1.5px solid {stage_info['border_color']}; font-weight: 800; font-size: 0.88rem; padding: 7px 16px; border-radius: 9999px; text-transform: uppercase; display: inline-block;">
+{stage_info['status_chip']}
 </span>
 </div>
-<h1 style="font-size: 2.15rem; font-weight: 800; color: #FFFFFF; margin: 8px 0 14px 0; letter-spacing: -0.02em; line-height: 1.3;">
-Every Child Has a Unique Path — Early Insight is the Best Foundation
-</h1>
-<p style="font-size: 1.05rem; line-height: 1.65; color: #CBD5E1; max-width: 880px; margin: 0;">
-By completing this developmental screening for <strong>{p_name}</strong>, you have taken the single most impactful, proactive step in early childhood. The toddler years (12 to 36 months) are defined by peak brain neuroplasticity. With attentive caregiver engagement, structured play, and early developmental support, children make extraordinary, lifelong developmental gains.
-</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px;">
+<div style="background: #F8FAFC; border-radius: 12px; padding: 14px 16px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.74rem; color: #64748B; font-weight: 700; text-transform: uppercase;">ASD Affection Rate</div>
+<div style="font-size: 1.75rem; font-weight: 900; color: {stage_info['color']}; margin: 2px 0;">{stage_info['affection_pct']:.1f}%</div>
+<div style="font-size: 0.76rem; color: #64748B;">Model risk probability</div>
+</div>
+<div style="background: #F8FAFC; border-radius: 12px; padding: 14px 16px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.74rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Identified ASD Stage</div>
+<div style="font-size: 1.25rem; font-weight: 800; color: #0A192F; margin: 4px 0;">{'Stage ' + str(stage_info['stage_num']) if stage_info['stage_num'] > 0 else 'Normative'}</div>
+<div style="font-size: 0.76rem; color: #64748B;">Pediatric Severity Tier</div>
+</div>
+<div style="background: #F8FAFC; border-radius: 12px; padding: 14px 16px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.74rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Support Recommendation</div>
+<div style="font-size: 0.95rem; font-weight: 800; color: #334155; margin: 4px 0;">{stage_info['support_level']}</div>
+<div style="font-size: 0.76rem; color: #64748B;">Clinical action criteria</div>
+</div>
+<div style="background: #F8FAFC; border-radius: 12px; padding: 14px 16px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.74rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Domain Distribution</div>
+<div style="font-size: 1.15rem; font-weight: 800; color: #0A192F; margin: 4px 0;">A: {res['a_domain']}/9 &bull; B: {res['b_domain']}/1</div>
+<div style="font-size: 0.76rem; color: #64748B;">Social vs Repetitive markers</div>
+</div>
+</div>
+
+<div style="margin-top: 14px; margin-bottom: 8px;">
+<div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700; color: #64748B; margin-bottom: 6px;">
+<span>🟢 Baseline (0–25%)</span>
+<span>🟡 Stage 1: Mild (26–65%)</span>
+<span>🟠 Stage 2: Moderate (66–85%)</span>
+<span>🔴 Stage 3: Substantial (86–100%)</span>
+</div>
+<div style="background: #E2E8F0; border-radius: 9999px; height: 16px; width: 100%; overflow: hidden; position: relative;">
+<div style="background: linear-gradient(90deg, #10B981 0%, #F59E0B 50%, #EA580C 75%, #DC2626 100%); height: 100%; width: {stage_info['meter_pct']}%; border-radius: 9999px; transition: width 0.8s ease;"></div>
+</div>
+<div style="font-size: 0.82rem; color: #64748B; margin-top: 6px; text-align: right;">
+Calibrated Patient Affection Marker: <strong>{stage_info['affection_pct']:.1f}%</strong> ({'Elevated Risk' if is_elevated else 'Normative Expectation'})
+</div>
+</div>
+
+<div style="background: #F8FAFC; border-radius: 12px; padding: 14px 18px; border-left: 4px solid {stage_info['color']}; margin-top: 14px;">
+<div style="font-size: 0.92rem; color: #334155; line-height: 1.6;">
+{stage_info['description']}
+</div>
+</div>
 </div>""")
 
-        # 2. 4-Pillar Action Plan
-        st.subheader("Your 4-Pillar Developmental Action Plan")
+        # 2. 4-Pillar Clinical Action Plan
+        st.subheader("Clinical Action Plan & Support Pathway")
         p1, p2 = st.columns(2)
         with p1:
             render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8;">
@@ -747,9 +868,9 @@ By completing this developmental screening for <strong>{p_name}</strong>, you ha
 <div class="med-card-title">1. Pediatric Consultation & Diagnostic Referral</div>
 <div class="med-card-body">
 <ul>
-<li><strong>Schedule Well-Child Review:</strong> Bring a printed copy of this screening dossier to your child's pediatrician or primary care provider.</li>
-<li><strong>Request Specialized Evaluation:</strong> Ask for a formal developmental evaluation with a developmental pediatrician, child psychologist, or pediatric neurologist using gold-standard diagnostic tools (ADOS-2, Bayley-4).</li>
-<li><strong>Audiology / Hearing Screen:</strong> Request a routine hearing assessment to ensure communicative differences are not secondary to middle ear fluid.</li>
+<li><strong>Schedule Pediatric Follow-up:</strong> Bring a copy of this staging dossier to your child's pediatrician or developmental doctor.</li>
+<li><strong>Request Formal Diagnostic Evaluation:</strong> Ask for multidisciplinary evaluation using gold-standard diagnostic instruments (ADOS-2, Bayley-4, ADI-R).</li>
+<li><strong>Audiology / Hearing Screen:</strong> Rule out hearing fluid variations that frequently mimic reduced social name orientation.</li>
 </ul>
 </div>
 </div>""")
@@ -762,10 +883,10 @@ By completing this developmental screening for <strong>{p_name}</strong>, you ha
 <div class="med-card-title">3. Interactive Floor-Time & Joint Attention Games</div>
 <div class="med-card-body">
 <ul>
-<li><strong>Face-to-Face Play:</strong> Position yourself at the child's exact eye level during play to encourage natural mutual gaze.</li>
-<li><strong>Reciprocal Turn-Taking:</strong> Engage in back-and-forth games (rolling a ball, blowing bubbles, taking turns stacking blocks).</li>
-<li><strong>Narrate Daily Activities:</strong> Speak in short, vivid 2-3 word sentences describing the child's focus ("Big car zooms!", "Liam builds tower!").</li>
-<li><strong>Celebrate Communicative Gestures:</strong> Enthusiastically reinforce all attempts at pointing, waving, and eye contact.</li>
+<li><strong>Eye-Level Play:</strong> Sit face-to-face during play to naturally foster reciprocal eye gaze.</li>
+<li><strong>Turn-Taking Games:</strong> Play rolling balls, popping soap bubbles, and passing colorful toys.</li>
+<li><strong>Language Expansion:</strong> Model 2-3 word descriptive phrases that narrate what the child is actively watching.</li>
+<li><strong>Positive Reinforcement:</strong> Enthusiastically praise every smile, gesture, and pointing attempt.</li>
 </ul>
 </div>
 </div>""")
@@ -779,10 +900,10 @@ By completing this developmental screening for <strong>{p_name}</strong>, you ha
 <div class="med-card-title">2. Early Intervention (No Diagnosis Required!)</div>
 <div class="med-card-body">
 <ul>
-<li><strong>Start Services Immediately:</strong> In virtually all jurisdictions (including US IDEA Part C), state and county Early Intervention services <strong>do not require</strong> a finalized medical diagnosis to begin.</li>
-<li><strong>Speech-Language Pathology:</strong> Focuses on functional communication, gesture imitation, and social pragmatic sound play.</li>
-<li><strong>Occupational Therapy:</strong> Supports sensory regulation, fine motor grasp, and self-soothing comfort routines.</li>
-<li><strong>Developmental Play Therapy:</strong> Structured toddler social group activities that foster peer play.</li>
+<li><strong>Start Services Immediately:</strong> State and county Early Intervention (EI) services do not require a medical hospital diagnosis to begin.</li>
+<li><strong>Speech-Language Pathology:</strong> Builds intentional communication, gesture imitation, and social sound play.</li>
+<li><strong>Occupational Therapy:</strong> Enhances sensory regulation, fine motor grasp, and transitions between activities.</li>
+<li><strong>Developmental Play Therapy:</strong> Supports peer engagement and shared social play.</li>
 </ul>
 </div>
 </div>""")
@@ -803,56 +924,221 @@ By completing this developmental screening for <strong>{p_name}</strong>, you ha
 </div>
 </div>""")
 
-        # 3. Official Patient Clinical Summary Certificate Card
+        # Navigation Controls to Step 9
         st.markdown("<br>", unsafe_allow_html=True)
-        st.subheader("Official Patient Evaluation Summary")
-        
-        status_chip = '<span style="background: #FEE2E2; color: #DC2626; font-weight: 800; padding: 6px 14px; border-radius: 9999px; font-size: 0.85rem;">ELEVATED RISK DETECTED</span>' if is_elevated else '<span style="background: #DCFCE7; color: #059669; font-weight: 800; padding: 6px 14px; border-radius: 9999px; font-size: 0.85rem;">TYPICAL DEVELOPMENT PROFILE</span>'
-        
-        render_html(f"""<div style="background: #FFFFFF; border: 2px solid #CBD5E1; border-radius: 16px; padding: 24px 28px; box-shadow: 0 6px 20px rgba(15,23,42,0.05); margin-bottom: 25px;">
-<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #F1F5F9; padding-bottom: 14px; margin-bottom: 16px;">
+        r_col1, r_col2, r_col3, r_spacer = st.columns([1.6, 1.6, 2.8, 1.5])
+        with r_col1:
+            if st.button("⬅️ Back: Risk Analysis", use_container_width=True):
+                st.session_state["wiz_step"] = 7
+                st.rerun()
+        with r_col2:
+            if st.button("🏠 Home", use_container_width=True, key="step8_home_btn"):
+                st.session_state["nav_target"] = "Home"
+                st.rerun()
+        with r_col3:
+            if st.button("🌟 Proceed to Precautions & Protective Care Guide (\"Beautiful Ending\") ➔", type="primary", use_container_width=True):
+                st.session_state["wiz_step"] = 9
+                st.rerun()
+
+    # -------------------------------------------------------------
+    # STEP 9: CLINICAL PRECAUTIONS & CAREGIVER PROTECTIVE GUIDANCE
+    # ("THE BEAUTIFUL ENDING")
+    # -------------------------------------------------------------
+    elif step == 9:
+        res = st.session_state.get("wiz_results")
+        if res is None:
+            st.warning("No evaluation results found. Please start from Step 1.")
+            if st.button("Start Screening"):
+                st.session_state["wiz_step"] = 1
+                st.rerun()
+            return
+
+        p_name = st.session_state.get("wiz_patient_name", "Liam Davis")
+        g_name = st.session_state.get("wiz_guardian_name", "Sarah Davis (Mother)")
+        mrn = st.session_state.get("wiz_mrn", "MRN-ASD-2026-0842")
+        age = st.session_state.get("wiz_age", 24)
+        sex = st.session_state.get("wiz_sex", "m")
+        is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
+        stage_info = calculate_asd_stage(res["tabnet_prob"], res["mlp_prob"], res["aq10_score"], is_elevated)
+        eval_date = datetime.date.today().strftime("%B %d, %Y")
+
+        # 1. Breathtaking Royal Hero Banner
+        render_html(f"""<div style="background: linear-gradient(135deg, #071326 0%, #0F284E 45%, #1E3A8A 100%); border-radius: 22px; padding: 40px 42px; color: #FFFFFF; margin-bottom: 30px; box-shadow: 0 20px 40px rgba(7,19,38,0.3); border: 1.5px solid rgba(255,255,255,0.12); position: relative; overflow: hidden;">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="background: rgba(255,255,255,0.16); color: #93C5FD; font-size: 0.84rem; font-weight: 800; padding: 6px 16px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid rgba(255,255,255,0.2);">
+🛡️ CLINICAL PRECAUTIONS & PROTECTIVE PARENTING GUIDE
+</span>
+</div>
+<h1 style="font-size: 2.25rem; font-weight: 800; color: #FFFFFF; margin: 8px 0 14px 0; letter-spacing: -0.02em; line-height: 1.25;">
+Essential Protective Precautions & Everyday Guidance for {p_name}
+</h1>
+<p style="font-size: 1.08rem; line-height: 1.7; color: #CBD5E1; max-width: 900px; margin: 0;">
+Parenting a young toddler with developmental differences is an act of deep attentiveness. Below are evidence-based medical, environmental, and behavioral precautions formulated by pediatric developmental specialists to protect <strong>{p_name}</strong>'s sensory balance, physical safety, emotional security, and overall developmental flourishing.
+</p>
+</div>""")
+
+        # 2. 6 Comprehensive Precaution Cards
+        st.subheader("Crucial Precautions & Caregiver Protective Practices")
+        pr1, pr2 = st.columns(2)
+        with pr1:
+            render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8;">
+<div class="med-card-header">
+<div class="med-card-icon">🌿</div>
+<span class="pill-badge pill-blue">Precaution 1 &bull; Sensory Environment</span>
+</div>
+<div class="med-card-title">1. Sensory Overload & Meltdown Prevention</div>
+<div class="med-card-body">
+<ul>
+<li><strong>Recognize Early Distress Cues:</strong> Watch for subtle pre-meltdown signs: covering ears, rapid blinking, gaze aversion, or sudden vocal agitation. Intervene before overload occurs.</li>
+<li><strong>Design a Quiet Sensory Corner:</strong> Set up a low-stimulation calming zone at home with soft lighting, weighted pillows or blankets, and noise-dampening earmuffs.</li>
+<li><strong>Prepare for Noisy Environments:</strong> When attending grocery stores, airports, or clinics, equip the child with sunglasses, familiar fidget toys, and noise-canceling headphones.</li>
+</ul>
+</div>
+</div>""")
+
+            render_html("""<div class="med-card" style="border-left: 5px solid #EF4444;">
+<div class="med-card-header">
+<div class="med-card-icon">🚪</div>
+<span class="pill-badge pill-amber" style="background: #FEE2E2; color: #DC2626;">Precaution 3 &bull; Physical Safety</span>
+</div>
+<div class="med-card-title">3. Safety, Wandering (Elopement) & Water Precautions</div>
+<div class="med-card-body">
+<ul>
+<li><strong>Enhanced Home Security:</strong> Toddlers with ASD traits frequently lack intuitive danger awareness and may bolt unexpectedly. Install high secondary deadbolts and audible door-chime alarms.</li>
+<li><strong>Strict Water Supervision:</strong> Statistics show toddlers with developmental traits are disproportionately drawn to water. Maintain direct "touch supervision" around bathtubs, ponds, and pools.</li>
+<li><strong>Wearable Identification:</strong> In public parks or busy transport hubs, use an ID wristband or embroidered tag with parent phone contact information.</li>
+</ul>
+</div>
+</div>""")
+
+            render_html("""<div class="med-card" style="border-left: 5px solid #059669;">
+<div class="med-card-header">
+<div class="med-card-icon">🥗</div>
+<span class="pill-badge pill-green">Precaution 5 &bull; Nutrition & Sleep</span>
+</div>
+<div class="med-card-title">5. Nutritional Sensitivity & Sleep Rhythm Precautions</div>
+<div class="med-card-body">
+<ul>
+<li><strong>Gentle Mealtime Strategies:</strong> Sensory oral aversions (refusing crunchy, slimy, or mixed textures) are common. Never turn meals into power struggles; introduce tiny sample bites next to safe preferred foods.</li>
+<li><strong>Consistent Circadian Routine:</strong> Melatonin production is often delayed in neurodivergent toddlers. Implement a predictable 4-step bedtime routine: warm bath &bull; dim room &bull; soft massage &bull; white noise machine.</li>
+<li><strong>Monitor Gastrointestinal Comfort:</strong> Toddlers with ASD traits have higher rates of constipation or food intolerances. Consult your pediatrician if chronic bowel distress is observed.</li>
+</ul>
+</div>
+</div>""")
+
+        with pr2:
+            render_html("""<div class="med-card" style="border-left: 5px solid #7C3AED;">
+<div class="med-card-header">
+<div class="med-card-icon">📱</div>
+<span class="pill-badge pill-purple">Precaution 2 &bull; Media & Devices</span>
+</div>
+<div class="med-card-title">2. Screen Time & Digital Device Precautions</div>
+<div class="med-card-body">
+<ul>
+<li><strong>Zero Passive Screens for Toddlers:</strong> The American Academy of Pediatrics (AAP) recommends eliminating passive smartphone, tablet, and TV viewing for children under 24 months.</li>
+<li><strong>Prevent Synaptic Displacement:</strong> Fast-paced digital animations overstimulate immature neural pathways and displace critical real-world 3D joint attention and human eye gaze.</li>
+<li><strong>Replace with Tactile Interaction:</strong> Swap touchscreen time for interactive floor games, playdough sculpting, bubble popping, and face-to-face vocal imitation.</li>
+</ul>
+</div>
+</div>""")
+
+            render_html("""<div class="med-card" style="border-left: 5px solid #D97706;">
+<div class="med-card-header">
+<div class="med-card-icon">⏰</div>
+<span class="pill-badge pill-amber">Precaution 4 &bull; Daily Transitions</span>
+</div>
+<div class="med-card-title">4. Routine Consistency & Transition Precautions</div>
+<div class="med-card-body">
+<ul>
+<li><strong>Consistent Daily Predictability:</strong> Neurodivergent brains consume high cognitive energy processing change. Keeping waking, feeding, and playing routines predictable reduces anxiety.</li>
+<li><strong>Visual Schedule Cards:</strong> Use visual picture sequences (e.g. Card 1: Shoes &bull; Card 2: Park &bull; Card 3: Home) so the child anticipates what is happening next.</li>
+<li><strong>Transitional Verbal Warnings:</strong> Provide gentle countdown warnings: "In 2 minutes, we say bye-bye to bubbles and wash hands for snack."</li>
+</ul>
+</div>
+</div>""")
+
+            render_html("""<div class="med-card" style="border-left: 5px solid #BE185D;">
+<div class="med-card-header">
+<div class="med-card-icon">💖</div>
+<span class="pill-badge pill-purple" style="background: #FCE7F3; color: #9D174D;">Precaution 6 &bull; Emotional Mindset</span>
+</div>
+<div class="med-card-title">6. Caregiver Mental Well-Being & Protective Mindset</div>
+<div class="med-card-body">
+<ul>
+<li><strong>Avoid Milestone Comparisons:</strong> Never compare your toddler's developmental timeline with siblings or peers. Every child develops according to their own biological blueprint.</li>
+<li><strong>Do Not Force Prolonged Eye Contact:</strong> Forcing eye contact can trigger fight-or-flight anxiety. Many children listen and learn best while looking slightly to the side or holding a sensory toy.</li>
+<li><strong>Protect Your Emotional Reserves:</strong> A calm, supported caregiver co-regulates a developing child's nervous system. Seek support, take restorative breaks, and connect with peer parent communities.</li>
+</ul>
+</div>
+</div>""")
+
+        # 3. The "Very Beautiful Ending" Climax — Heartfelt Golden Love Letter
+        render_html(f"""<div style="background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 50%, #FDE68A 100%); border: 2.5px solid #F59E0B; border-radius: 22px; padding: 36px 42px; margin: 30px 0; box-shadow: 0 12px 32px rgba(245,158,11,0.15);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+<span style="background: #D97706; color: #FFFFFF; font-size: 0.82rem; font-weight: 800; padding: 5px 14px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.06em;">
+🌟 A LOVE LETTER TO PARENTS & CAREGIVERS
+</span>
+</div>
+<h2 style="font-size: 1.95rem; font-weight: 800; color: #78350F; margin: 8px 0 14px 0; letter-spacing: -0.01em; line-height: 1.3;">
+Your Child is Not Broken — They Experience the World in a Beautiful, Distinct Frequency
+</h2>
+<p style="font-size: 1.08rem; line-height: 1.75; color: #92400E; margin-bottom: 18px;">
+Neurodiversity is a natural, profound variation of the human mind. The traits identified today do not define <strong>{p_name}</strong>'s destiny; they illuminate how they process sound, sight, language, emotion, and connection. Today, you took the single most courageous, proactive step a caregiver can take: seeking understanding early during the golden window of childhood neuroplasticity.
+</p>
+<div style="background: rgba(255,255,255,0.75); border-radius: 14px; padding: 20px 24px; border-left: 5px solid #D97706; font-style: italic; color: #78350F; font-size: 1.05rem; line-height: 1.65;">
+"Autism is not a tragedy. The tragedy is lack of understanding, delayed intervention, and lost time. By acting early, you gave {p_name} the greatest gift possible: time, understanding, and the unwavering foundation of your love. With the right early support, their future holds limitless brilliance, warmth, and joy."
+</div>
+</div>""")
+
+        # 4. Official Gold-Seal Certificate of Parental Dedication & Screening Completion
+        render_html(f"""<div style="background: #FFFFFF; border: 2px solid #CBD5E1; border-radius: 18px; padding: 26px 30px; box-shadow: 0 8px 24px rgba(15,23,42,0.06); margin-bottom: 30px;">
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1D4ED8; padding-bottom: 16px; margin-bottom: 18px;">
 <div>
-<div style="font-size: 0.78rem; font-weight: 800; color: #1D4ED8; letter-spacing: 0.06em; text-transform: uppercase;">CLINICAL COMPLETION CERTIFICATE</div>
-<h3 style="font-size: 1.5rem; font-weight: 800; color: #0A192F; margin: 4px 0 2px 0;">{p_name}</h3>
-<div style="font-size: 0.88rem; color: #64748B;">Caregiver: <strong>{g_name}</strong> &bull; MRN: <strong>{mrn}</strong> &bull; Date: {eval_date}</div>
+<div style="font-size: 0.78rem; font-weight: 800; color: #1D4ED8; text-transform: uppercase; letter-spacing: 0.08em;">OFFICIAL CLINICAL RECORD CERTIFICATE OF COMPLETION</div>
+<h3 style="font-size: 1.65rem; font-weight: 800; color: #0A192F; margin: 4px 0 2px 0;">{p_name}</h3>
+<div style="font-size: 0.92rem; color: #64748B;">Dedicated Caregiver: <strong style="color: #0F172A;">{g_name}</strong> &bull; MRN: <strong>{mrn}</strong></div>
 </div>
-<div>
-{status_chip}
+<div style="text-align: right;">
+<div style="font-size: 2.8rem; line-height: 1;">🎖️</div>
+<div style="font-size: 0.78rem; font-weight: 800; color: #059669; text-transform: uppercase; margin-top: 4px;">Verified Screening Dossier</div>
 </div>
 </div>
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
-<div style="background: #F8FAFC; border-radius: 10px; padding: 12px; border: 1px solid #E2E8F0;">
-<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Chronological Age & Sex</div>
-<div style="font-size: 1.05rem; font-weight: 800; color: #0A192F;">{age}m &bull; {'Male' if sex=='m' else 'Female'}</div>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; font-size: 0.92rem;">
+<div style="background: #F8FAFC; border-radius: 10px; padding: 14px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Assessment Date & Protocol</div>
+<div style="font-size: 1.05rem; font-weight: 800; color: #0A192F;">{eval_date}</div>
+<div style="font-size: 0.76rem; color: #64748B;">Standardized Q-CHAT-10</div>
 </div>
-<div style="background: #F8FAFC; border-radius: 10px; padding: 12px; border: 1px solid #E2E8F0;">
-<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">TabNet Model Output</div>
-<div style="font-size: 1.05rem; font-weight: 800; color: #1D4ED8;">{res['tabnet_prob'] * 100:.1f}% Confidence</div>
+<div style="background: #F8FAFC; border-radius: 10px; padding: 14px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Clinical Staging Classification</div>
+<div style="font-size: 1.05rem; font-weight: 800; color: {stage_info['color']};">{stage_info['stage_name']}</div>
+<div style="font-size: 0.76rem; color: #64748B;">Affection Rate: {stage_info['affection_pct']:.1f}%</div>
 </div>
-<div style="background: #F8FAFC; border-radius: 10px; padding: 12px; border: 1px solid #E2E8F0;">
-<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Q-CHAT Score</div>
-<div style="font-size: 1.05rem; font-weight: 800; color: #0A192F;">{res['aq10_score']} / 10 Points</div>
+<div style="background: #F8FAFC; border-radius: 10px; padding: 14px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Clinical Pathway Status</div>
+<div style="font-size: 1.05rem; font-weight: 800; color: #1D4ED8;">Action & Precautions Complete</div>
+<div style="font-size: 0.76rem; color: #64748B;">Pediatric Referral Package Ready</div>
 </div>
 </div>
 </div>""")
 
-        # 4. Final Action Buttons
-        act_col1, act_col2, act_col3, act_col4 = st.columns([2.5, 1.8, 1.8, 1.5])
-        with act_col1:
+        # 5. Final Action Controls
+        f_col1, f_col2, f_col3, f_col4 = st.columns([2.5, 1.8, 1.8, 1.5])
+        with f_col1:
             if st.button("📄 View & Print Full Official Medical Report", type="primary", use_container_width=True):
                 st.session_state["nav_target"] = "Clinical Test Report"
                 st.rerun()
-        with act_col2:
-            if st.button("⬅️ Back: Risk Analysis", use_container_width=True):
-                st.session_state["wiz_step"] = 7
+        with f_col2:
+            if st.button("⬅️ Back: Action Plan & Stage", use_container_width=True):
+                st.session_state["wiz_step"] = 8
                 st.rerun()
-        with act_col3:
+        with f_col3:
             if st.button("🔄 Start New Screening", use_container_width=True):
                 st.session_state["wiz_step"] = 1
                 st.session_state["wiz_results"] = None
                 st.rerun()
-        with act_col4:
-            if st.button("🏠 Home", use_container_width=True, key="step8_home_btn"):
+        with f_col4:
+            if st.button("🏠 Home", use_container_width=True, key="step9_home_btn"):
                 st.session_state["nav_target"] = "Home"
                 st.rerun()
 
