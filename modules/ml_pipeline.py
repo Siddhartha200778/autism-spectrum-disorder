@@ -1,5 +1,7 @@
 import io
 import os
+import joblib
+import streamlit as st
 import torch
 import numpy as np
 import pandas as pd
@@ -12,6 +14,13 @@ from sklearn.metrics import (
 from sklearn.neural_network import MLPClassifier
 from pytorch_tabnet.tab_model import TabNetClassifier
 from imblearn.over_sampling import SMOTE
+
+# Limit PyTorch CPU threads to 1 to prevent CPU starvation and throttling on Streamlit Cloud
+try:
+    torch.set_num_threads(1)
+    torch.set_num_interop_threads(1)
+except Exception:
+    pass
 
 def load_dataset_from_bytes(file_bytes, filename=""):
     """Loads a dataset from raw bytes, handling CSV, XLS, XLSX formats."""
@@ -31,14 +40,45 @@ def load_dataset_from_bytes(file_bytes, filename=""):
     data.columns = data.columns.str.strip()
     return data
 
+@st.cache_data(show_spinner=False)
 def load_default_dataset():
     """Loads the benchmark research toddler ASD dataset included in the repo."""
-    for default_path in ["toddler_asd_dataset.csv", "dl dataset.xls"]:
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for default_name in ["toddler_asd_dataset.csv", "dl dataset.xls"]:
+        default_path = os.path.join(base_dir, default_name)
+        if not os.path.exists(default_path):
+            default_path = default_name
         if os.path.exists(default_path):
             with open(default_path, "rb") as f:
                 bytes_data = f.read()
-            return load_dataset_from_bytes(bytes_data, default_path)
+            return load_dataset_from_bytes(bytes_data, default_name)
     return None
+
+@st.cache_resource(show_spinner=False)
+def get_benchmark_models_and_data():
+    """
+    Loads pre-trained TabNet and MLP models and preprocessed data.
+    Loads instantly from cached_models.joblib in < 1 second with 0% CPU overhead,
+    preventing Streamlit Cloud resource throttling.
+    """
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    cache_path = os.path.join(base_dir, "cached_models.joblib")
+    if not os.path.exists(cache_path):
+        cache_path = "cached_models.joblib"
+        
+    if os.path.exists(cache_path):
+        try:
+            bundle = joblib.load(cache_path)
+            return bundle.get("prep"), bundle.get("models")
+        except Exception:
+            pass
+
+    raw_df = load_default_dataset()
+    if raw_df is not None:
+        prep = preprocess_and_prepare(raw_df)
+        models = train_models_pipeline(prep)
+        return prep, models
+    return None, None
 
 def preprocess_and_prepare(raw_df):
     """

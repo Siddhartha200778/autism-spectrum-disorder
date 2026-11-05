@@ -2,7 +2,12 @@ import streamlit as st
 import os
 
 from modules.theme import inject_custom_css, render_footer, render_html
-from modules.ml_pipeline import load_default_dataset, preprocess_and_prepare, train_models_pipeline
+from modules.ml_pipeline import (
+    load_default_dataset,
+    preprocess_and_prepare,
+    train_models_pipeline,
+    get_benchmark_models_and_data
+)
 
 # Page Configuration
 st.set_page_config(
@@ -59,24 +64,23 @@ PAGE_ICONS = {
     "Contact": "📬"
 }
 
-# Auto-initialize Session State and Benchmark Dataset
-if "raw_dataset" not in st.session_state or st.session_state["raw_dataset"] is None:
-    raw_df = load_default_dataset()
-    if raw_df is not None:
-        st.session_state["raw_dataset"] = raw_df
-        st.session_state["dataset_source"] = "Toddler ASD Dataset (toddler_asd_dataset.csv)"
-        st.session_state["dataset_size"] = f"{raw_df.shape[0]:,} records &bull; 71.2 KB"
+# Auto-initialize Pre-trained Models and Benchmark Dataset (Cached across all sessions)
+cached_prep, cached_models = get_benchmark_models_and_data()
 
-if "models_result" not in st.session_state and "raw_dataset" in st.session_state and st.session_state["raw_dataset"] is not None:
-    with st.spinner("Initializing TabNet & MLP models on benchmark dataset..."):
-        try:
-            prep = preprocess_and_prepare(st.session_state["raw_dataset"])
-            models_trained = train_models_pipeline(prep)
-            st.session_state["prepared_data"] = prep
-            st.session_state["models_result"] = models_trained
-            st.session_state["data_preprocessed"] = True
-        except Exception as e:
-            st.warning(f"Note: Model training ready on user request ({e})")
+if "raw_dataset" not in st.session_state or st.session_state["raw_dataset"] is None:
+    if cached_prep is not None and "raw_df" in cached_prep:
+        st.session_state["raw_dataset"] = cached_prep["raw_df"]
+    else:
+        st.session_state["raw_dataset"] = load_default_dataset()
+    st.session_state["dataset_source"] = "Toddler ASD Dataset (toddler_asd_dataset.csv)"
+    st.session_state["dataset_size"] = "1,054 records &bull; 71.2 KB"
+
+if "prepared_data" not in st.session_state and cached_prep is not None:
+    st.session_state["prepared_data"] = cached_prep
+
+if "models_result" not in st.session_state and cached_models is not None:
+    st.session_state["models_result"] = cached_models
+    st.session_state["data_preprocessed"] = True
 
 # Sidebar Branding & Navigation
 with st.sidebar:
