@@ -27,16 +27,16 @@ def render():
 
     with up_col2:
         st.write("**Or use the built-in research dataset:**")
-        if st.button("📁 Load Benchmark Dataset", use_container_width=True, help="Loads dl dataset.xls (1,054 toddler records)"):
+        if st.button("📁 Load Benchmark Dataset", use_container_width=True, help="Loads toddler_asd_dataset.csv (1,054 toddler records)"):
             with st.spinner("Loading benchmark dataset..."):
                 raw_df = load_default_dataset()
                 if raw_df is not None:
                     st.session_state["raw_dataset"] = raw_df
-                    st.session_state["dataset_source"] = "Benchmark Research Dataset (dl dataset.xls)"
-                    st.session_state["dataset_size"] = "71.2 KB"
+                    st.session_state["dataset_source"] = "Toddler ASD Screening Dataset (toddler_asd_dataset.csv)"
+                    st.session_state["dataset_size"] = f"{raw_df.shape[0]:,} records &bull; 71.2 KB"
                     # Reset models to trigger retraining
                     st.session_state["data_preprocessed"] = False
-                    st.success("Loaded benchmark dataset successfully!")
+                    st.success("Loaded Toddler ASD dataset successfully!")
                     st.rerun()
 
     # Process uploaded file if provided

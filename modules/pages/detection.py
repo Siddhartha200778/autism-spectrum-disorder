@@ -4,30 +4,49 @@ import datetime
 from modules.theme import render_section_header, render_disclaimer, render_html
 from modules.ml_pipeline import run_single_patient_inference
 
-def init_wizard_state():
-    """Initializes session state for the step-by-step screening wizard."""
+def init_wizard_state(reset=False):
+    """Initializes session state for the step-by-step screening wizard without pre-filling user answers."""
+    if reset:
+        st.session_state["wiz_step"] = 1
+        st.session_state["wiz_patient_name"] = ""
+        st.session_state["wiz_guardian_name"] = ""
+        st.session_state["wiz_mrn"] = "MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01"
+        st.session_state["wiz_age"] = 24
+        st.session_state["wiz_sex"] = None
+        st.session_state["wiz_ethnicity"] = None
+        st.session_state["wiz_jaundice"] = None
+        st.session_state["wiz_family_asd"] = None
+        st.session_state["wiz_screener"] = None
+        st.session_state["wiz_q"] = {f"Q{i}": None for i in range(1, 11)}
+        st.session_state["wiz_results"] = None
+        for i in range(1, 11):
+            st.session_state.pop(f"radio_Q{i}", None)
+        st.session_state.pop("radio_jaundice", None)
+        st.session_state.pop("radio_family_asd", None)
+        return
+
     if "wiz_step" not in st.session_state:
         st.session_state["wiz_step"] = 1
     if "wiz_patient_name" not in st.session_state:
-        st.session_state["wiz_patient_name"] = "Liam Davis"
+        st.session_state["wiz_patient_name"] = ""
     if "wiz_guardian_name" not in st.session_state:
-        st.session_state["wiz_guardian_name"] = "Sarah Davis (Mother)"
+        st.session_state["wiz_guardian_name"] = ""
     if "wiz_mrn" not in st.session_state:
         st.session_state["wiz_mrn"] = "MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01"
     if "wiz_age" not in st.session_state:
         st.session_state["wiz_age"] = 24
     if "wiz_sex" not in st.session_state:
-        st.session_state["wiz_sex"] = "m"
+        st.session_state["wiz_sex"] = None
     if "wiz_ethnicity" not in st.session_state:
-        st.session_state["wiz_ethnicity"] = "White-European"
+        st.session_state["wiz_ethnicity"] = None
     if "wiz_jaundice" not in st.session_state:
-        st.session_state["wiz_jaundice"] = "no"
+        st.session_state["wiz_jaundice"] = None
     if "wiz_family_asd" not in st.session_state:
-        st.session_state["wiz_family_asd"] = "no"
+        st.session_state["wiz_family_asd"] = None
     if "wiz_screener" not in st.session_state:
-        st.session_state["wiz_screener"] = "family member"
+        st.session_state["wiz_screener"] = None
     if "wiz_q" not in st.session_state:
-        st.session_state["wiz_q"] = {f"Q{i}": 0 for i in range(1, 11)}
+        st.session_state["wiz_q"] = {f"Q{i}": None for i in range(1, 11)}
     if "wiz_results" not in st.session_state:
         st.session_state["wiz_results"] = None
 
@@ -173,32 +192,32 @@ Please enter the child's identity details and caregiver information. These will 
 
         c1, c2 = st.columns(2)
         with c1:
-            render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Child's Full Name / Identifier:</p>")
+            render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Child's Full Name / Identifier (Optional):</p>")
             p_name = st.text_input(
                 "Child's Full Name / Identifier:",
-                value=st.session_state["wiz_patient_name"],
-                placeholder="e.g. Liam Davis",
+                value=st.session_state.get("wiz_patient_name", ""),
+                placeholder="Enter child's full name (leave blank if preferred)...",
                 label_visibility="collapsed"
             )
-            st.session_state["wiz_patient_name"] = p_name.strip() if p_name.strip() else "Liam Davis"
+            st.session_state["wiz_patient_name"] = p_name.strip()
 
-            render_html("<div style='margin-top: 14px;'></div><p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Medical Record Number (MRN) / Evaluation ID:</p>")
+            render_html("<div style='margin-top: 14px;'></div><p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Medical Record Number (MRN) / Evaluation ID (Auto-Generated):</p>")
             mrn_val = st.text_input(
                 "MRN / Evaluation ID:",
-                value=st.session_state["wiz_mrn"],
+                value=st.session_state.get("wiz_mrn", "MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01"),
                 label_visibility="collapsed"
             )
-            st.session_state["wiz_mrn"] = mrn_val.strip() if mrn_val.strip() else "MRN-ASD-2026-0842"
+            st.session_state["wiz_mrn"] = mrn_val.strip() if mrn_val.strip() else ("MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01")
 
         with c2:
-            render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Parent / Guardian Name:</p>")
+            render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Parent / Guardian Name (Optional):</p>")
             g_name = st.text_input(
                 "Parent / Guardian Name:",
-                value=st.session_state["wiz_guardian_name"],
-                placeholder="e.g. Sarah Davis (Mother)",
+                value=st.session_state.get("wiz_guardian_name", ""),
+                placeholder="Enter parent or guardian name...",
                 label_visibility="collapsed"
             )
-            st.session_state["wiz_guardian_name"] = g_name.strip() if g_name.strip() else "Sarah Davis (Mother)"
+            st.session_state["wiz_guardian_name"] = g_name.strip()
 
             render_html("""<div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 14px 18px; margin-top: 18px;">
 <div style="font-size: 0.78rem; font-weight: 700; color: #1D4ED8; text-transform: uppercase;">Assessment Protocol</div>
@@ -242,7 +261,7 @@ This period represents the golden developmental window of maximal neural plastic
                 "Select Child's Age (in Months):",
                 min_value=12,
                 max_value=36,
-                value=int(st.session_state["wiz_age"]),
+                value=int(st.session_state.get("wiz_age", 24)),
                 step=1,
                 label_visibility="collapsed",
                 help="Select the exact age in months of the child at the time of screening."
@@ -291,26 +310,26 @@ Biological sex is evaluated by the models to normalize normative developmental b
 </div>""")
 
         c_sex1, c_sex2 = st.columns(2)
-        curr_sex = st.session_state["wiz_sex"]
+        curr_sex = st.session_state.get("wiz_sex")
         with c_sex1:
             is_male = (curr_sex == "m")
-            render_html(f"""<div style="border: 2px solid {'#1D4ED8' if is_male else '#E2E8F0'}; background: {'#EFF6FF' if is_male else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center;">
+            render_html(f"""<div style="border: 2px solid {'#1D4ED8' if is_male else '#CBD5E1'}; background: {'#EFF6FF' if is_male else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center; transition: all 0.2s ease;">
 <div style="font-size: 2.5rem; margin-bottom: 6px;">👦</div>
-<div style="font-size: 1.25rem; font-weight: 800; color: #0A192F;">Male</div>
+<div style="font-size: 1.25rem; font-weight: 800; color: {'#1D4ED8' if is_male else '#0A192F'};">Male</div>
 <div style="font-size: 0.82rem; color: #64748B; margin-top: 4px;">Biological Male</div>
 </div>""")
-            if st.button("Select Male", use_container_width=True, type="primary" if is_male else "secondary"):
+            if st.button("Select Male", use_container_width=True, type="primary" if is_male else "secondary", key="btn_sex_male"):
                 st.session_state["wiz_sex"] = "m"
                 st.rerun()
 
         with c_sex2:
             is_female = (curr_sex == "f")
-            render_html(f"""<div style="border: 2px solid {'#1D4ED8' if is_female else '#E2E8F0'}; background: {'#EFF6FF' if is_female else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center;">
+            render_html(f"""<div style="border: 2px solid {'#1D4ED8' if is_female else '#CBD5E1'}; background: {'#EFF6FF' if is_female else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center; transition: all 0.2s ease;">
 <div style="font-size: 2.5rem; margin-bottom: 6px;">👧</div>
-<div style="font-size: 1.25rem; font-weight: 800; color: #0A192F;">Female</div>
+<div style="font-size: 1.25rem; font-weight: 800; color: {'#1D4ED8' if is_female else '#0A192F'};">Female</div>
 <div style="font-size: 0.82rem; color: #64748B; margin-top: 4px;">Biological Female</div>
 </div>""")
-            if st.button("Select Female", use_container_width=True, type="primary" if is_female else "secondary"):
+            if st.button("Select Female", use_container_width=True, type="primary" if is_female else "secondary", key="btn_sex_female"):
                 st.session_state["wiz_sex"] = "f"
                 st.rerun()
 
@@ -326,8 +345,11 @@ Biological sex is evaluated by the models to normalize normative developmental b
                 st.rerun()
         with nav_col3:
             if st.button("Next: Clinical History ➔", type="primary", use_container_width=True):
-                st.session_state["wiz_step"] = 4
-                st.rerun()
+                if st.session_state.get("wiz_sex") is None:
+                    st.warning("⚠️ Please select the child's biological sex (Male or Female) before proceeding.")
+                else:
+                    st.session_state["wiz_step"] = 4
+                    st.rerun()
 
     # -------------------------------------------------------------
     # STEP 4: CLINICAL & PERINATAL BACKGROUND
@@ -342,7 +364,7 @@ Biological sex is evaluated by the models to normalize normative developmental b
 Clinical, Perinatal & Family Background
 </div>
 <div class="med-card-body" style="font-size: 1rem; color: #475569;">
-Please provide demographic and clinical history details. These are encoded as non-linear priors by TabNet and MLP neural networks.
+Please select demographic and clinical history details. These are encoded as non-linear priors by TabNet and MLP neural networks.
 </div>
 </div>""")
 
@@ -350,51 +372,62 @@ Please provide demographic and clinical history details. These are encoded as no
         with col1:
             render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Ethnicity / Cultural Background:</p>")
             eth_options = [
+                "-- Select Ethnicity --",
                 "White-European", "Asian", "Middle Eastern", "black",
                 "South Asian", "Hispanic", "Latino", "mixed", "others"
             ]
-            current_eth = st.session_state["wiz_ethnicity"]
+            current_eth = st.session_state.get("wiz_ethnicity")
             eth_idx = eth_options.index(current_eth) if current_eth in eth_options else 0
-            st.session_state["wiz_ethnicity"] = st.selectbox(
+            selected_eth = st.selectbox(
                 "Ethnicity:",
                 options=eth_options,
                 index=eth_idx,
-                format_func=lambda x: x.title(),
+                format_func=lambda x: x.title() if x != "-- Select Ethnicity --" else x,
                 label_visibility="collapsed"
             )
+            st.session_state["wiz_ethnicity"] = selected_eth if selected_eth != "-- Select Ethnicity --" else None
 
             render_html("<div style='margin-top: 14px;'></div><p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Who is completing this screening questionnaire?</p>")
-            screener_options = ["family member", "Health Care Professional", "Others"]
-            curr_scr = st.session_state["wiz_screener"]
+            screener_options = ["-- Select Screener --", "family member", "Health Care Professional", "Others"]
+            curr_scr = st.session_state.get("wiz_screener")
             scr_idx = screener_options.index(curr_scr) if curr_scr in screener_options else 0
-            st.session_state["wiz_screener"] = st.selectbox(
+            selected_scr = st.selectbox(
                 "Who is completing this screening questionnaire?",
                 options=screener_options,
                 index=scr_idx,
-                format_func=lambda x: x.title(),
+                format_func=lambda x: x.title() if x != "-- Select Screener --" else x,
                 label_visibility="collapsed"
             )
+            st.session_state["wiz_screener"] = selected_scr if selected_scr != "-- Select Screener --" else None
 
         with col2:
             render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Was the child born with neonatal jaundice?</p>")
-            st.session_state["wiz_jaundice"] = st.radio(
+            curr_j = st.session_state.get("wiz_jaundice")
+            j_idx = ["no", "yes"].index(curr_j) if curr_j in ["no", "yes"] else None
+            j_choice = st.radio(
                 "Was the child born with neonatal jaundice?",
                 options=["no", "yes"],
-                index=0 if st.session_state["wiz_jaundice"] == "no" else 1,
+                index=j_idx,
                 horizontal=True,
-                format_func=lambda x: "Yes (Jaundice diagnosed)" if x == "yes" else "No",
+                format_func=lambda x: "Yes (Jaundice diagnosed)" if x == "yes" else "No (Typical birth)",
+                key="radio_jaundice",
                 label_visibility="collapsed"
             )
+            st.session_state["wiz_jaundice"] = j_choice
 
             render_html("<div style='margin-top: 14px;'></div><p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Does any immediate family member have diagnosed ASD?</p>")
-            st.session_state["wiz_family_asd"] = st.radio(
+            curr_f = st.session_state.get("wiz_family_asd")
+            f_idx = ["no", "yes"].index(curr_f) if curr_f in ["no", "yes"] else None
+            f_choice = st.radio(
                 "Does any immediate family member have diagnosed ASD?",
                 options=["no", "yes"],
-                index=0 if st.session_state["wiz_family_asd"] == "no" else 1,
+                index=f_idx,
                 horizontal=True,
-                format_func=lambda x: "Yes (Parent or sibling)" if x == "yes" else "No",
+                format_func=lambda x: "Yes (Parent or sibling)" if x == "yes" else "No (No diagnosed family ASD)",
+                key="radio_family_asd",
                 label_visibility="collapsed"
             )
+            st.session_state["wiz_family_asd"] = f_choice
 
         st.markdown("<br>", unsafe_allow_html=True)
         nav_col1, nav_col2, nav_col3, nav_spacer = st.columns([1.5, 1.5, 2.2, 1.8])
@@ -408,8 +441,21 @@ Please provide demographic and clinical history details. These are encoded as no
                 st.rerun()
         with nav_col3:
             if st.button("Next: Social Questions (Q1-Q5) ➔", type="primary", use_container_width=True):
-                st.session_state["wiz_step"] = 5
-                st.rerun()
+                missing = []
+                if not st.session_state.get("wiz_ethnicity"):
+                    missing.append("Ethnicity")
+                if not st.session_state.get("wiz_screener"):
+                    missing.append("Screener")
+                if st.session_state.get("wiz_jaundice") is None:
+                    missing.append("Neonatal Jaundice")
+                if st.session_state.get("wiz_family_asd") is None:
+                    missing.append("Family ASD History")
+                
+                if missing:
+                    st.warning(f"⚠️ Please complete all required clinical history selections: {', '.join(missing)}.")
+                else:
+                    st.session_state["wiz_step"] = 5
+                    st.rerun()
 
     # -------------------------------------------------------------
     # STEP 5: SOCIAL COMMUNICATION QUESTIONS (Q1 TO Q5)
@@ -424,7 +470,7 @@ Please provide demographic and clinical history details. These are encoded as no
 Social Communication & Interaction (Q1 to Q5)
 </div>
 <div class="med-card-body" style="font-size: 1rem; color: #475569;">
-Evaluate the child's typical communicative behaviors. Select whether the response indicates a <strong>typical developmental trait (0)</strong> or an <strong>atypical screening marker (1)</strong>.
+Evaluate the child's typical communicative behaviors. Please select your answer for each question below.
 </div>
 </div>""")
 
@@ -437,7 +483,8 @@ Evaluate the child's typical communicative behaviors. Select whether the respons
         ]
 
         for qid, qtext, opt0, opt1 in q_list_1:
-            curr_val = st.session_state["wiz_q"].get(qid, 0)
+            curr_val = st.session_state["wiz_q"].get(qid)
+            idx = curr_val if curr_val in [0, 1] else None
             render_html(f"""<div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 14px 18px 12px 18px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
 <div style="font-size: 1.05rem; font-weight: 800; color: #0A192F !important; line-height: 1.5;">
 <span style="background: #1D4ED8; color: #FFFFFF !important; padding: 3px 10px; border-radius: 6px; font-weight: 800; font-size: 0.88rem; margin-right: 8px;">{qid}</span>
@@ -447,7 +494,7 @@ Evaluate the child's typical communicative behaviors. Select whether the respons
             choice = st.radio(
                 f"Selection for {qid}",
                 options=[0, 1],
-                index=curr_val,
+                index=idx,
                 format_func=lambda x, o0=opt0, o1=opt1: o0 if x == 0 else o1,
                 horizontal=True,
                 key=f"radio_{qid}",
@@ -467,8 +514,12 @@ Evaluate the child's typical communicative behaviors. Select whether the respons
                 st.rerun()
         with nav_col3:
             if st.button("Next: Motor Traits (Q6-Q10) ➔", type="primary", use_container_width=True):
-                st.session_state["wiz_step"] = 6
-                st.rerun()
+                unanswered = [qid for qid in ["Q1", "Q2", "Q3", "Q4", "Q5"] if st.session_state["wiz_q"].get(qid) is None]
+                if unanswered:
+                    st.warning(f"⚠️ Please answer all questions before proceeding. Unanswered: {', '.join(unanswered)}.")
+                else:
+                    st.session_state["wiz_step"] = 6
+                    st.rerun()
 
     # -------------------------------------------------------------
     # STEP 6: MOTOR & BEHAVIORAL QUESTIONS (Q6 TO Q10)
@@ -483,7 +534,7 @@ Evaluate the child's typical communicative behaviors. Select whether the respons
 Affective, Motor & Communicative Traits (Q6 to Q10)
 </div>
 <div class="med-card-body" style="font-size: 1rem; color: #475569;">
-Final screening indicators assessing gaze tracking, empathy, speech sounds, communicative gestures, and repetitive motor mannerisms.
+Final screening indicators assessing gaze tracking, empathy, speech sounds, communicative gestures, and repetitive motor mannerisms. Please select your answer for each question below.
 </div>
 </div>""")
 
@@ -496,7 +547,8 @@ Final screening indicators assessing gaze tracking, empathy, speech sounds, comm
         ]
 
         for qid, qtext, opt0, opt1 in q_list_2:
-            curr_val = st.session_state["wiz_q"].get(qid, 0)
+            curr_val = st.session_state["wiz_q"].get(qid)
+            idx = curr_val if curr_val in [0, 1] else None
             render_html(f"""<div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 14px 18px 12px 18px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
 <div style="font-size: 1.05rem; font-weight: 800; color: #0A192F !important; line-height: 1.5;">
 <span style="background: #7C3AED; color: #FFFFFF !important; padding: 3px 10px; border-radius: 6px; font-weight: 800; font-size: 0.88rem; margin-right: 8px;">{qid}</span>
@@ -506,7 +558,7 @@ Final screening indicators assessing gaze tracking, empathy, speech sounds, comm
             choice = st.radio(
                 f"Selection for {qid}",
                 options=[0, 1],
-                index=curr_val,
+                index=idx,
                 format_func=lambda x, o0=opt0, o1=opt1: o0 if x == 0 else o1,
                 horizontal=True,
                 key=f"radio_{qid}",
@@ -526,36 +578,44 @@ Final screening indicators assessing gaze tracking, empathy, speech sounds, comm
                 st.rerun()
         with nav_col3:
             if st.button("🧠 Evaluate Developmental Risk with AI ➔", type="primary", use_container_width=True):
-                # Execute inference
-                patient_dict = {
-                    "Age": st.session_state["wiz_age"],
-                    "Sex": st.session_state["wiz_sex"],
-                    "Ethnicity": st.session_state["wiz_ethnicity"],
-                    "Jaundice": st.session_state["wiz_jaundice"],
-                    "Family_ASD": st.session_state["wiz_family_asd"],
-                    "Screener": st.session_state["wiz_screener"],
-                    **st.session_state["wiz_q"]
-                }
-                models_dict = st.session_state["models_result"]
-                prepared_data = st.session_state["prepared_data"]
+                unanswered = [qid for qid in ["Q6", "Q7", "Q8", "Q9", "Q10"] if st.session_state["wiz_q"].get(qid) is None]
+                if unanswered:
+                    st.warning(f"⚠️ Please answer all questions before evaluating. Unanswered: {', '.join(unanswered)}.")
+                else:
+                    # Execute inference
+                    patient_dict = {
+                        "Age": st.session_state["wiz_age"],
+                        "Sex": st.session_state["wiz_sex"],
+                        "Ethnicity": st.session_state["wiz_ethnicity"],
+                        "Jaundice": st.session_state["wiz_jaundice"],
+                        "Family_ASD": st.session_state["wiz_family_asd"],
+                        "Screener": st.session_state["wiz_screener"],
+                        **st.session_state["wiz_q"]
+                    }
+                    models_dict = st.session_state["models_result"]
+                    prepared_data = st.session_state["prepared_data"]
 
-                with st.spinner("Executing dual-model inference across TabNet and MLP networks..."):
-                    res = run_single_patient_inference(patient_dict, models_dict, prepared_data)
+                    with st.spinner("Executing dual-model inference across TabNet and MLP networks..."):
+                        res = run_single_patient_inference(patient_dict, models_dict, prepared_data)
 
-                # Save results & patient report for the Clinical Test Report page
-                st.session_state["wiz_results"] = res
-                st.session_state["latest_patient_report"] = {
-                    "patient_name": st.session_state["wiz_patient_name"],
-                    "guardian_name": st.session_state["wiz_guardian_name"],
-                    "mrn": st.session_state["wiz_mrn"],
-                    "date": datetime.date.today().strftime("%B %d, %Y"),
-                    "examiner": "Pediatric Screening Specialist",
-                    "institution": "Pediatric Neurodevelopmental Clinical Center",
-                    **patient_dict,
-                    **res
-                }
-                st.session_state["wiz_step"] = 7
-                st.rerun()
+                    p_display_name = st.session_state.get("wiz_patient_name", "").strip() or "Patient (Unspecified)"
+                    g_display_name = st.session_state.get("wiz_guardian_name", "").strip() or "Caregiver (Unspecified)"
+                    mrn_display = st.session_state.get("wiz_mrn", "").strip() or ("MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01")
+
+                    # Save results & patient report for the Clinical Test Report page
+                    st.session_state["wiz_results"] = res
+                    st.session_state["latest_patient_report"] = {
+                        "patient_name": p_display_name,
+                        "guardian_name": g_display_name,
+                        "mrn": mrn_display,
+                        "date": datetime.date.today().strftime("%B %d, %Y"),
+                        "examiner": "Pediatric Screening Specialist",
+                        "institution": "Pediatric Neurodevelopmental Clinical Center",
+                        **patient_dict,
+                        **res
+                    }
+                    st.session_state["wiz_step"] = 7
+                    st.rerun()
 
     # -------------------------------------------------------------
     # STEP 7: DEDICATED CLINICAL RISK EVALUATION & PATIENT DOSSIER
@@ -569,15 +629,15 @@ Final screening indicators assessing gaze tracking, empathy, speech sounds, comm
                 st.rerun()
             return
 
-        p_name = st.session_state.get("wiz_patient_name", "Liam Davis")
-        g_name = st.session_state.get("wiz_guardian_name", "Sarah Davis (Mother)")
-        mrn = st.session_state.get("wiz_mrn", "MRN-ASD-2026-0842")
+        p_name = st.session_state.get("wiz_patient_name", "").strip() or "Patient (Unspecified)"
+        g_name = st.session_state.get("wiz_guardian_name", "").strip() or "Caregiver (Unspecified)"
+        mrn = st.session_state.get("wiz_mrn", "").strip() or ("MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01")
         age = st.session_state.get("wiz_age", 24)
         sex = st.session_state.get("wiz_sex", "m")
-        ethnicity = st.session_state.get("wiz_ethnicity", "White-European")
-        jaundice = st.session_state.get("wiz_jaundice", "no")
-        family_asd = st.session_state.get("wiz_family_asd", "no")
-        screener = st.session_state.get("wiz_screener", "family member")
+        ethnicity = st.session_state.get("wiz_ethnicity") or "Unspecified"
+        jaundice = st.session_state.get("wiz_jaundice") or "no"
+        family_asd = st.session_state.get("wiz_family_asd") or "no"
+        screener = st.session_state.get("wiz_screener") or "family member"
         eval_date = datetime.date.today().strftime("%B %d, %Y")
 
         is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
@@ -787,9 +847,9 @@ Dense non-linear classifier probability with decision threshold calibrated at 0.
                 st.rerun()
             return
 
-        p_name = st.session_state.get("wiz_patient_name", "Liam Davis")
-        g_name = st.session_state.get("wiz_guardian_name", "Sarah Davis (Mother)")
-        mrn = st.session_state.get("wiz_mrn", "MRN-ASD-2026-0842")
+        p_name = st.session_state.get("wiz_patient_name", "").strip() or "Patient (Unspecified)"
+        g_name = st.session_state.get("wiz_guardian_name", "").strip() or "Caregiver (Unspecified)"
+        mrn = st.session_state.get("wiz_mrn", "").strip() or ("MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01")
         age = st.session_state.get("wiz_age", 24)
         sex = st.session_state.get("wiz_sex", "m")
         is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
@@ -953,9 +1013,9 @@ Calibrated Patient Affection Marker: <strong>{stage_info['affection_pct']:.1f}%<
                 st.rerun()
             return
 
-        p_name = st.session_state.get("wiz_patient_name", "Liam Davis")
-        g_name = st.session_state.get("wiz_guardian_name", "Sarah Davis (Mother)")
-        mrn = st.session_state.get("wiz_mrn", "MRN-ASD-2026-0842")
+        p_name = st.session_state.get("wiz_patient_name", "").strip() or "Patient (Unspecified)"
+        g_name = st.session_state.get("wiz_guardian_name", "").strip() or "Caregiver (Unspecified)"
+        mrn = st.session_state.get("wiz_mrn", "").strip() or ("MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01")
         age = st.session_state.get("wiz_age", 24)
         sex = st.session_state.get("wiz_sex", "m")
         is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
@@ -1134,8 +1194,7 @@ Neurodiversity is a natural, profound variation of the human mind. The traits id
                 st.rerun()
         with f_col3:
             if st.button("🔄 Start New Screening", use_container_width=True):
-                st.session_state["wiz_step"] = 1
-                st.session_state["wiz_results"] = None
+                init_wizard_state(reset=True)
                 st.rerun()
         with f_col4:
             if st.button("🏠 Home", use_container_width=True, key="step9_home_btn"):

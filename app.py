@@ -64,8 +64,8 @@ if "raw_dataset" not in st.session_state or st.session_state["raw_dataset"] is N
     raw_df = load_default_dataset()
     if raw_df is not None:
         st.session_state["raw_dataset"] = raw_df
-        st.session_state["dataset_source"] = "Benchmark Research Dataset (dl dataset.xls)"
-        st.session_state["dataset_size"] = "71.2 KB"
+        st.session_state["dataset_source"] = "Toddler ASD Dataset (toddler_asd_dataset.csv)"
+        st.session_state["dataset_size"] = f"{raw_df.shape[0]:,} records &bull; 71.2 KB"
 
 if "models_result" not in st.session_state and "raw_dataset" in st.session_state and st.session_state["raw_dataset"] is not None:
     with st.spinner("Initializing TabNet & MLP models on benchmark dataset..."):

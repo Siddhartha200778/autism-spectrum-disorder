@@ -32,13 +32,13 @@ def load_dataset_from_bytes(file_bytes, filename=""):
     return data
 
 def load_default_dataset():
-    """Loads the benchmark research dataset (dl dataset.xls) included in the repo."""
-    default_path = "dl dataset.xls"
-    if not os.path.exists(default_path):
-        return None
-    with open(default_path, "rb") as f:
-        bytes_data = f.read()
-    return load_dataset_from_bytes(bytes_data, "dl dataset.xls")
+    """Loads the benchmark research toddler ASD dataset included in the repo."""
+    for default_path in ["toddler_asd_dataset.csv", "dl dataset.xls"]:
+        if os.path.exists(default_path):
+            with open(default_path, "rb") as f:
+                bytes_data = f.read()
+            return load_dataset_from_bytes(bytes_data, default_path)
+    return None
 
 def preprocess_and_prepare(raw_df):
     """
