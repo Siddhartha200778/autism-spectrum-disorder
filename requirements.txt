@@ -1,3 +1,6 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+pytorch-tabnet
 streamlit
 pandas
 numpy
@@ -5,8 +8,6 @@ scikit-learn
 joblib
 matplotlib
 seaborn
-torch
-pytorch-tabnet
 imbalanced-learn
 xlrd
 openpyxl

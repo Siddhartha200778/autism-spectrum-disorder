@@ -2,12 +2,18 @@ import streamlit as st
 import os
 
 from modules.theme import inject_custom_css, render_footer, render_html
-from modules.ml_pipeline import (
-    load_default_dataset,
-    preprocess_and_prepare,
-    train_models_pipeline,
-    get_benchmark_models_and_data
-)
+try:
+    from modules.ml_pipeline import (
+        load_default_dataset,
+        preprocess_and_prepare,
+        train_models_pipeline,
+        get_benchmark_models_and_data
+    )
+except Exception as e:
+    import traceback
+    st.error(f"Module Import Error: {e}")
+    st.code(traceback.format_exc())
+    st.stop()
 
 # Page Configuration
 st.set_page_config(

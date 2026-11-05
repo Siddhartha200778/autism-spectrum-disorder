@@ -1,8 +1,24 @@
 import io
 import os
-import joblib
 import streamlit as st
-import torch
+
+try:
+    import joblib
+except ImportError:
+    try:
+        from sklearn.utils import _joblib as joblib
+    except ImportError:
+        import pickle as joblib
+
+try:
+    import torch
+    try:
+        torch.set_num_threads(1)
+    except Exception:
+        pass
+except Exception:
+    torch = None
+
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -12,15 +28,16 @@ from sklearn.metrics import (
     classification_report, confusion_matrix, roc_curve, auc
 )
 from sklearn.neural_network import MLPClassifier
-from pytorch_tabnet.tab_model import TabNetClassifier
-from imblearn.over_sampling import SMOTE
 
-# Limit PyTorch CPU threads to 1 to prevent CPU starvation and throttling on Streamlit Cloud
 try:
-    torch.set_num_threads(1)
-    torch.set_num_interop_threads(1)
+    from pytorch_tabnet.tab_model import TabNetClassifier
 except Exception:
-    pass
+    TabNetClassifier = None
+
+try:
+    from imblearn.over_sampling import SMOTE
+except Exception:
+    SMOTE = None
 
 def load_dataset_from_bytes(file_bytes, filename=""):
     """Loads a dataset from raw bytes, handling CSV, XLS, XLSX formats."""
