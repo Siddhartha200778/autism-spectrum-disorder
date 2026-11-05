@@ -7,6 +7,7 @@ def get_default_sample_report(risk_type="elevated"):
     if risk_type == "elevated":
         return {
             "patient_name": "Liam Davis",
+            "guardian_name": "Sarah Davis (Mother)",
             "mrn": "MRN-ASD-2026-0842",
             "date": datetime.date.today().strftime("%B %d, %Y"),
             "examiner": "Dr. Sarah Jenkins, MD, FAAP",
@@ -31,6 +32,7 @@ def get_default_sample_report(risk_type="elevated"):
     else:
         return {
             "patient_name": "Emma Watson",
+            "guardian_name": "David Watson (Father)",
             "mrn": "MRN-TYP-2026-0199",
             "date": datetime.date.today().strftime("%B %d, %Y"),
             "examiner": "Dr. Sarah Jenkins, MD, FAAP",
@@ -247,10 +249,10 @@ def generate_standalone_html_report(data):
             <td><strong>Ethnicity:</strong> {str(data.get('Ethnicity', 'N/A')).title()}</td>
         </tr>
         <tr>
+            <td><strong>Parent / Guardian:</strong> {str(data.get('guardian_name', 'Sarah Davis (Mother)')).title()}</td>
             <td><strong>Neonatal Jaundice:</strong> {str(data.get('Jaundice', 'no')).title()}</td>
             <td><strong>Immediate Family ASD History:</strong> {str(data.get('Family_ASD', 'no')).title()}</td>
             <td><strong>Informant / Screener:</strong> {str(data.get('Screener', 'Family Member')).title()}</td>
-            <td><strong>Assessment Instrument:</strong> Q-CHAT-10 Protocol</td>
         </tr>
     </table>
 
@@ -450,10 +452,10 @@ def render():
                 <td style="width: 25%;"><strong>Ethnicity:</strong> {str(report_data.get('Ethnicity', 'N/A')).title()}</td>
             </tr>
             <tr>
+                <td><strong>Parent / Guardian:</strong> {str(report_data.get('guardian_name', 'Sarah Davis (Mother)')).title()}</td>
                 <td><strong>Neonatal Jaundice:</strong> {str(report_data.get('Jaundice', 'no')).title()}</td>
                 <td><strong>Family ASD History:</strong> {str(report_data.get('Family_ASD', 'no')).title()}</td>
                 <td><strong>Informant / Screener:</strong> {str(report_data.get('Screener', 'Family Member')).title()}</td>
-                <td><strong>Assessment Type:</strong> Early Toddler Screening</td>
             </tr>
         </table>
 

@@ -8,6 +8,12 @@ def init_wizard_state():
     """Initializes session state for the step-by-step screening wizard."""
     if "wiz_step" not in st.session_state:
         st.session_state["wiz_step"] = 1
+    if "wiz_patient_name" not in st.session_state:
+        st.session_state["wiz_patient_name"] = "Liam Davis"
+    if "wiz_guardian_name" not in st.session_state:
+        st.session_state["wiz_guardian_name"] = "Sarah Davis (Mother)"
+    if "wiz_mrn" not in st.session_state:
+        st.session_state["wiz_mrn"] = "MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01"
     if "wiz_age" not in st.session_state:
         st.session_state["wiz_age"] = 24
     if "wiz_sex" not in st.session_state:
@@ -28,12 +34,14 @@ def init_wizard_state():
 def render_stepper(current_step):
     """Renders visual multi-step progress indicator at the top."""
     steps = [
-        (1, "1. Age", "👶"),
-        (2, "2. Gender", "🚻"),
-        (3, "3. History", "📋"),
-        (4, "4. Social (Q1-Q5)", "🗣️"),
-        (5, "5. Motor (Q6-Q10)", "🔄"),
-        (6, "6. AI Results", "🧠")
+        (1, "1. Patient Info", "👤"),
+        (2, "2. Age", "👶"),
+        (3, "3. Gender", "🚻"),
+        (4, "4. History", "📋"),
+        (5, "5. Social (Q1-Q5)", "🗣️"),
+        (6, "6. Motor (Q6-Q10)", "🔄"),
+        (7, "7. Risk Assessment", "🩺"),
+        (8, "8. Action Plan", "🌟")
     ]
     
     html = '<div class="stepper-container">'
@@ -46,13 +54,11 @@ def render_stepper(current_step):
             cls = "step-node"
         
         circle_content = "✓" if step_num < current_step else str(step_num)
-        html += f"""
-        <div class="{cls}">
-            <div class="step-circle">{circle_content}</div>
-            <span>{icon} {label}</span>
-        </div>
-        """
-        if step_num < 6:
+        html += f"""<div class="{cls}">
+<div class="step-circle">{circle_content}</div>
+<span>{icon} {label}</span>
+</div>"""
+        if step_num < 8:
             html += '<span style="color: #CBD5E1; font-weight: bold; margin: 0 4px;">➔</span>'
     html += '</div>'
     render_html(html)
@@ -60,7 +66,7 @@ def render_stepper(current_step):
 def render():
     render_section_header(
         "Step-by-Step Guided ASD Clinical Screener",
-        "Interactive developmental assessment guiding you sequentially from child age and demographics to behavioral screening.",
+        "Interactive developmental assessment guiding you sequentially from patient information and demographics to behavioral evaluation and clinical action planning.",
         badge="STEP-BY-STEP CLINICAL WIZARD"
     )
 
@@ -75,24 +81,85 @@ def render():
     render_stepper(step)
 
     # -------------------------------------------------------------
-    # STEP 1: CHILD'S AGE
+    # STEP 1: PATIENT & CAREGIVER IDENTIFICATION
     # -------------------------------------------------------------
     if step == 1:
-        render_html("""
-        <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
-            <div class="med-card-header">
-                <div class="med-card-icon">👶</div>
-                <span class="pill-badge pill-blue">Step 1 of 5</span>
-            </div>
-            <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
-                What is the child's chronological age in months?
-            </div>
-            <div class="med-card-body" style="font-size: 1rem; color: #475569;">
-                Standardized pediatric screening via the Q-CHAT protocol is calibrated for toddlers between <strong>12 and 36 months</strong> of age. 
-                This period represents the golden developmental window of maximal neural plasticity.
-            </div>
-        </div>
-        """)
+        render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
+<div class="med-card-header">
+<div class="med-card-icon">👤</div>
+<span class="pill-badge pill-blue">Step 1 of 8 &bull; Identification</span>
+</div>
+<div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+Patient & Caregiver Identification
+</div>
+<div class="med-card-body" style="font-size: 1rem; color: #475569;">
+Please enter the child's identity details and caregiver information. These will be linked to the clinical evaluation profile, risk stratification report, and printable medical dossier.
+</div>
+</div>""")
+
+        c1, c2 = st.columns(2)
+        with c1:
+            render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Child's Full Name / Identifier:</p>")
+            p_name = st.text_input(
+                "Child's Full Name / Identifier:",
+                value=st.session_state["wiz_patient_name"],
+                placeholder="e.g. Liam Davis",
+                label_visibility="collapsed"
+            )
+            st.session_state["wiz_patient_name"] = p_name.strip() if p_name.strip() else "Liam Davis"
+
+            render_html("<div style='margin-top: 14px;'></div><p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Medical Record Number (MRN) / Evaluation ID:</p>")
+            mrn_val = st.text_input(
+                "MRN / Evaluation ID:",
+                value=st.session_state["wiz_mrn"],
+                label_visibility="collapsed"
+            )
+            st.session_state["wiz_mrn"] = mrn_val.strip() if mrn_val.strip() else "MRN-ASD-2026-0842"
+
+        with c2:
+            render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Parent / Guardian Name:</p>")
+            g_name = st.text_input(
+                "Parent / Guardian Name:",
+                value=st.session_state["wiz_guardian_name"],
+                placeholder="e.g. Sarah Davis (Mother)",
+                label_visibility="collapsed"
+            )
+            st.session_state["wiz_guardian_name"] = g_name.strip() if g_name.strip() else "Sarah Davis (Mother)"
+
+            render_html("""<div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 14px 18px; margin-top: 18px;">
+<div style="font-size: 0.78rem; font-weight: 700; color: #1D4ED8; text-transform: uppercase;">Assessment Protocol</div>
+<div style="font-size: 1.05rem; font-weight: 800; color: #0A192F; margin: 4px 0;">Q-CHAT-10 Toddler Protocol</div>
+<div style="font-size: 0.82rem; color: #475569;">Calibrated with TabNet Sparse Attention & Deep MLP Classifiers</div>
+</div>""")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 1.8, 3.5])
+        with nav_col1:
+            if st.button("🏠 Return to Home", use_container_width=True):
+                st.session_state["nav_target"] = "Home"
+                st.rerun()
+        with nav_col2:
+            if st.button("Next: Child's Age ➔", type="primary", use_container_width=True):
+                st.session_state["wiz_step"] = 2
+                st.rerun()
+
+    # -------------------------------------------------------------
+    # STEP 2: CHILD'S AGE
+    # -------------------------------------------------------------
+    elif step == 2:
+        render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
+<div class="med-card-header">
+<div class="med-card-icon">👶</div>
+<span class="pill-badge pill-blue">Step 2 of 8 &bull; Chronological Age</span>
+</div>
+<div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+What is the child's chronological age in months?
+</div>
+<div class="med-card-body" style="font-size: 1rem; color: #475569;">
+Standardized pediatric screening via the Q-CHAT protocol is calibrated for toddlers between <strong>12 and 36 months</strong> of age. 
+This period represents the golden developmental window of maximal neural plasticity.
+</div>
+</div>""")
 
         col_input, col_info = st.columns([2, 1.5])
         with col_input:
@@ -109,70 +176,66 @@ def render():
             st.session_state["wiz_age"] = age_val
 
         with col_info:
-            render_html(f"""
-            <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 18px; margin-top: 5px;">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #1D4ED8; text-transform: uppercase;">Selected Milestone</div>
-                <div style="font-size: 2rem; font-weight: 800; color: #1D4ED8; margin: 4px 0;">{age_val} Months</div>
-                <div style="font-size: 0.85rem; color: #334155;">
-                    Approx. <strong>{age_val // 12} year(s) and {age_val % 12} month(s)</strong> old.
-                </div>
-            </div>
-            """)
+            render_html(f"""<div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 18px; margin-top: 5px;">
+<div style="font-size: 0.8rem; font-weight: 700; color: #1D4ED8; text-transform: uppercase;">Selected Milestone</div>
+<div style="font-size: 2rem; font-weight: 800; color: #1D4ED8; margin: 4px 0;">{age_val} Months</div>
+<div style="font-size: 0.85rem; color: #334155;">
+Approx. <strong>{age_val // 12} year(s) and {age_val % 12} month(s)</strong> old.
+</div>
+</div>""")
 
         st.markdown("<br>", unsafe_allow_html=True)
-        nav_col1, nav_col2, nav_spacer = st.columns([1.5, 1.8, 3.5])
+        nav_col1, nav_col2, nav_col3, nav_spacer = st.columns([1.5, 1.5, 1.8, 2.2])
         with nav_col1:
-            if st.button("🏠 Back to Home", use_container_width=True):
-                st.session_state["nav_target"] = "Home"
+            if st.button("⬅️ Back: Patient Info", use_container_width=True):
+                st.session_state["wiz_step"] = 1
                 st.rerun()
         with nav_col2:
+            if st.button("🏠 Home", use_container_width=True, key="step2_home_btn"):
+                st.session_state["nav_target"] = "Home"
+                st.rerun()
+        with nav_col3:
             if st.button("Next: Biological Sex ➔", type="primary", use_container_width=True):
-                st.session_state["wiz_step"] = 2
+                st.session_state["wiz_step"] = 3
                 st.rerun()
 
     # -------------------------------------------------------------
-    # STEP 2: BIOLOGICAL SEX
+    # STEP 3: BIOLOGICAL SEX
     # -------------------------------------------------------------
-    elif step == 2:
-        render_html("""
-        <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
-            <div class="med-card-header">
-                <div class="med-card-icon">🚻</div>
-                <span class="pill-badge pill-blue">Step 2 of 5</span>
-            </div>
-            <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
-                What is the child's biological sex?
-            </div>
-            <div class="med-card-body" style="font-size: 1rem; color: #475569;">
-                Biological sex is evaluated by the models to normalize normative developmental behavioral trajectories and account for known prevalence ratios.
-            </div>
-        </div>
-        """)
+    elif step == 3:
+        render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
+<div class="med-card-header">
+<div class="med-card-icon">🚻</div>
+<span class="pill-badge pill-blue">Step 3 of 8 &bull; Biological Sex</span>
+</div>
+<div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+What is the child's biological sex?
+</div>
+<div class="med-card-body" style="font-size: 1rem; color: #475569;">
+Biological sex is evaluated by the models to normalize normative developmental behavioral trajectories and account for known prevalence ratios.
+</div>
+</div>""")
 
         c_sex1, c_sex2 = st.columns(2)
         curr_sex = st.session_state["wiz_sex"]
         with c_sex1:
             is_male = (curr_sex == "m")
-            render_html(f"""
-            <div style="border: 2px solid {'#1D4ED8' if is_male else '#E2E8F0'}; background: {'#EFF6FF' if is_male else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center;">
-                <div style="font-size: 2.5rem; margin-bottom: 6px;">👦</div>
-                <div style="font-size: 1.25rem; font-weight: 800; color: #0A192F;">Male</div>
-                <div style="font-size: 0.82rem; color: #64748B; margin-top: 4px;">Biological Male</div>
-            </div>
-            """)
+            render_html(f"""<div style="border: 2px solid {'#1D4ED8' if is_male else '#E2E8F0'}; background: {'#EFF6FF' if is_male else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center;">
+<div style="font-size: 2.5rem; margin-bottom: 6px;">👦</div>
+<div style="font-size: 1.25rem; font-weight: 800; color: #0A192F;">Male</div>
+<div style="font-size: 0.82rem; color: #64748B; margin-top: 4px;">Biological Male</div>
+</div>""")
             if st.button("Select Male", use_container_width=True, type="primary" if is_male else "secondary"):
                 st.session_state["wiz_sex"] = "m"
                 st.rerun()
 
         with c_sex2:
             is_female = (curr_sex == "f")
-            render_html(f"""
-            <div style="border: 2px solid {'#1D4ED8' if is_female else '#E2E8F0'}; background: {'#EFF6FF' if is_female else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center;">
-                <div style="font-size: 2.5rem; margin-bottom: 6px;">👧</div>
-                <div style="font-size: 1.25rem; font-weight: 800; color: #0A192F;">Female</div>
-                <div style="font-size: 0.82rem; color: #64748B; margin-top: 4px;">Biological Female</div>
-            </div>
-            """)
+            render_html(f"""<div style="border: 2px solid {'#1D4ED8' if is_female else '#E2E8F0'}; background: {'#EFF6FF' if is_female else '#FFFFFF'}; border-radius: 14px; padding: 22px; text-align: center;">
+<div style="font-size: 2.5rem; margin-bottom: 6px;">👧</div>
+<div style="font-size: 1.25rem; font-weight: 800; color: #0A192F;">Female</div>
+<div style="font-size: 0.82rem; color: #64748B; margin-top: 4px;">Biological Female</div>
+</div>""")
             if st.button("Select Female", use_container_width=True, type="primary" if is_female else "secondary"):
                 st.session_state["wiz_sex"] = "f"
                 st.rerun()
@@ -181,35 +244,33 @@ def render():
         nav_col1, nav_col2, nav_col3, nav_spacer = st.columns([1.5, 1.5, 1.8, 2.2])
         with nav_col1:
             if st.button("⬅️ Back: Age", use_container_width=True):
-                st.session_state["wiz_step"] = 1
+                st.session_state["wiz_step"] = 2
                 st.rerun()
         with nav_col2:
-            if st.button("🏠 Home", use_container_width=True, key="step2_home_btn"):
+            if st.button("🏠 Home", use_container_width=True, key="step3_home_btn"):
                 st.session_state["nav_target"] = "Home"
                 st.rerun()
         with nav_col3:
             if st.button("Next: Clinical History ➔", type="primary", use_container_width=True):
-                st.session_state["wiz_step"] = 3
+                st.session_state["wiz_step"] = 4
                 st.rerun()
 
     # -------------------------------------------------------------
-    # STEP 3: CLINICAL & PERINATAL BACKGROUND
+    # STEP 4: CLINICAL & PERINATAL BACKGROUND
     # -------------------------------------------------------------
-    elif step == 3:
-        render_html("""
-        <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
-            <div class="med-card-header">
-                <div class="med-card-icon">📋</div>
-                <span class="pill-badge pill-blue">Step 3 of 5</span>
-            </div>
-            <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
-                Clinical, Perinatal & Family Background
-            </div>
-            <div class="med-card-body" style="font-size: 1rem; color: #475569;">
-                Please provide demographic and clinical history details. These are encoded as non-linear priors by TabNet and MLP neural networks.
-            </div>
-        </div>
-        """)
+    elif step == 4:
+        render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
+<div class="med-card-header">
+<div class="med-card-icon">📋</div>
+<span class="pill-badge pill-blue">Step 4 of 8 &bull; Clinical Background</span>
+</div>
+<div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+Clinical, Perinatal & Family Background
+</div>
+<div class="med-card-body" style="font-size: 1rem; color: #475569;">
+Please provide demographic and clinical history details. These are encoded as non-linear priors by TabNet and MLP neural networks.
+</div>
+</div>""")
 
         col1, col2 = st.columns(2)
         with col1:
@@ -265,35 +326,33 @@ def render():
         nav_col1, nav_col2, nav_col3, nav_spacer = st.columns([1.5, 1.5, 2.2, 1.8])
         with nav_col1:
             if st.button("⬅️ Back: Gender", use_container_width=True):
-                st.session_state["wiz_step"] = 2
+                st.session_state["wiz_step"] = 3
                 st.rerun()
         with nav_col2:
-            if st.button("🏠 Home", use_container_width=True, key="step3_home_btn"):
+            if st.button("🏠 Home", use_container_width=True, key="step4_home_btn"):
                 st.session_state["nav_target"] = "Home"
                 st.rerun()
         with nav_col3:
             if st.button("Next: Social Questions (Q1-Q5) ➔", type="primary", use_container_width=True):
-                st.session_state["wiz_step"] = 4
+                st.session_state["wiz_step"] = 5
                 st.rerun()
 
     # -------------------------------------------------------------
-    # STEP 4: SOCIAL COMMUNICATION QUESTIONS (Q1 TO Q5)
+    # STEP 5: SOCIAL COMMUNICATION QUESTIONS (Q1 TO Q5)
     # -------------------------------------------------------------
-    elif step == 4:
-        render_html("""
-        <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
-            <div class="med-card-header">
-                <div class="med-card-icon">🗣️</div>
-                <span class="pill-badge pill-blue">Step 4 of 5 &bull; Domain A</span>
-            </div>
-            <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
-                Social Communication & Interaction (Q1 to Q5)
-            </div>
-            <div class="med-card-body" style="font-size: 1rem; color: #475569;">
-                Evaluate the child's typical communicative behaviors. Select whether the response indicates a <strong>typical developmental trait (0)</strong> or an <strong>atypical screening marker (1)</strong>.
-            </div>
-        </div>
-        """)
+    elif step == 5:
+        render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 20px;">
+<div class="med-card-header">
+<div class="med-card-icon">🗣️</div>
+<span class="pill-badge pill-blue">Step 5 of 8 &bull; Domain A</span>
+</div>
+<div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+Social Communication & Interaction (Q1 to Q5)
+</div>
+<div class="med-card-body" style="font-size: 1rem; color: #475569;">
+Evaluate the child's typical communicative behaviors. Select whether the response indicates a <strong>typical developmental trait (0)</strong> or an <strong>atypical screening marker (1)</strong>.
+</div>
+</div>""")
 
         q_list_1 = [
             ("Q1", "Does your child look at you when you call his/her name?", "Always / Usually (0)", "Rarely or Never (1)"),
@@ -305,14 +364,12 @@ def render():
 
         for qid, qtext, opt0, opt1 in q_list_1:
             curr_val = st.session_state["wiz_q"].get(qid, 0)
-            render_html(f"""
-            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 14px 18px 12px 18px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
-                <div style="font-size: 1.05rem; font-weight: 800; color: #0A192F !important; line-height: 1.5;">
-                    <span style="background: #1D4ED8; color: #FFFFFF !important; padding: 3px 10px; border-radius: 6px; font-weight: 800; font-size: 0.88rem; margin-right: 8px;">{qid}</span>
-                    <span style="color: #0A192F !important;">{qtext}</span>
-                </div>
-            </div>
-            """)
+            render_html(f"""<div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 14px 18px 12px 18px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+<div style="font-size: 1.05rem; font-weight: 800; color: #0A192F !important; line-height: 1.5;">
+<span style="background: #1D4ED8; color: #FFFFFF !important; padding: 3px 10px; border-radius: 6px; font-weight: 800; font-size: 0.88rem; margin-right: 8px;">{qid}</span>
+<span style="color: #0A192F !important;">{qtext}</span>
+</div>
+</div>""")
             choice = st.radio(
                 f"Selection for {qid}",
                 options=[0, 1],
@@ -328,35 +385,33 @@ def render():
         nav_col1, nav_col2, nav_col3, nav_spacer = st.columns([1.5, 1.5, 2.2, 1.8])
         with nav_col1:
             if st.button("⬅️ Back: History", use_container_width=True):
-                st.session_state["wiz_step"] = 3
+                st.session_state["wiz_step"] = 4
                 st.rerun()
         with nav_col2:
-            if st.button("🏠 Home", use_container_width=True, key="step4_home_btn"):
+            if st.button("🏠 Home", use_container_width=True, key="step5_home_btn"):
                 st.session_state["nav_target"] = "Home"
                 st.rerun()
         with nav_col3:
             if st.button("Next: Motor Traits (Q6-Q10) ➔", type="primary", use_container_width=True):
-                st.session_state["wiz_step"] = 5
+                st.session_state["wiz_step"] = 6
                 st.rerun()
 
     # -------------------------------------------------------------
-    # STEP 5: MOTOR & BEHAVIORAL QUESTIONS (Q6 TO Q10)
+    # STEP 6: MOTOR & BEHAVIORAL QUESTIONS (Q6 TO Q10)
     # -------------------------------------------------------------
-    elif step == 5:
-        render_html("""
-        <div class="med-card" style="border-left: 5px solid #7C3AED; margin-bottom: 20px;">
-            <div class="med-card-header">
-                <div class="med-card-icon">🔄</div>
-                <span class="pill-badge pill-purple">Step 5 of 5 &bull; Domains A & B</span>
-            </div>
-            <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
-                Affective, Motor & Communicative Traits (Q6 to Q10)
-            </div>
-            <div class="med-card-body" style="font-size: 1rem; color: #475569;">
-                Final screening indicators assessing gaze tracking, empathy, speech sounds, communicative gestures, and repetitive motor mannerisms.
-            </div>
-        </div>
-        """)
+    elif step == 6:
+        render_html("""<div class="med-card" style="border-left: 5px solid #7C3AED; margin-bottom: 20px;">
+<div class="med-card-header">
+<div class="med-card-icon">🔄</div>
+<span class="pill-badge pill-purple">Step 6 of 8 &bull; Domains A & B</span>
+</div>
+<div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+Affective, Motor & Communicative Traits (Q6 to Q10)
+</div>
+<div class="med-card-body" style="font-size: 1rem; color: #475569;">
+Final screening indicators assessing gaze tracking, empathy, speech sounds, communicative gestures, and repetitive motor mannerisms.
+</div>
+</div>""")
 
         q_list_2 = [
             ("Q6", "Does your child follow where you look (gaze tracking)?", "Many times a day (0)", "Rarely or Never (1)"),
@@ -368,14 +423,12 @@ def render():
 
         for qid, qtext, opt0, opt1 in q_list_2:
             curr_val = st.session_state["wiz_q"].get(qid, 0)
-            render_html(f"""
-            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 14px 18px 12px 18px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
-                <div style="font-size: 1.05rem; font-weight: 800; color: #0A192F !important; line-height: 1.5;">
-                    <span style="background: #7C3AED; color: #FFFFFF !important; padding: 3px 10px; border-radius: 6px; font-weight: 800; font-size: 0.88rem; margin-right: 8px;">{qid}</span>
-                    <span style="color: #0A192F !important;">{qtext}</span>
-                </div>
-            </div>
-            """)
+            render_html(f"""<div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 14px 18px 12px 18px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+<div style="font-size: 1.05rem; font-weight: 800; color: #0A192F !important; line-height: 1.5;">
+<span style="background: #7C3AED; color: #FFFFFF !important; padding: 3px 10px; border-radius: 6px; font-weight: 800; font-size: 0.88rem; margin-right: 8px;">{qid}</span>
+<span style="color: #0A192F !important;">{qtext}</span>
+</div>
+</div>""")
             choice = st.radio(
                 f"Selection for {qid}",
                 options=[0, 1],
@@ -391,10 +444,10 @@ def render():
         nav_col1, nav_col2, nav_col3, nav_spacer = st.columns([1.5, 1.5, 2.5, 1.5])
         with nav_col1:
             if st.button("⬅️ Back: Q1–Q5", use_container_width=True):
-                st.session_state["wiz_step"] = 4
+                st.session_state["wiz_step"] = 5
                 st.rerun()
         with nav_col2:
-            if st.button("🏠 Home", use_container_width=True, key="step5_home_btn"):
+            if st.button("🏠 Home", use_container_width=True, key="step6_home_btn"):
                 st.session_state["nav_target"] = "Home"
                 st.rerun()
         with nav_col3:
@@ -418,21 +471,22 @@ def render():
                 # Save results & patient report for the Clinical Test Report page
                 st.session_state["wiz_results"] = res
                 st.session_state["latest_patient_report"] = {
-                    "patient_name": f"Patient ({'Male' if patient_dict['Sex']=='m' else 'Female'}, {patient_dict['Age']}m)",
-                    "mrn": "MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01",
+                    "patient_name": st.session_state["wiz_patient_name"],
+                    "guardian_name": st.session_state["wiz_guardian_name"],
+                    "mrn": st.session_state["wiz_mrn"],
                     "date": datetime.date.today().strftime("%B %d, %Y"),
                     "examiner": "Pediatric Screening Specialist",
                     "institution": "Pediatric Neurodevelopmental Clinical Center",
                     **patient_dict,
                     **res
                 }
-                st.session_state["wiz_step"] = 6
+                st.session_state["wiz_step"] = 7
                 st.rerun()
 
     # -------------------------------------------------------------
-    # STEP 6: AI CLINICAL RESULTS & PRINT REPORT
+    # STEP 7: DEDICATED CLINICAL RISK EVALUATION & PATIENT DOSSIER
     # -------------------------------------------------------------
-    elif step == 6:
+    elif step == 7:
         res = st.session_state.get("wiz_results")
         if res is None:
             st.warning("No evaluation results found. Please start from Step 1.")
@@ -441,130 +495,365 @@ def render():
                 st.rerun()
             return
 
-        is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
-        
-        if is_elevated:
-            render_html("""
-            <div style="background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%); border: 2px solid #EF4444; border-radius: 16px; padding: 24px; margin-bottom: 25px;">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div>
-                        <span class="pill-badge pill-amber" style="background: #DC2626; color: #FFFFFF; font-size: 0.85rem;">ELEVATED RISK DETECTED</span>
-                        <h3 style="color: #991B1B; margin: 10px 0 6px 0; font-size: 1.45rem; font-weight: 800;">
-                            Developmental ASD Traits Indicated
-                        </h3>
-                        <p style="color: #7F1D1D; margin: 0; font-size: 0.98rem; line-height: 1.5;">
-                            The deep learning models identified behavioral response patterns consistent with elevated Autism Spectrum traits. A comprehensive multidisciplinary pediatric evaluation is advised.
-                        </p>
-                    </div>
-                    <div style="font-size: 3rem; margin-left: 20px;">⚠️</div>
-                </div>
-            </div>
-            """)
-        else:
-            render_html("""
-            <div style="background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); border: 2px solid #10B981; border-radius: 16px; padding: 24px; margin-bottom: 25px;">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div>
-                        <span class="pill-badge pill-green" style="background: #059669; color: #FFFFFF; font-size: 0.85rem;">LOW RISK PROFILE</span>
-                        <h3 style="color: #065F46; margin: 10px 0 6px 0; font-size: 1.45rem; font-weight: 800;">
-                            Typical Developmental Trajectory Indicated
-                        </h3>
-                        <p style="color: #064E3B; margin: 0; font-size: 0.98rem; line-height: 1.5;">
-                            Responses fall within normative developmental expectations for this age group. Continue routine pediatric surveillance and developmental milestone checkups.
-                        </p>
-                    </div>
-                    <div style="font-size: 3rem; margin-left: 20px;">✅</div>
-                </div>
-            </div>
-            """)
+        p_name = st.session_state.get("wiz_patient_name", "Liam Davis")
+        g_name = st.session_state.get("wiz_guardian_name", "Sarah Davis (Mother)")
+        mrn = st.session_state.get("wiz_mrn", "MRN-ASD-2026-0842")
+        age = st.session_state.get("wiz_age", 24)
+        sex = st.session_state.get("wiz_sex", "m")
+        ethnicity = st.session_state.get("wiz_ethnicity", "White-European")
+        jaundice = st.session_state.get("wiz_jaundice", "no")
+        family_asd = st.session_state.get("wiz_family_asd", "no")
+        screener = st.session_state.get("wiz_screener", "family member")
+        eval_date = datetime.date.today().strftime("%B %d, %Y")
 
-        # Model Metric Breakdown Cards
+        is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
+
+        # 1. Prominent Patient Information Card
+        render_html(f"""<div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 16px; padding: 22px 26px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(15,23,42,0.04);">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1.5px solid #F1F5F9; padding-bottom: 14px; margin-bottom: 16px;">
+<div>
+<span class="clinical-brand-badge" style="margin-bottom: 4px;">OFFICIAL PEDIATRIC SCREENING DOSSIER</span>
+<h3 style="font-size: 1.6rem; font-weight: 800; color: #0A192F; margin: 4px 0 2px 0;">{p_name}</h3>
+<div style="font-size: 0.9rem; color: #64748B;">Caregiver: <strong style="color: #0F172A;">{g_name}</strong> &bull; Screener: <strong style="color: #0F172A;">{screener.title()}</strong></div>
+</div>
+<div style="text-align: right;">
+<div style="font-size: 0.88rem; color: #0F172A;"><strong>MRN:</strong> {mrn}</div>
+<div style="font-size: 0.82rem; color: #64748B;"><strong>Date:</strong> {eval_date}</div>
+<div style="font-size: 0.78rem; color: #1D4ED8; font-weight: 700; margin-top: 4px;">Validated Q-CHAT-10 Protocol</div>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; font-size: 0.9rem;">
+<div style="background: #F8FAFC; border-radius: 10px; padding: 12px 14px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Chronological Age</div>
+<div style="font-size: 1.15rem; font-weight: 800; color: #0A192F;">{age} Months</div>
+<div style="font-size: 0.76rem; color: #475569;">({age // 12}y {age % 12}m old)</div>
+</div>
+<div style="background: #F8FAFC; border-radius: 10px; padding: 12px 14px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Biological Sex</div>
+<div style="font-size: 1.15rem; font-weight: 800; color: #0A192F;">{'Male (Boy)' if sex=='m' else 'Female (Girl)'}</div>
+<div style="font-size: 0.76rem; color: #475569;">Normative profile</div>
+</div>
+<div style="background: #F8FAFC; border-radius: 10px; padding: 12px 14px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Ethnicity Background</div>
+<div style="font-size: 1.15rem; font-weight: 800; color: #0A192F;">{ethnicity.title()}</div>
+<div style="font-size: 0.76rem; color: #475569;">Demographic baseline</div>
+</div>
+<div style="background: #F8FAFC; border-radius: 10px; padding: 12px 14px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Perinatal & History</div>
+<div style="font-size: 0.95rem; font-weight: 800; color: #0A192F;">Jaundice: {jaundice.title()}</div>
+<div style="font-size: 0.8rem; color: #475569;">Family ASD: {family_asd.title()}</div>
+</div>
+</div>
+</div>""")
+
+        # 2. Prominent Full-Width Clinical Risk Stratification Banner
+        if is_elevated:
+            render_html("""<div style="background: linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 50%, #FEE2E2 100%); border: 2.5px solid #EF4444; border-radius: 18px; padding: 28px 32px; margin-bottom: 26px; box-shadow: 0 8px 24px rgba(239,68,68,0.12);">
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;">
+<div>
+<span style="background: #DC2626; color: #FFFFFF; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block;">
+⚠️ ELEVATED DEVELOPMENTAL RISK DETECTED
+</span>
+<h2 style="color: #991B1B; font-size: 1.85rem; font-weight: 800; margin: 12px 0 8px 0; letter-spacing: -0.01em;">
+Developmental Autism Spectrum Traits Indicated
+</h2>
+<p style="color: #7F1D1D; font-size: 1.05rem; line-height: 1.6; margin: 0; max-width: 860px;">
+Multimodal inference across <strong>TabNet Sparse Attentive Learning</strong> and <strong>Multi-Layer Perceptrons</strong> indicates significant behavioral divergence consistent with elevated Autism Spectrum traits. Responses across early joint attention, eye gaze contact, and communicative gestures suggest that this toddler will benefit from comprehensive developmental pediatric evaluation.
+</p>
+</div>
+<div style="background: #FFFFFF; border: 2px solid #FCA5A5; border-radius: 16px; padding: 18px 24px; text-align: center; min-width: 170px; box-shadow: 0 4px 12px rgba(239,68,68,0.1);">
+<div style="font-size: 0.78rem; font-weight: 800; color: #DC2626; text-transform: uppercase;">Clinical Stratum</div>
+<div style="font-size: 2.2rem; font-weight: 900; color: #991B1B; margin: 4px 0;">Tier 3</div>
+<div style="font-size: 0.78rem; color: #7F1D1D; font-weight: 600;">Elevated Clinical Priority</div>
+</div>
+</div>
+</div>""")
+        else:
+            render_html("""<div style="background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 50%, #BBF7D0 100%); border: 2.5px solid #10B981; border-radius: 18px; padding: 28px 32px; margin-bottom: 26px; box-shadow: 0 8px 24px rgba(16,185,129,0.12);">
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;">
+<div>
+<span style="background: #059669; color: #FFFFFF; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block;">
+✅ TYPICAL DEVELOPMENTAL TRAJECTORY
+</span>
+<h2 style="color: #065F46; font-size: 1.85rem; font-weight: 800; margin: 12px 0 8px 0; letter-spacing: -0.01em;">
+Normative Toddler Behavioral Milestones Observed
+</h2>
+<p style="color: #064E3B; font-size: 1.05rem; line-height: 1.6; margin: 0; max-width: 860px;">
+The deep learning models identified behavioral and communicative response patterns consistent with typical early childhood development. Social communication, mutual gaze, and play markers fall within expected normative distributions. Continue standard routine pediatric surveillance.
+</p>
+</div>
+<div style="background: #FFFFFF; border: 2px solid #86EFAC; border-radius: 16px; padding: 18px 24px; text-align: center; min-width: 170px; box-shadow: 0 4px 12px rgba(16,185,129,0.1);">
+<div style="font-size: 0.78rem; font-weight: 800; color: #059669; text-transform: uppercase;">Clinical Stratum</div>
+<div style="font-size: 2.2rem; font-weight: 900; color: #065F46; margin: 4px 0;">Tier 1</div>
+<div style="font-size: 0.78rem; color: #064E3B; font-weight: 600;">Normative Surveillance</div>
+</div>
+</div>
+</div>""")
+
+        # 3. Model Metric Breakdown Cards
         c1, c2, c3 = st.columns(3)
         with c1:
-            render_html(f"""
-            <div class="med-card">
-                <div class="med-card-header">
-                    <div class="med-card-icon">🧠</div>
-                    <span class="pill-badge {'pill-amber' if res['tabnet_pred'] == 1 else 'pill-green'}">
-                        {'ASD Positive' if res['tabnet_pred'] == 1 else 'ASD Negative'}
-                    </span>
-                </div>
-                <div class="med-card-title">TabNet Prediction</div>
-                <div style="font-size: 1.85rem; font-weight: 800; color: #1D4ED8; margin-bottom: 6px;">
-                    {res['tabnet_prob'] * 100:.1f}%
-                </div>
-                <div class="med-card-body">
-                    Model Confidence for ASD Traits.<br>
-                    Sequential sparse attention analysis.
-                </div>
-            </div>
-            """)
+            render_html(f"""<div class="med-card">
+<div class="med-card-header">
+<div class="med-card-icon">🧠</div>
+<span class="pill-badge {'pill-amber' if res['tabnet_pred'] == 1 else 'pill-green'}">
+{'ASD Positive' if res['tabnet_pred'] == 1 else 'ASD Negative'}
+</span>
+</div>
+<div class="med-card-title">TabNet Attentive Model</div>
+<div style="font-size: 1.85rem; font-weight: 800; color: #1D4ED8; margin-bottom: 6px;">
+{res['tabnet_prob'] * 100:.1f}%
+</div>
+<div class="med-card-body">
+Sequential sparse attention model confidence for ASD behavioral traits.
+</div>
+</div>""")
 
         with c2:
-            render_html(f"""
-            <div class="med-card">
-                <div class="med-card-header">
-                    <div class="med-card-icon">⚡</div>
-                    <span class="pill-badge {'pill-amber' if res['mlp_pred'] == 1 else 'pill-green'}">
-                        {'ASD Positive' if res['mlp_pred'] == 1 else 'ASD Negative'}
-                    </span>
-                </div>
-                <div class="med-card-title">MLP Neural Net Prediction</div>
-                <div style="font-size: 1.85rem; font-weight: 800; color: #7C3AED; margin-bottom: 6px;">
-                    {res['mlp_prob'] * 100:.1f}%
-                </div>
-                <div class="med-card-body">
-                    Calibrated Probability.<br>
-                    Threshold cutoff applied at 0.60.
-                </div>
-            </div>
-            """)
+            render_html(f"""<div class="med-card">
+<div class="med-card-header">
+<div class="med-card-icon">⚡</div>
+<span class="pill-badge {'pill-amber' if res['mlp_pred'] == 1 else 'pill-green'}">
+{'ASD Positive' if res['mlp_pred'] == 1 else 'ASD Negative'}
+</span>
+</div>
+<div class="med-card-title">MLP Neural Network</div>
+<div style="font-size: 1.85rem; font-weight: 800; color: #7C3AED; margin-bottom: 6px;">
+{res['mlp_prob'] * 100:.1f}%
+</div>
+<div class="med-card-body">
+Dense non-linear classifier probability with decision threshold calibrated at 0.60.
+</div>
+</div>""")
 
         with c3:
-            render_html(f"""
-            <div class="med-card">
-                <div class="med-card-header">
-                    <div class="med-card-icon">📋</div>
-                    <span class="pill-badge pill-blue">Q-CHAT Score</span>
-                </div>
-                <div class="med-card-title">Behavioral Domain Scores</div>
-                <div style="font-size: 1.85rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">
-                    {res['aq10_score']} / 10
-                </div>
-                <div class="med-card-body">
-                    <strong>Domain A (Social):</strong> {res['a_domain']} / 9<br>
-                    <strong>Domain B (Repetitive):</strong> {res['b_domain']} / 1
-                </div>
-            </div>
-            """)
+            render_html(f"""<div class="med-card">
+<div class="med-card-header">
+<div class="med-card-icon">📋</div>
+<span class="pill-badge pill-blue">Q-CHAT Total</span>
+</div>
+<div class="med-card-title">Behavioral Domain Scores</div>
+<div style="font-size: 1.85rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">
+{res['aq10_score']} / 10
+</div>
+<div class="med-card-body">
+<strong>Domain A (Social Communication):</strong> {res['a_domain']} / 9<br>
+<strong>Domain B (Repetitive Behaviors):</strong> {res['b_domain']} / 1
+</div>
+</div>""")
 
-        # Actions: Open and Print Clinical Report OR Start New Screening
+        # 4. Behavioral Response Summary Audit Table
         st.markdown("<br>", unsafe_allow_html=True)
-        r_btn_col1, r_btn_col2, r_btn_col3, r_spacer = st.columns([2.5, 1.8, 1.8, 1.9])
-        with r_btn_col1:
-            if st.button("📄 View & Print Official Patient Report", type="primary", use_container_width=True):
+        st.subheader("Behavioral Questionnaire Response Audit")
+        
+        q_meta = [
+            ("Q1", "Name Orientation", "Does child look when name is called?", "Domain A"),
+            ("Q2", "Eye Contact", "Ease of establishing mutual eye contact?", "Domain A"),
+            ("Q3", "Pointing for Wants", "Points to indicate desired objects?", "Domain A"),
+            ("Q4", "Shared Interest", "Points to share interest (e.g. airplane)?", "Domain A"),
+            ("Q5", "Pretend Play", "Engages in pretend play (doll, toy phone)?", "Domain A"),
+            ("Q6", "Gaze Following", "Follows where adult looks (gaze tracking)?", "Domain A"),
+            ("Q7", "Empathy & Comfort", "Shows empathy or comforts upset family member?", "Domain A"),
+            ("Q8", "Speech & Vocalization", "Are first words communicative or atypical echoes?", "Domain A"),
+            ("Q9", "Communicative Gestures", "Uses simple communicative gestures (waving)?", "Domain A"),
+            ("Q10", "Repetitive Mannerisms", "Stares blankly or shows repetitive motor mannerisms?", "Domain B"),
+        ]
+
+        table_rows = ""
+        for qid, short_label, inquiry, domain in q_meta:
+            score = st.session_state["wiz_q"].get(qid, 0)
+            status_badge = '<span style="background: #FEE2E2; color: #DC2626; font-weight: 800; padding: 4px 10px; border-radius: 9999px; font-size: 0.8rem;">Atypical Trait (1)</span>' if score == 1 else '<span style="background: #DCFCE7; color: #059669; font-weight: 800; padding: 4px 10px; border-radius: 9999px; font-size: 0.8rem;">Typical Response (0)</span>'
+            table_rows += f"""<tr>
+<td style="font-weight: 800; color: #0A192F;">{qid}</td>
+<td><strong>{short_label}</strong><br><span style="font-size: 0.82rem; color: #64748B;">{inquiry}</span></td>
+<td><span style="background: #EFF6FF; color: #1D4ED8; font-weight: 700; padding: 3px 8px; border-radius: 6px; font-size: 0.78rem;">{domain}</span></td>
+<td>{status_badge}</td>
+</tr>"""
+
+        render_html(f"""<table class="report-table" style="margin-top: 10px;">
+<thead>
+<tr>
+<th style="width: 8%;">Item</th>
+<th style="width: 52%;">Clinical Trait & Questionnaire Inquiry</th>
+<th style="width: 18%;">Domain</th>
+<th style="width: 22%;">Recorded Attribution</th>
+</tr>
+</thead>
+<tbody>
+{table_rows}
+</tbody>
+</table>""")
+
+        # Navigation Controls
+        st.markdown("<br>", unsafe_allow_html=True)
+        r_col1, r_col2, r_col3, r_spacer = st.columns([1.6, 1.6, 2.5, 1.8])
+        with r_col1:
+            if st.button("⬅️ Back: Questions (Q6-Q10)", use_container_width=True):
+                st.session_state["wiz_step"] = 6
+                st.rerun()
+        with r_col2:
+            if st.button("🏠 Home", use_container_width=True, key="step7_home_btn"):
+                st.session_state["nav_target"] = "Home"
+                st.rerun()
+        with r_col3:
+            if st.button("🌟 Proceed to Clinical Action Plan (\"Good Ending\") ➔", type="primary", use_container_width=True):
+                st.session_state["wiz_step"] = 8
+                st.rerun()
+
+    # -------------------------------------------------------------
+    # STEP 8: THE "GOOD ENDING" — ACTION PLAN & CLINICAL ROADMAP
+    # -------------------------------------------------------------
+    elif step == 8:
+        res = st.session_state.get("wiz_results")
+        if res is None:
+            st.warning("No evaluation results found. Please start from Step 1.")
+            if st.button("Start Screening"):
+                st.session_state["wiz_step"] = 1
+                st.rerun()
+            return
+
+        p_name = st.session_state.get("wiz_patient_name", "Liam Davis")
+        g_name = st.session_state.get("wiz_guardian_name", "Sarah Davis (Mother)")
+        mrn = st.session_state.get("wiz_mrn", "MRN-ASD-2026-0842")
+        age = st.session_state.get("wiz_age", 24)
+        sex = st.session_state.get("wiz_sex", "m")
+        is_elevated = (res["tabnet_pred"] == 1) or (res["mlp_pred"] == 1) or (res["aq10_score"] >= 3)
+        eval_date = datetime.date.today().strftime("%B %d, %Y")
+
+        # 1. Heartwarming, Empowering Hero Closing Banner
+        render_html(f"""<div style="background: linear-gradient(135deg, #0A192F 0%, #1E3A8A 50%, #4338CA 100%); border-radius: 20px; padding: 36px 38px; color: #FFFFFF; margin-bottom: 30px; box-shadow: 0 16px 36px rgba(10,25,47,0.25);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+<span style="background: rgba(255,255,255,0.18); color: #93C5FD; font-size: 0.82rem; font-weight: 800; padding: 5px 14px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.06em;">
+🌟 DEVELOPMENTAL EMPOWERMENT & CLINICAL ROADMAP
+</span>
+</div>
+<h1 style="font-size: 2.15rem; font-weight: 800; color: #FFFFFF; margin: 8px 0 14px 0; letter-spacing: -0.02em; line-height: 1.3;">
+Every Child Has a Unique Path — Early Insight is the Best Foundation
+</h1>
+<p style="font-size: 1.05rem; line-height: 1.65; color: #CBD5E1; max-width: 880px; margin: 0;">
+By completing this developmental screening for <strong>{p_name}</strong>, you have taken the single most impactful, proactive step in early childhood. The toddler years (12 to 36 months) are defined by peak brain neuroplasticity. With attentive caregiver engagement, structured play, and early developmental support, children make extraordinary, lifelong developmental gains.
+</p>
+</div>""")
+
+        # 2. 4-Pillar Action Plan
+        st.subheader("Your 4-Pillar Developmental Action Plan")
+        p1, p2 = st.columns(2)
+        with p1:
+            render_html("""<div class="med-card" style="border-left: 5px solid #1D4ED8;">
+<div class="med-card-header">
+<div class="med-card-icon">🩺</div>
+<span class="pill-badge pill-blue">Pillar 1 &bull; Clinical Medical Care</span>
+</div>
+<div class="med-card-title">1. Pediatric Consultation & Diagnostic Referral</div>
+<div class="med-card-body">
+<ul>
+<li><strong>Schedule Well-Child Review:</strong> Bring a printed copy of this screening dossier to your child's pediatrician or primary care provider.</li>
+<li><strong>Request Specialized Evaluation:</strong> Ask for a formal developmental evaluation with a developmental pediatrician, child psychologist, or pediatric neurologist using gold-standard diagnostic tools (ADOS-2, Bayley-4).</li>
+<li><strong>Audiology / Hearing Screen:</strong> Request a routine hearing assessment to ensure communicative differences are not secondary to middle ear fluid.</li>
+</ul>
+</div>
+</div>""")
+
+            render_html("""<div class="med-card" style="border-left: 5px solid #059669;">
+<div class="med-card-header">
+<div class="med-card-icon">💡</div>
+<span class="pill-badge pill-green">Pillar 3 &bull; Home Play Strategies</span>
+</div>
+<div class="med-card-title">3. Interactive Floor-Time & Joint Attention Games</div>
+<div class="med-card-body">
+<ul>
+<li><strong>Face-to-Face Play:</strong> Position yourself at the child's exact eye level during play to encourage natural mutual gaze.</li>
+<li><strong>Reciprocal Turn-Taking:</strong> Engage in back-and-forth games (rolling a ball, blowing bubbles, taking turns stacking blocks).</li>
+<li><strong>Narrate Daily Activities:</strong> Speak in short, vivid 2-3 word sentences describing the child's focus ("Big car zooms!", "Liam builds tower!").</li>
+<li><strong>Celebrate Communicative Gestures:</strong> Enthusiastically reinforce all attempts at pointing, waving, and eye contact.</li>
+</ul>
+</div>
+</div>""")
+
+        with p2:
+            render_html("""<div class="med-card" style="border-left: 5px solid #7C3AED;">
+<div class="med-card-header">
+<div class="med-card-icon">🧸</div>
+<span class="pill-badge pill-purple">Pillar 2 &bull; Early Support Services</span>
+</div>
+<div class="med-card-title">2. Early Intervention (No Diagnosis Required!)</div>
+<div class="med-card-body">
+<ul>
+<li><strong>Start Services Immediately:</strong> In virtually all jurisdictions (including US IDEA Part C), state and county Early Intervention services <strong>do not require</strong> a finalized medical diagnosis to begin.</li>
+<li><strong>Speech-Language Pathology:</strong> Focuses on functional communication, gesture imitation, and social pragmatic sound play.</li>
+<li><strong>Occupational Therapy:</strong> Supports sensory regulation, fine motor grasp, and self-soothing comfort routines.</li>
+<li><strong>Developmental Play Therapy:</strong> Structured toddler social group activities that foster peer play.</li>
+</ul>
+</div>
+</div>""")
+
+            render_html("""<div class="med-card" style="border-left: 5px solid #D97706;">
+<div class="med-card-header">
+<div class="med-card-icon">🤝</div>
+<span class="pill-badge pill-amber">Pillar 4 &bull; Community & Guidance</span>
+</div>
+<div class="med-card-title">4. Family Guidance & Trusted Resources</div>
+<div class="med-card-body">
+<ul>
+<li><strong>CDC Learn the Signs. Act Early:</strong> Free milestone tracker app with research-backed developmental guides.</li>
+<li><strong>Autism Navigator Video Glossary:</strong> Side-by-side video clips showing typical vs atypical toddler communication.</li>
+<li><strong>Caregiver Empowerment:</strong> Connect with local pediatric parent support groups and early childhood playgroups.</li>
+<li><strong>Parent Well-Being:</strong> Remember that self-care and caregiver emotional balance provide the stable foundation for your child.</li>
+</ul>
+</div>
+</div>""")
+
+        # 3. Official Patient Clinical Summary Certificate Card
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.subheader("Official Patient Evaluation Summary")
+        
+        status_chip = '<span style="background: #FEE2E2; color: #DC2626; font-weight: 800; padding: 6px 14px; border-radius: 9999px; font-size: 0.85rem;">ELEVATED RISK DETECTED</span>' if is_elevated else '<span style="background: #DCFCE7; color: #059669; font-weight: 800; padding: 6px 14px; border-radius: 9999px; font-size: 0.85rem;">TYPICAL DEVELOPMENT PROFILE</span>'
+        
+        render_html(f"""<div style="background: #FFFFFF; border: 2px solid #CBD5E1; border-radius: 16px; padding: 24px 28px; box-shadow: 0 6px 20px rgba(15,23,42,0.05); margin-bottom: 25px;">
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #F1F5F9; padding-bottom: 14px; margin-bottom: 16px;">
+<div>
+<div style="font-size: 0.78rem; font-weight: 800; color: #1D4ED8; letter-spacing: 0.06em; text-transform: uppercase;">CLINICAL COMPLETION CERTIFICATE</div>
+<h3 style="font-size: 1.5rem; font-weight: 800; color: #0A192F; margin: 4px 0 2px 0;">{p_name}</h3>
+<div style="font-size: 0.88rem; color: #64748B;">Caregiver: <strong>{g_name}</strong> &bull; MRN: <strong>{mrn}</strong> &bull; Date: {eval_date}</div>
+</div>
+<div>
+{status_chip}
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+<div style="background: #F8FAFC; border-radius: 10px; padding: 12px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Chronological Age & Sex</div>
+<div style="font-size: 1.05rem; font-weight: 800; color: #0A192F;">{age}m &bull; {'Male' if sex=='m' else 'Female'}</div>
+</div>
+<div style="background: #F8FAFC; border-radius: 10px; padding: 12px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">TabNet Model Output</div>
+<div style="font-size: 1.05rem; font-weight: 800; color: #1D4ED8;">{res['tabnet_prob'] * 100:.1f}% Confidence</div>
+</div>
+<div style="background: #F8FAFC; border-radius: 10px; padding: 12px; border: 1px solid #E2E8F0;">
+<div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Q-CHAT Score</div>
+<div style="font-size: 1.05rem; font-weight: 800; color: #0A192F;">{res['aq10_score']} / 10 Points</div>
+</div>
+</div>
+</div>""")
+
+        # 4. Final Action Buttons
+        act_col1, act_col2, act_col3, act_col4 = st.columns([2.5, 1.8, 1.8, 1.5])
+        with act_col1:
+            if st.button("📄 View & Print Full Official Medical Report", type="primary", use_container_width=True):
                 st.session_state["nav_target"] = "Clinical Test Report"
                 st.rerun()
-        with r_btn_col2:
+        with act_col2:
+            if st.button("⬅️ Back: Risk Analysis", use_container_width=True):
+                st.session_state["wiz_step"] = 7
+                st.rerun()
+        with act_col3:
             if st.button("🔄 Start New Screening", use_container_width=True):
                 st.session_state["wiz_step"] = 1
                 st.session_state["wiz_results"] = None
                 st.rerun()
-        with r_btn_col3:
-            if st.button("🏠 Return to Home", use_container_width=True, key="step6_home_btn"):
+        with act_col4:
+            if st.button("🏠 Home", use_container_width=True, key="step8_home_btn"):
                 st.session_state["nav_target"] = "Home"
                 st.rerun()
-
-        # Guidance Recommendation
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.subheader("Clinical Recommendation & Next Steps")
-        if is_elevated:
-            st.markdown("""1. **Pediatric Consultation:** Present these screening findings to your child's pediatrician or family physician.
-2. **Multidisciplinary Assessment:** Request a formal evaluation with a developmental pediatrician, child psychologist, or pediatric neurologist.
-3. **Early Intervention Services:** Initiate county/state early intervention programs immediately; referral does not require a finalized formal diagnosis.""")
-        else:
-            st.markdown("""1. **Maintain Routine Checkups:** Continue standard 18- and 24-month well-child pediatric checkups.
-2. **Monitor Emerging Milestones:** Keep tracking speech, social smiling, and motor milestone progressions.
-3. **Re-Screen if Concerns Arise:** Re-evaluate if you observe any regression in acquired social or communicative abilities.""")
 
     render_disclaimer()
