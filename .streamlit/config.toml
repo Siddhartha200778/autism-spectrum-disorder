@@ -1,8 +1,8 @@
 [theme]
 base = "light"
-primaryColor = "#1D4ED8"
+primaryColor = "#16324F"
 backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F0F7FF"
+secondaryBackgroundColor = "#F8FAFC"
 textColor = "#0F172A"
 font = "sans serif"
 
@@ -14,3 +14,4 @@ maxUploadSize = 50
 
 [browser]
 gatherUsageStats = false
+

@@ -515,16 +515,26 @@ def inject_custom_css():
 
     /* Buttons */
     .stButton > button {
-        border-radius: 10px;
-        font-weight: 600;
-        padding: 10px 22px;
-        transition: all 0.2s ease;
-        border: none;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        padding: 9px 18px !important;
+        transition: all 0.18s ease !important;
+        border: 1px solid #CBD5E1 !important;
     }
 
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(29, 78, 216, 0.25);
+    .stButton > button[kind="primary"],
+    .stButton > button[data-testid="stBaseButton-primary"] {
+        background-color: #16324F !important;
+        border-color: #16324F !important;
+        color: #FFFFFF !important;
+    }
+
+    .stButton > button[kind="primary"]:hover,
+    .stButton > button[data-testid="stBaseButton-primary"]:hover {
+        background-color: #1E3A5F !important;
+        border-color: #1E3A5F !important;
+        box-shadow: 0 4px 12px rgba(22, 50, 79, 0.25) !important;
+        transform: translateY(-1px) !important;
     }
 
     /* Tabs Styling */
@@ -702,6 +712,293 @@ def inject_custom_css():
         }
     }
 
+    /* ========================================================
+       SWISS CLINICAL RESEARCH PLATFORM DESIGN SYSTEM (SPEC 2.4)
+       ======================================================== */
+    .clinical-top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0 16px 0;
+        margin-bottom: 12px;
+        border-bottom: 1px solid #E2E8F0;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .clinical-breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+    }
+
+    .crumb-root {
+        font-weight: 800;
+        color: #1E293B;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .crumb-sep {
+        color: #94A3B8;
+        font-weight: 400;
+    }
+
+    .crumb-current {
+        color: #64748B;
+        font-weight: 600;
+    }
+
+    .protocol-pills-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .protocol-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .protocol-pill-teal {
+        background: #F0FDFA;
+        border: 1px solid #CCFBF1;
+        color: #0F766E;
+    }
+
+    .protocol-pill-teal .pill-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #0D9488;
+        display: inline-block;
+    }
+
+    .protocol-pill-slate {
+        background: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        color: #475569;
+    }
+
+    /* Decision Support Amber Banner */
+    .decision-support-banner {
+        background: #FFFBEB;
+        border: 1px solid #FDE68A;
+        border-radius: 8px;
+        padding: 12px 18px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .decision-banner-icon {
+        font-size: 1.15rem;
+        line-height: 1.2;
+    }
+
+    .decision-banner-content {
+        font-size: 0.81rem;
+        color: #92400E;
+        line-height: 1.5;
+    }
+
+    .decision-banner-title {
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        margin-right: 4px;
+        text-transform: uppercase;
+    }
+
+    /* Enterprise Clinical Hero Card */
+    .clinical-hero-card {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        padding: 24px 28px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        margin-bottom: 22px;
+    }
+
+    .clinical-hero-title {
+        font-size: 1.68rem;
+        font-weight: 800;
+        color: #16324F !important;
+        letter-spacing: -0.02em;
+        line-height: 1.25;
+        margin: 0 0 8px 0;
+    }
+
+    .clinical-hero-desc {
+        font-size: 0.92rem;
+        color: #475569 !important;
+        line-height: 1.55;
+        margin: 0;
+        max-width: 860px;
+    }
+
+    /* Swiss Metric Cards */
+    .metric-card-swiss {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+        padding: 18px 20px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .metric-label-swiss {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #64748B;
+        text-transform: capitalize;
+        margin-bottom: 6px;
+    }
+
+    .metric-value-swiss {
+        font-size: 1.85rem;
+        font-weight: 800;
+        color: #0F172A;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        margin-bottom: 8px;
+    }
+
+    .metric-meta-swiss {
+        font-size: 0.74rem;
+        color: #64748B;
+    }
+
+    /* Architecture Benchmark Cards */
+    .arch-card-swiss {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+        padding: 20px 22px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .arch-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .arch-title {
+        font-size: 0.82rem;
+        font-weight: 800;
+        color: #0F172A;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .arch-badge-teal {
+        background: #CCFBF1;
+        border: 1px solid #99F6E4;
+        color: #0F766E;
+        font-size: 0.68rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .arch-badge-blue {
+        background: #E0F2FE;
+        border: 1px solid #BAE6FD;
+        color: #0369A1;
+        font-size: 0.68rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .arch-desc {
+        font-size: 0.83rem;
+        color: #475569 !important;
+        line-height: 1.5;
+        margin: 0 0 16px 0;
+        flex-grow: 1;
+    }
+
+    .arch-stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+        padding-top: 14px;
+        border-top: 1px solid #F1F5F9;
+    }
+
+    .arch-stat-box {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .arch-stat-lbl {
+        font-size: 0.68rem;
+        color: #94A3B8;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-bottom: 2px;
+    }
+
+    .arch-stat-val {
+        font-size: 0.96rem;
+        font-weight: 800;
+        color: #0F172A;
+    }
+
+    /* Section Bar */
+    .section-header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0 12px 0;
+        margin: 28px 0 16px 0;
+        border-bottom: 1px solid #E2E8F0;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .section-bar-title {
+        font-size: 0.86rem;
+        font-weight: 800;
+        color: #0F172A;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .section-bar-badge {
+        display: inline-flex;
+        align-items: center;
+        background: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        color: #475569;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 9999px;
+    }
+
     /* Footer */
     .clinical-footer {
         text-align: center;
@@ -716,12 +1013,15 @@ def inject_custom_css():
     st.markdown(custom_css, unsafe_allow_html=True)
 
 def render_html(content):
-    """Safely renders HTML without markdown treating leading indentation as code blocks."""
+    """Safely renders HTML using st.html (or fallback to st.markdown) without treating indentation as code."""
     if not content:
         return
-    cleaned_lines = [line.strip() for line in str(content).splitlines() if line.strip()]
-    cleaned_html = "\n".join(cleaned_lines)
-    st.markdown(cleaned_html, unsafe_allow_html=True)
+    if hasattr(st, "html"):
+        st.html(content)
+    else:
+        cleaned_lines = [line.strip() for line in str(content).splitlines() if line.strip()]
+        cleaned_html = " ".join(cleaned_lines)
+        st.markdown(cleaned_html, unsafe_allow_html=True)
 
 def render_section_header(title, subtitle=None, badge=None):
     """Renders a consistent, high-impact clinical section header."""
