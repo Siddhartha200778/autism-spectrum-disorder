@@ -243,7 +243,16 @@ def render() -> None:
                 background:#FFFBEB; border:1px solid #FCD34D;
                 border-left:4px solid #F59E0B; border-radius:8px;
                 padding:12px 16px; margin-bottom:22px;">
-        <span style="font-size:1.1rem; margin-top:1px;">&#9888;</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+         style="flex-shrink:0; margin-top:1px;"
+         xmlns="http://www.w3.org/2000/svg">
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+            stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="12" y1="9" x2="12" y2="13" stroke="#D97706" stroke-width="2"
+            stroke-linecap="round"/>
+      <line x1="12" y1="17" x2="12.01" y2="17" stroke="#D97706" stroke-width="2"
+            stroke-linecap="round"/>
+    </svg>
         <div>
             <span style="font-size:0.76rem; font-weight:800; color:#92400E;
                          text-transform:uppercase; letter-spacing:0.05em;">
@@ -285,14 +294,14 @@ def render() -> None:
         """)
     with cta_col:
         st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
-        if st.button("Inference Screening Tool ➔", type="primary", use_container_width=True):
+        if st.button("Inference Screening Tool →", type="primary", use_container_width=True):
             st.session_state["nav_target"] = "Early ASD Detection"
             st.rerun()
         st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
-        if st.button("Dataset Analysis ➔", use_container_width=True):
+        if st.button("Dataset Analysis →", use_container_width=True):
             st.session_state["nav_target"] = "Dataset Analysis"
             st.rerun()
-        if st.button("Model Comparison ➔", use_container_width=True):
+        if st.button("Model Comparison →", use_container_width=True):
             st.session_state["nav_target"] = "Model Comparison"
             st.rerun()
 
@@ -607,7 +616,7 @@ def render() -> None:
         render_html(f"""
         <div style="{_cap_style}">
             <div style="font-size:0.85rem; font-weight:700; color:#0F172A; margin-bottom:6px;">
-                &#127979; Instant Behavioral Risk Assessment
+                Instant Behavioral Risk Assessment
             </div>
             <div style="font-size:0.8rem; color:#475569; line-height:1.6;">
                 Interactive Q-CHAT-10 questionnaire guiding caregivers through toddler behavioral
@@ -619,7 +628,7 @@ def render() -> None:
         render_html(f"""
         <div style="{_cap_style}">
             <div style="font-size:0.85rem; font-weight:700; color:#0F172A; margin-bottom:6px;">
-                &#128202; Multi-Format Dataset Processing
+                Multi-Format Dataset Processing
             </div>
             <div style="font-size:0.8rem; color:#475569; line-height:1.6;">
                 Drag-and-drop ingestion of CSV, XLS, and XLSX files with automatic schema
@@ -632,7 +641,7 @@ def render() -> None:
         render_html(f"""
         <div style="{_cap_style}">
             <div style="font-size:0.85rem; font-weight:700; color:#0F172A; margin-bottom:6px;">
-                &#128200; Comparative Analytics Dashboard
+                Comparative Analytics Dashboard
             </div>
             <div style="font-size:0.8rem; color:#475569; line-height:1.6;">
                 Side-by-side performance benchmarking across Accuracy, Precision, Recall, and
@@ -643,7 +652,7 @@ def render() -> None:
         render_html(f"""
         <div style="{_cap_style}">
             <div style="font-size:0.85rem; font-weight:700; color:#0F172A; margin-bottom:6px;">
-                &#128270; Feature Salience Attribution
+                Feature Salience Attribution
             </div>
             <div style="font-size:0.8rem; color:#475569; line-height:1.6;">
                 Direct extraction of TabNet sparse attention feature importances, revealing which
@@ -735,19 +744,19 @@ def render() -> None:
     # ------------------------------------------------------------------
     qn1, qn2, qn3, qn4 = st.columns(4)
     with qn1:
-        if st.button("Start Early Detection ➔", use_container_width=True, type="primary",
+        if st.button("Start Early Detection →", use_container_width=True, type="primary",
                      key="home_qnav_screener"):
             st.session_state["nav_target"] = "Early ASD Detection"
             st.rerun()
     with qn2:
-        if st.button("Dataset Analysis ➔", use_container_width=True, key="home_qnav_dataset"):
+        if st.button("Dataset Analysis →", use_container_width=True, key="home_qnav_dataset"):
             st.session_state["nav_target"] = "Dataset Analysis"
             st.rerun()
     with qn3:
-        if st.button("Model Comparison ➔", use_container_width=True, key="home_qnav_comparison"):
+        if st.button("Model Comparison →", use_container_width=True, key="home_qnav_comparison"):
             st.session_state["nav_target"] = "Model Comparison"
             st.rerun()
     with qn4:
-        if st.button("Clinical Test Report ➔", use_container_width=True, key="home_qnav_report"):
+        if st.button("Clinical Test Report →", use_container_width=True, key="home_qnav_report"):
             st.session_state["nav_target"] = "Clinical Test Report"
             st.rerun()

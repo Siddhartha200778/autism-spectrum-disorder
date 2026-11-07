@@ -31,7 +31,7 @@ except Exception as _ml_import_err:
 # Page Configuration
 st.set_page_config(
     page_title="Interpretable Deep Learning for Early ASD Detection",
-    page_icon="🧠",
+    page_icon="AS",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -59,7 +59,7 @@ PAGES = [
     "Home",
     "About Autism",
     "Early ASD Detection",
-    "Clinical Test Report",
+    "Test Report",
     "Dataset Analysis",
     "AI Models",
     "Model Comparison",
@@ -70,17 +70,17 @@ PAGES = [
 ]
 
 PAGE_ICONS = {
-    "Home": "🏠",
-    "About Autism": "📘",
-    "Early ASD Detection": "🩺",
-    "Clinical Test Report": "📄",
-    "Dataset Analysis": "📊",
-    "AI Models": "🧠",
-    "Model Comparison": "⚖️",
-    "Results & Visualization": "📈",
-    "Research Methodology": "🔬",
-    "About Us": "👥",
-    "Contact": "📬"
+    "Home":                   "01.",
+    "About Autism":           "02.",
+    "Early ASD Detection":    "03.",
+    "Clinical Test Report":   "04.",
+    "Dataset Analysis":       "05.",
+    "AI Models":              "06.",
+    "Model Comparison":       "07.",
+    "Results & Visualization":"08.",
+    "Research Methodology":   "09.",
+    "About Us":               "10.",
+    "Contact":                "11.",
 }
 
 # Auto-initialize Pre-trained Models and Benchmark Dataset (Cached across all sessions)
@@ -198,22 +198,22 @@ if selected_page != "Home":
     prev_target = st.session_state["nav_history"][-1] if st.session_state["nav_history"] else "Home"
     top_c1, top_c2, top_c3, top_spacer = st.columns([1.6, 1.6, 1.8, 5.0])
     with top_c1:
-        if st.button(f"⬅️ Back ({prev_target})", key="global_top_back", help=f"Return to {prev_target}"):
+        if st.button(f"← Back ({prev_target})", key="global_top_back", help=f"Return to {prev_target}"):
             dest = st.session_state["nav_history"].pop() if st.session_state["nav_history"] else "Home"
             st.session_state["nav_target"] = dest
             st.rerun()
     with top_c2:
-        if st.button("🏠 Home", key="global_top_home", help="Navigate to Home page"):
+        if st.button("Home", key="global_top_home", help="Navigate to Home page"):
             st.session_state["nav_target"] = "Home"
             st.rerun()
     with top_c3:
         if selected_page != "Early ASD Detection":
-            if st.button("🩺 Early Detection", key="global_top_screener", help="Open ASD Screener"):
+            if st.button("Early Detection", key="global_top_screener", help="Open ASD Screener"):
                 st.session_state["nav_target"] = "Early ASD Detection"
                 st.rerun()
         else:
-            if st.button("📄 Test Report", key="global_top_report", help="Open Clinical Test Report"):
-                st.session_state["nav_target"] = "Clinical Test Report"
+            if st.button("Test Report", key="global_top_report", help="Clinical Test Report"):
+                st.session_state["nav_target"] = "Test Report"
                 st.rerun()
     st.markdown("<div style='margin-bottom: 12px;'></div>", unsafe_allow_html=True)
 
@@ -222,7 +222,7 @@ PAGE_ROUTERS = {
     "Home": home.render,
     "About Autism": about_asd.render,
     "Early ASD Detection": detection.render,
-    "Clinical Test Report": test_report.render,
+    "Test Report": test_report.render,
     "Dataset Analysis": dataset_analysis.render,
     "AI Models": models.render,
     "Model Comparison": comparison.render,
@@ -241,22 +241,22 @@ if selected_page != "Home":
     prev_target = st.session_state["nav_history"][-1] if st.session_state["nav_history"] else "Home"
     b_c1, b_c2, b_c3, b_spacer = st.columns([1.6, 1.6, 2.0, 4.8])
     with b_c1:
-        if st.button(f"⬅️ Go Back ({prev_target})", key="global_bot_back"):
+        if st.button(f"← Back ({prev_target})", key="global_bot_back"):
             dest = st.session_state["nav_history"].pop() if st.session_state["nav_history"] else "Home"
             st.session_state["nav_target"] = dest
             st.rerun()
     with b_c2:
-        if st.button("🏠 Return to Home", key="global_bot_home"):
+        if st.button("Home", key="global_bot_home"):
             st.session_state["nav_target"] = "Home"
             st.rerun()
     with b_c3:
         if selected_page != "Early ASD Detection":
-            if st.button("🩺 Early ASD Detection", key="global_bot_screener"):
+            if st.button("Early ASD Detection", key="global_bot_screener"):
                 st.session_state["nav_target"] = "Early ASD Detection"
                 st.rerun()
         else:
-            if st.button("📄 Clinical Test Report", key="global_bot_report"):
-                st.session_state["nav_target"] = "Clinical Test Report"
+            if st.button("Clinical Test Report", key="global_bot_report"):
+                st.session_state["nav_target"] = "Test Report"
                 st.rerun()
 
 # Global Footer
