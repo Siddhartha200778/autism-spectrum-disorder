@@ -33,7 +33,7 @@ st.set_page_config(
     page_title="Interpretable Deep Learning for Early ASD Detection",
     page_icon="AS",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Inject Custom Healthcare AI Design System
@@ -59,7 +59,7 @@ PAGES = [
     "Home",
     "About Autism",
     "Early ASD Detection",
-    "Test Report",
+    "Clinical Test Report",
     "Dataset Analysis",
     "AI Models",
     "Model Comparison",
@@ -68,20 +68,6 @@ PAGES = [
     "About Us",
     "Contact"
 ]
-
-PAGE_ICONS = {
-    "Home":                   "01.",
-    "About Autism":           "02.",
-    "Early ASD Detection":    "03.",
-    "Clinical Test Report":   "04.",
-    "Dataset Analysis":       "05.",
-    "AI Models":              "06.",
-    "Model Comparison":       "07.",
-    "Results & Visualization":"08.",
-    "Research Methodology":   "09.",
-    "About Us":               "10.",
-    "Contact":                "11.",
-}
 
 # Auto-initialize Pre-trained Models and Benchmark Dataset (Cached across all sessions)
 cached_prep, cached_models = get_benchmark_models_and_data()
@@ -141,7 +127,6 @@ with st.sidebar:
         "Platform Navigation",
         options=PAGES,
         key="nav_radio",
-        format_func=lambda x: f"{PAGE_ICONS.get(x, '•')}  {x}"
     )
     st.session_state["active_page"] = selected_page
 
@@ -222,6 +207,7 @@ PAGE_ROUTERS = {
     "Home": home.render,
     "About Autism": about_asd.render,
     "Early ASD Detection": detection.render,
+    "Clinical Test Report": test_report.render,
     "Test Report": test_report.render,
     "Dataset Analysis": dataset_analysis.render,
     "AI Models": models.render,

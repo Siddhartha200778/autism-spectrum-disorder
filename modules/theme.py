@@ -1008,6 +1008,128 @@ def inject_custom_css():
         color: #64748B;
         font-size: 0.86rem;
     }
+
+    /* ── Hamburger Sidebar Toggle Button (3 horizontal bars) ──────── */
+
+    /* Container for collapse control (when sidebar is COLLAPSED) */
+    [data-testid="collapsedControl"],
+    [data-testid="stSidebarCollapsedControl"],
+    header [data-testid="collapsedControl"],
+    header [data-testid="stSidebarCollapsedControl"] {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        z-index: 999999 !important;
+        position: fixed !important;
+        top: 14px !important;
+        left: 14px !important;
+    }
+
+    [data-testid="collapsedControl"] button,
+    [data-testid="stSidebarCollapsedControl"] button {
+        background: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        min-height: 40px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 2px 8px rgba(15,23,42,0.12) !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        position: relative !important;
+    }
+
+    [data-testid="collapsedControl"] button:hover,
+    [data-testid="stSidebarCollapsedControl"] button:hover {
+        background: #F8FAFC !important;
+        border-color: #94A3B8 !important;
+        box-shadow: 0 4px 12px rgba(15,23,42,0.18) !important;
+    }
+
+    /* Hide the default chevron SVG inside the collapsed control */
+    [data-testid="collapsedControl"] svg,
+    [data-testid="stSidebarCollapsedControl"] svg {
+        display: none !important;
+    }
+
+    /* Draw 3 hamburger lines using pseudo-element inside button */
+    [data-testid="collapsedControl"] button::before,
+    [data-testid="stSidebarCollapsedControl"] button::before {
+        content: '' !important;
+        display: block !important;
+        width: 18px !important;
+        height: 2px !important;
+        background: #0F172A !important;
+        border-radius: 2px !important;
+        box-shadow: 0 -6px 0 0 #0F172A, 0 6px 0 0 #0F172A !important;
+        pointer-events: none !important;
+    }
+
+    [data-testid="collapsedControl"]::after,
+    [data-testid="stSidebarCollapsedControl"]::after {
+        display: none !important;
+    }
+
+    /* The close/toggle button inside the sidebar (when it is EXPANDED) */
+    [data-testid="stSidebarCollapseButton"],
+    [data-testid="stSidebarHeader"] {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    [data-testid="stSidebarCollapseButton"] button,
+    [data-testid="stSidebarHeader"] button,
+    [data-testid="stSidebar"] button[kind="header"] {
+        background: rgba(255,255,255,0.08) !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        border-radius: 8px !important;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        position: relative !important;
+    }
+
+    [data-testid="stSidebarCollapseButton"] button:hover,
+    [data-testid="stSidebarHeader"] button:hover,
+    [data-testid="stSidebar"] button[kind="header"]:hover {
+        background: rgba(255,255,255,0.18) !important;
+        border-color: rgba(255,255,255,0.3) !important;
+    }
+
+    /* Hide default X/chevron SVG in sidebar close button */
+    [data-testid="stSidebarCollapseButton"] svg,
+    [data-testid="stSidebarHeader"] svg,
+    [data-testid="stSidebar"] button[kind="header"] svg {
+        display: none !important;
+    }
+
+    /* Draw 3 lines on sidebar close button too */
+    [data-testid="stSidebarCollapseButton"] button::before,
+    [data-testid="stSidebarHeader"] button::before,
+    [data-testid="stSidebar"] button[kind="header"]::before {
+        content: '' !important;
+        display: block !important;
+        width: 16px !important;
+        height: 2px !important;
+        background: #FFFFFF !important;
+        border-radius: 2px !important;
+        box-shadow: 0 -5px 0 0 #FFFFFF, 0 5px 0 0 #FFFFFF !important;
+        pointer-events: none !important;
+    }
+
     </style>
     """
     st.markdown(custom_css, unsafe_allow_html=True)
