@@ -104,17 +104,20 @@ if "models_result" not in st.session_state and cached_models is not None:
 # Sidebar Branding & Navigation
 with st.sidebar:
     render_html("""
-    <div style="padding: 10px 0 18px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 20px;">
+    <div style="padding: 10px 0 18px 0; border-bottom: 1px solid rgba(255,255,255,0.12); margin-bottom: 20px;">
         <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="background: linear-gradient(135deg, #1D4ED8 0%, #7C3AED 100%); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.45rem; box-shadow: 0 4px 14px rgba(29, 78, 216, 0.4);">
-                🧠
+            <div style="background: #1D4ED8; width: 44px; height: 44px; border-radius: 10px;
+                        display: flex; align-items: center; justify-content: center;
+                        font-size: 1.1rem; font-weight: 900; color: #FFFFFF;
+                        flex-shrink: 0; box-shadow: 0 4px 14px rgba(29,78,216,0.5);">
+                AS
             </div>
             <div>
-                <div style="font-weight: 800; font-size: 1.1rem; color: #FFFFFF; letter-spacing: -0.01em;">
-                    ASD DeepScreen
+                <div style="font-weight: 800; font-size: 0.95rem; color: #FFFFFF; line-height: 1.2;">
+                    ASD TODDLER SCREENING
                 </div>
-                <div style="font-size: 0.74rem; color: #93C5FD; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">
-                    Clinical Healthcare AI
+                <div style="font-size: 0.68rem; color: #94A3B8; font-weight: 600; margin-top: 2px;">
+                    TabNet v1.9EF &#183; py-tabnet 4.1
                 </div>
             </div>
         </div>

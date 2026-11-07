@@ -656,7 +656,82 @@ def render() -> None:
     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
     # ------------------------------------------------------------------
-    # 9. Quick Navigation Footer Row
+    # 9. Compute Environment Panel (matches reference design)
+    # ------------------------------------------------------------------
+    render_html("""
+    <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px;
+                padding:16px 20px; margin-bottom:20px;">
+        <div style="font-size:0.65rem; font-weight:800; color:#94A3B8;
+                     text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">
+            COMPUTE ENVIRONMENT
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+            <div>
+                <div style="font-size:0.68rem; color:#94A3B8; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                    torch.runtime
+                </div>
+                <div style="font-size:0.82rem; font-weight:700; color:#0F172A;
+                             font-family:monospace;">
+                    2.2.3+cpu
+                </div>
+            </div>
+            <div>
+                <div style="font-size:0.68rem; color:#94A3B8; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                    TabNet Engine
+                </div>
+                <div style="font-size:0.82rem; font-weight:700; color:#0F172A;
+                             font-family:monospace;">
+                    py-tabnet 4.1
+                </div>
+            </div>
+            <div>
+                <div style="font-size:0.68rem; color:#94A3B8; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                    Validation Split
+                </div>
+                <div style="font-size:0.82rem; font-weight:700; color:#0F172A;
+                             font-family:monospace;">
+                    5-Fold Stratified
+                </div>
+            </div>
+            <div>
+                <div style="font-size:0.68rem; color:#94A3B8; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                    Validated Pipeline
+                </div>
+                <div style="font-size:0.82rem; font-weight:700; color:#14B8A6;
+                             font-family:monospace;">
+                    &#10003; N=1,054
+                </div>
+            </div>
+            <div>
+                <div style="font-size:0.68rem; color:#94A3B8; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                    Imbalance Handling
+                </div>
+                <div style="font-size:0.82rem; font-weight:700; color:#0F172A;
+                             font-family:monospace;">
+                    SMOTE (train-only)
+                </div>
+            </div>
+            <div>
+                <div style="font-size:0.68rem; color:#94A3B8; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                    Deployment
+                </div>
+                <div style="font-size:0.82rem; font-weight:700; color:#0F172A;
+                             font-family:monospace;">
+                    Streamlit Cloud
+                </div>
+            </div>
+        </div>
+    </div>
+    """)
+
+    # ------------------------------------------------------------------
+    # 10. Quick Navigation Footer Row
     # ------------------------------------------------------------------
     qn1, qn2, qn3, qn4 = st.columns(4)
     with qn1:
