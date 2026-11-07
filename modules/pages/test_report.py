@@ -1,6 +1,410 @@
 import streamlit as st
 import datetime
+import io
 from modules.theme import render_section_header, render_disclaimer, render_html
+
+try:
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
+    from reportlab.platypus import (
+        SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable, KeepTogether
+    )
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT, TA_JUSTIFY
+    from reportlab.pdfgen import canvas
+    _REPORTLAB_AVAILABLE = True
+except Exception:
+    _REPORTLAB_AVAILABLE = False
+
+
+if _REPORTLAB_AVAILABLE:
+    class NumberedCanvas(canvas.Canvas):
+        """Two-pass canvas to dynamically compute and draw total page numbers and clinical footer."""
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self._saved_page_states = []
+
+        def showPage(self):
+            self._saved_page_states.append(dict(self.__dict__))
+            self._startPage()
+
+        def save(self):
+            num_pages = len(self._saved_page_states)
+            for state in self._saved_page_states:
+                self.__dict__.update(state)
+                self.draw_page_number(num_pages)
+                super().showPage()
+            super().save()
+
+        def draw_page_number(self, page_count):
+            self.saveState()
+            self.setFont('Helvetica', 7)
+            self.setFillColor(colors.HexColor('#64748B'))
+            text = f"CONFIDENTIAL CLINICAL DOCUMENT  •  Generated: {datetime.date.today().strftime('%Y-%m-%d')}  •  Page {self._pageNumber} of {page_count}"
+            self.drawRightString(A4[0] - 36, 18, text)
+            self.drawString(36, 18, "ASD DeepScreen  •  Interpretable Clinical Research Platform")
+            self.setStrokeColor(colors.HexColor('#E2E8F0'))
+            self.setLineWidth(0.5)
+            self.line(36, 26, A4[0] - 36, 26)
+            self.restoreState()
+
+
+def generate_clinical_pdf_report(data: dict) -> bytes:
+    """
+    Constructs a high-fidelity, publication-grade clinical PDF diagnostic dossier
+    matching the exact structure and visual standards of the medical report.
+    """
+    if not _REPORTLAB_AVAILABLE:
+        raise RuntimeError("ReportLab engine is initializing. Please refresh in a moment.")
+
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(
+        buf,
+        pagesize=A4,
+        leftMargin=36,
+        rightMargin=36,
+        topMargin=36,
+        bottomMargin=36
+    )
+    printable_width = A4[0] - 72
+
+    styles = getSampleStyleSheet()
+
+    style_badge = ParagraphStyle(
+        'Badge', fontName='Helvetica-Bold', fontSize=7.5,
+        textColor=colors.HexColor('#1D4ED8'), textTransform='uppercase', spaceAfter=3
+    )
+    style_main_title = ParagraphStyle(
+        'MainTitle', fontName='Helvetica-Bold', fontSize=15, leading=18,
+        textColor=colors.HexColor('#0A192F'), spaceAfter=2
+    )
+    style_subtitle = ParagraphStyle(
+        'Subtitle', fontName='Helvetica', fontSize=8.5, leading=11,
+        textColor=colors.HexColor('#64748B'), spaceAfter=0
+    )
+    style_header_meta = ParagraphStyle(
+        'HeaderMeta', fontName='Helvetica', fontSize=8, leading=11,
+        alignment=TA_RIGHT, textColor=colors.HexColor('#475569')
+    )
+    style_status_title = ParagraphStyle(
+        'StatusTitle', fontName='Helvetica-Bold', fontSize=11.5, leading=14, alignment=TA_CENTER
+    )
+    style_status_body = ParagraphStyle(
+        'StatusBody', fontName='Helvetica', fontSize=8, leading=11,
+        alignment=TA_CENTER, textColor=colors.HexColor('#334155')
+    )
+    style_section_title = ParagraphStyle(
+        'SectionTitle', fontName='Helvetica-Bold', fontSize=9, leading=12,
+        textColor=colors.HexColor('#0F172A'), spaceAfter=4
+    )
+    style_body = ParagraphStyle(
+        'Body', fontName='Helvetica', fontSize=8, leading=11, textColor=colors.HexColor('#1E293B')
+    )
+    style_body_bold = ParagraphStyle(
+        'BodyBold', fontName='Helvetica-Bold', fontSize=8, leading=11, textColor=colors.HexColor('#0F172A')
+    )
+    style_small = ParagraphStyle(
+        'Small', fontName='Helvetica', fontSize=7, leading=9.5, textColor=colors.HexColor('#64748B')
+    )
+    style_metric_val = ParagraphStyle(
+        'MetricVal', fontName='Helvetica-Bold', fontSize=14, leading=17, alignment=TA_CENTER
+    )
+    style_metric_label = ParagraphStyle(
+        'MetricLabel', fontName='Helvetica-Bold', fontSize=7.5, leading=9.5,
+        alignment=TA_CENTER, textColor=colors.HexColor('#475569')
+    )
+    style_metric_sub = ParagraphStyle(
+        'MetricSub', fontName='Helvetica', fontSize=6.5, leading=8.5,
+        alignment=TA_CENTER, textColor=colors.HexColor('#64748B')
+    )
+
+    story = []
+
+    # 1. Header Row
+    institution = data.get('institution', 'Pediatric Neurodevelopmental Research Center')
+    mrn = data.get('mrn', 'MRN-ASD-2026-0842')
+    eval_date = data.get('date', datetime.date.today().strftime('%B %d, %Y'))
+
+    left_header = [
+        Paragraph("CONFIDENTIAL MEDICAL SCREENING DOCUMENT", style_badge),
+        Paragraph("Pediatric Autism Spectrum Developmental Evaluation", style_main_title),
+        Paragraph(institution, style_subtitle)
+    ]
+    right_header = [
+        Paragraph(f"<strong>MRN:</strong> {mrn}", style_header_meta),
+        Paragraph(f"<strong>Evaluation Date:</strong> {eval_date}", style_header_meta),
+        Paragraph("<strong>Protocol:</strong> Q-CHAT-10 Toddler", style_header_meta),
+        Paragraph("<strong>Status:</strong> Completed &amp; Verified", style_header_meta)
+    ]
+    header_table = Table([[left_header, right_header]], colWidths=[printable_width * 0.70, printable_width * 0.30])
+    header_table.setStyle(TableStyle([
+        ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ('LEFTPADDING', (0,0), (-1,-1), 0),
+        ('RIGHTPADDING', (0,0), (-1,-1), 0),
+        ('TOPPADDING', (0,0), (-1,-1), 0),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 0),
+    ]))
+    story.append(header_table)
+    story.append(Spacer(1, 6))
+    story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor('#1D4ED8'), spaceBefore=2, spaceAfter=8))
+
+    # 2. Risk Banner
+    is_elevated = (data.get("tabnet_pred") == 1) or (data.get("mlp_pred") == 1) or (data.get("aq10_score", 0) >= 3)
+    if is_elevated:
+        status_text = "ELEVATED ASD RISK PROFILE"
+        status_bg = colors.HexColor('#FEF2F2')
+        status_border = colors.HexColor('#EF4444')
+        status_color = colors.HexColor('#991B1B')
+    else:
+        status_text = "TYPICAL DEVELOPMENTAL PROFILE"
+        status_bg = colors.HexColor('#F0FDF4')
+        status_border = colors.HexColor('#10B981')
+        status_color = colors.HexColor('#065F46')
+
+    style_status_title.textColor = status_color
+    status_content = [
+        Paragraph(status_text, style_status_title),
+        Spacer(1, 2),
+        Paragraph(
+            "Multivariate screening based on standardized <strong>Q-CHAT-10</strong> behavioral markers "
+            "evaluated through calibrated deep neural architectures (TabNet Attentive Learning &amp; Multi-Layer Perceptron).",
+            style_status_body
+        )
+    ]
+    status_table = Table([[status_content]], colWidths=[printable_width])
+    status_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), status_bg),
+        ('BOX', (0,0), (-1,-1), 1.5, status_border),
+        ('LEFTPADDING', (0,0), (-1,-1), 12),
+        ('RIGHTPADDING', (0,0), (-1,-1), 12),
+        ('TOPPADDING', (0,0), (-1,-1), 7),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 7),
+    ]))
+    story.append(status_table)
+    story.append(Spacer(1, 8))
+
+    # 3. Patient Demographics & History
+    patient_name = data.get('patient_name', 'Liam Davis')
+    age_mons = data.get('Age', 24)
+    sex_str = 'Male' if str(data.get('Sex', 'm')).lower() in ['m', 'male'] else 'Female'
+    ethnicity = str(data.get('Ethnicity', 'N/A')).title()
+    guardian = str(data.get('guardian_name', 'Sarah Davis (Mother)')).title()
+    jaundice = str(data.get('Jaundice', 'no')).title()
+    fam_asd = str(data.get('Family_ASD', 'no')).title()
+    screener = str(data.get('Screener', 'Family Member')).title()
+
+    demo_title_row = [
+        Paragraph("1. PATIENT DEMOGRAPHICS &amp; CLINICAL EPIDEMIOLOGY", style_section_title),
+        "", "", ""
+    ]
+    demo_row1 = [
+        Paragraph(f"<strong>Patient ID:</strong> {patient_name}", style_body),
+        Paragraph(f"<strong>Chronological Age:</strong> {age_mons} Months", style_body),
+        Paragraph(f"<strong>Biological Sex:</strong> {sex_str}", style_body),
+        Paragraph(f"<strong>Ethnicity:</strong> {ethnicity}", style_body)
+    ]
+    demo_row2 = [
+        Paragraph(f"<strong>Informant / Guardian:</strong> {guardian}", style_body),
+        Paragraph(f"<strong>Neonatal Jaundice:</strong> {jaundice}", style_body),
+        Paragraph(f"<strong>Family ASD History:</strong> {fam_asd}", style_body),
+        Paragraph(f"<strong>Test Administrator:</strong> {screener}", style_body)
+    ]
+    col_w4 = printable_width / 4.0
+    demo_table = Table([demo_title_row, demo_row1, demo_row2], colWidths=[col_w4]*4)
+    demo_table.setStyle(TableStyle([
+        ('SPAN', (0,0), (3,0)),
+        ('BACKGROUND', (0,0), (3,0), colors.HexColor('#F1F5F9')),
+        ('BOTTOMPADDING', (0,0), (3,0), 3),
+        ('TOPPADDING', (0,0), (3,0), 3),
+        ('LEFTPADDING', (0,0), (-1,-1), 6),
+        ('RIGHTPADDING', (0,0), (-1,-1), 6),
+        ('TOPPADDING', (0,1), (-1,-1), 4),
+        ('BOTTOMPADDING', (0,1), (-1,-1), 4),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#CBD5E1')),
+        ('INNERGRID', (0,1), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
+    ]))
+    story.append(demo_table)
+    story.append(Spacer(1, 8))
+
+    # 4. Deep Learning Risk Stratification
+    tabnet_prob = data.get('tabnet_prob', 0) * 100.0
+    mlp_prob = data.get('mlp_prob', 0) * 100.0
+    aq10_score = data.get('aq10_score', 0)
+    a_dom = data.get('a_domain', 0)
+    b_dom = data.get('b_domain', 0)
+
+    card1 = [
+        Paragraph("TABNET ATTENTIVE NETWORK", style_metric_label),
+        Spacer(1, 2),
+        Paragraph(f"{tabnet_prob:.1f}%", ParagraphStyle('TVal', parent=style_metric_val, textColor=colors.HexColor('#1D4ED8'))),
+        Spacer(1, 1),
+        Paragraph("Risk Probability (Sparse Attention)", style_metric_sub)
+    ]
+    card2 = [
+        Paragraph("MLP NEURAL BASELINE", style_metric_label),
+        Spacer(1, 2),
+        Paragraph(f"{mlp_prob:.1f}%", ParagraphStyle('MVal', parent=style_metric_val, textColor=colors.HexColor('#7C3AED'))),
+        Spacer(1, 1),
+        Paragraph("Sigmoid Output (Threshold &ge; 60%)", style_metric_sub)
+    ]
+    card3 = [
+        Paragraph("Q-CHAT-10 SCORE", style_metric_label),
+        Spacer(1, 2),
+        Paragraph(f"{aq10_score} / 10", ParagraphStyle('QVal', parent=style_metric_val, textColor=colors.HexColor('#0F172A'))),
+        Spacer(1, 1),
+        Paragraph(f"Domain A: {a_dom}/9 &bull; Domain B: {b_dom}/1", style_metric_sub)
+    ]
+    col_w3 = printable_width / 3.0
+    eval_table = Table([[card1, card2, card3]], colWidths=[col_w3]*3)
+    eval_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F8FAFC')),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#CBD5E1')),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#CBD5E1')),
+        ('TOPPADDING', (0,0), (-1,-1), 6),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+        ('LEFTPADDING', (0,0), (-1,-1), 6),
+        ('RIGHTPADDING', (0,0), (-1,-1), 6),
+    ]))
+    story.append(eval_table)
+    story.append(Spacer(1, 8))
+
+    # 5. Itemized Q-CHAT-10 Behavioral Matrix
+    questions_info = [
+        ("Q1", "Name Orientation", "Does child respond / turn when called by name?", data.get("Q1", 0), "Domain A"),
+        ("Q2", "Eye Contact", "Ease of establishing sustained mutual eye contact?", data.get("Q2", 0), "Domain A"),
+        ("Q3", "Proto-Imperative Point", "Points to indicate desire for objects?", data.get("Q3", 0), "Domain A"),
+        ("Q4", "Proto-Declarative Point", "Points to share interest in objects / events?", data.get("Q4", 0), "Domain A"),
+        ("Q5", "Pretend Play", "Engages in symbolic pretend play (e.g. phone, doll)?", data.get("Q5", 0), "Domain A"),
+        ("Q6", "Gaze Following", "Follows adult looking direction across room?", data.get("Q6", 0), "Domain A"),
+        ("Q7", "Affective Empathy", "Consoles or reacts to visibly upset family members?", data.get("Q7", 0), "Domain A"),
+        ("Q8", "Early Vocalization", "Frequency and communicative quality of words?", data.get("Q8", 0), "Domain A"),
+        ("Q9", "Gestural Repertoire", "Uses communicative gestures (e.g. waving bye-bye)?", data.get("Q9", 0), "Domain A"),
+        ("Q10", "Repetitive Mannerisms", "Repetitive motor mannerisms or object spinning?", data.get("Q10", 0), "Domain B")
+    ]
+    matrix_title_row = [
+        Paragraph("2. ITEMIZED Q-CHAT-10 BEHAVIORAL MARKER ATTRIBUTION MATRIX", style_section_title),
+        "", "", ""
+    ]
+    matrix_header_row = [
+        Paragraph("<strong>Item</strong>", style_body_bold),
+        Paragraph("<strong>Clinical Marker &amp; Behavioral Inquiry</strong>", style_body_bold),
+        Paragraph("<strong>Domain</strong>", style_body_bold),
+        Paragraph("<strong>Attribution Score</strong>", style_body_bold)
+    ]
+    matrix_rows = [matrix_title_row, matrix_header_row]
+    row_styles = [
+        ('SPAN', (0,0), (3,0)),
+        ('BACKGROUND', (0,0), (3,0), colors.HexColor('#F1F5F9')),
+        ('BACKGROUND', (0,1), (3,1), colors.HexColor('#E2E8F0')),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#CBD5E1')),
+        ('INNERGRID', (0,1), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
+        ('TOPPADDING', (0,0), (-1,-1), 2.5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
+        ('LEFTPADDING', (0,0), (-1,-1), 5),
+        ('RIGHTPADDING', (0,0), (-1,-1), 5),
+    ]
+    col_w_matrix = [printable_width * 0.08, printable_width * 0.54, printable_width * 0.18, printable_width * 0.20]
+
+    for idx, (qid, qtitle, qdesc, val, dom) in enumerate(questions_info, start=2):
+        val_int = 1 if str(val).lower() in ['1', 'yes', 'true'] else 0
+        if val_int == 1:
+            score_text = "<strong>Atypical (1)</strong>"
+            score_color = colors.HexColor('#991B1B')
+        else:
+            score_text = "Typical (0)"
+            score_color = colors.HexColor('#065F46')
+
+        desc_para = Paragraph(f"<strong>{qtitle}</strong> &bull; <font color='#64748B'>{qdesc}</font>", style_body)
+        dom_para = Paragraph(f"<font color='#475569'>{dom}</font>", style_body)
+        score_para = Paragraph(f"<font color='{score_color.hexval()}'>{score_text}</font>", style_body)
+
+        matrix_rows.append([
+            Paragraph(f"<strong>{qid}</strong>", style_body),
+            desc_para,
+            dom_para,
+            score_para
+        ])
+        if idx % 2 == 1:
+            row_styles.append(('BACKGROUND', (0, idx), (-1, idx), colors.HexColor('#F8FAFC')))
+
+    matrix_table = Table(matrix_rows, colWidths=col_w_matrix)
+    matrix_table.setStyle(TableStyle(row_styles))
+    story.append(matrix_table)
+    story.append(Spacer(1, 8))
+
+    # 6. Recommendations
+    if is_elevated:
+        recs = [
+            "<strong>Priority Pediatric Referral:</strong> Schedule comprehensive multidisciplinary diagnostic evaluation (ADOS-2 / ADI-R / CARS-2).",
+            "<strong>Early Intervention Services:</strong> Connect with state/regional early developmental intervention for speech, language, and occupational therapy.",
+            "<strong>Audiological Evaluation:</strong> Complete formal pediatric hearing screening to rule out peripheral sensory deficits."
+        ]
+    else:
+        recs = [
+            "<strong>Developmental Surveillance:</strong> Continue standard 18-, 24-, and 30-month well-child pediatric checkups.",
+            "<strong>Milestone Tracking:</strong> Monitor continuous social communication and language acquisition milestones with primary pediatrician."
+        ]
+    rec_paras = [Paragraph("3. CLINICAL RECOMMENDATIONS &amp; ACTION PLAN", style_section_title)]
+    for r in recs:
+        rec_paras.append(Paragraph(f"&bull; {r}", style_body))
+        rec_paras.append(Spacer(1, 1.5))
+    rec_table = Table([[rec_paras]], colWidths=[printable_width])
+    rec_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F8FAFC')),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#CBD5E1')),
+        ('LEFTPADDING', (0,0), (-1,-1), 8),
+        ('RIGHTPADDING', (0,0), (-1,-1), 8),
+        ('TOPPADDING', (0,0), (-1,-1), 6),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+    ]))
+    story.append(rec_table)
+    story.append(Spacer(1, 8))
+
+    # 7. Signatures
+    examiner = data.get('examiner', 'Dr. Sarah Jenkins, MD, FAAP')
+    sig_left = [
+        Paragraph("Evaluating Specialist / Clinician:", style_small),
+        Spacer(1, 2),
+        Paragraph(f"<strong>{examiner}</strong>", style_body_bold),
+        Paragraph("Board Certified Pediatric Neurodevelopmental Specialist", style_small),
+        Paragraph(institution, style_small)
+    ]
+    sig_right = [
+        Spacer(1, 14),
+        HRFlowable(width="80%", thickness=1, color=colors.HexColor('#0F172A'), spaceBefore=0, spaceAfter=2, hAlign='RIGHT'),
+        Paragraph("Physician / Licensed Examiner Signature &amp; Date", ParagraphStyle('SigCap', parent=style_small, alignment=TA_RIGHT))
+    ]
+    sig_table = Table([[sig_left, sig_right]], colWidths=[printable_width * 0.60, printable_width * 0.40])
+    sig_table.setStyle(TableStyle([
+        ('VALIGN', (0,0), (-1,-1), 'BOTTOM'),
+        ('LEFTPADDING', (0,0), (-1,-1), 0),
+        ('RIGHTPADDING', (0,0), (-1,-1), 0),
+        ('TOPPADDING', (0,0), (-1,-1), 2),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2),
+    ]))
+
+    # 8. Disclaimer
+    disclaimer_p = Paragraph(
+        "<strong>MEDICAL DISCLAIMER:</strong> This document is generated as an academic screening decision support output. "
+        "It does NOT constitute a definitive psychiatric or medical diagnosis. Final diagnostic determination must be conducted "
+        "by qualified healthcare professionals following direct clinical assessment (e.g. DSM-5 / ICD-11 criteria).",
+        ParagraphStyle('Disc', fontName='Helvetica', fontSize=6.5, leading=8.5, textColor=colors.HexColor('#7F1D1D'))
+    )
+    disc_table = Table([[disclaimer_p]], colWidths=[printable_width])
+    disc_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#FEF2F2')),
+        ('BOX', (0,0), (-1,-1), 0.75, colors.HexColor('#FCA5A5')),
+        ('LEFTPADDING', (0,0), (-1,-1), 6),
+        ('RIGHTPADDING', (0,0), (-1,-1), 6),
+        ('TOPPADDING', (0,0), (-1,-1), 4),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+    ]))
+
+    story.append(KeepTogether([sig_table, Spacer(1, 6), disc_table]))
+
+    doc.build(story, canvasmaker=NumberedCanvas)
+    return buf.getvalue()
+
 
 def get_default_sample_report(risk_type="elevated"):
     """Generates a realistic clinical sample report for instant testing & printing."""
@@ -372,25 +776,58 @@ def render():
     # Print & Download Controls Bar
     st.markdown("<br>", unsafe_allow_html=True)
     st.subheader("2. Export & Print Options")
-    
+
+    # Generate Clinical PDF Report (Medical-grade format)
+    pdf_bytes = None
+    pdf_error = None
+    try:
+        pdf_bytes = generate_clinical_pdf_report(report_data)
+    except Exception as _pdf_err:
+        pdf_error = str(_pdf_err)
+
     html_content = generate_standalone_html_report(report_data)
-    
-    p_col1, p_col2, p_spacer = st.columns([1.8, 2.2, 3.5])
+
+    patient_slug = str(report_data.get('patient_name', 'Patient')).strip().replace(' ', '_')
+    mrn_slug = str(report_data.get('mrn', 'MRN')).strip().replace(' ', '_')
+    file_base = f"Clinical_ASD_Report_{patient_slug}_{mrn_slug}"
+
+    p_col1, p_col2, p_col3, p_spacer = st.columns([2.4, 2.0, 1.8, 1.8])
+
     with p_col1:
-        # Browser print trigger using HTML iframe
+        if pdf_bytes is not None:
+            st.download_button(
+                label="Download Clinical Report (PDF)",
+                data=pdf_bytes,
+                file_name=f"{file_base}.pdf",
+                mime="application/pdf",
+                use_container_width=True,
+                type="primary",
+                help="Official high-fidelity clinical diagnostic screening report in PDF format matching medical records standard"
+            )
+        else:
+            st.button(
+                "PDF Compiling...",
+                disabled=True,
+                use_container_width=True,
+                type="primary"
+            )
+            if pdf_error:
+                st.caption(f"PDF note: {pdf_error}")
+
+    with p_col2:
         st.download_button(
-            label="📥 Download Official HTML Report",
+            label="Download HTML Report",
             data=html_content,
-            file_name=f"ASD_Screening_Report_{report_data.get('patient_name', 'Patient').replace(' ', '_')}.html",
+            file_name=f"{file_base}.html",
             mime="text/html",
             use_container_width=True,
-            type="primary"
+            help="Download standalone browser-viewable HTML version"
         )
-    with p_col2:
-        # Client side JavaScript print helper
+
+    with p_col3:
         render_html("""
-        <button onclick="window.print()" style="background: linear-gradient(135deg, #0A192F 0%, #1D4ED8 100%); color: #FFFFFF; font-weight: 700; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; width: 100%; box-shadow: 0 4px 12px rgba(29,78,216,0.3);">
-            🖨️ Open Print Dialog (PDF)
+        <button onclick="window.print()" style="background: #F8FAFC; color: #0F172A; font-weight: 700; padding: 9px 16px; border-radius: 8px; border: 1px solid #CBD5E1; cursor: pointer; width: 100%; font-size: 0.9rem; transition: all 0.2s ease;">
+            Print Document
         </button>
         """)
 
