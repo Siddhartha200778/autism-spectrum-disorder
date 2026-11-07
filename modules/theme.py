@@ -524,16 +524,16 @@ def inject_custom_css():
 
     .stButton > button[kind="primary"],
     .stButton > button[data-testid="stBaseButton-primary"] {
-        background-color: #16324F !important;
-        border-color: #16324F !important;
+        background-color: #1D4ED8 !important;
+        border-color: #1D4ED8 !important;
         color: #FFFFFF !important;
     }
 
     .stButton > button[kind="primary"]:hover,
     .stButton > button[data-testid="stBaseButton-primary"]:hover {
-        background-color: #1E3A5F !important;
-        border-color: #1E3A5F !important;
-        box-shadow: 0 4px 12px rgba(22, 50, 79, 0.25) !important;
+        background-color: #1E40AF !important;
+        border-color: #1E40AF !important;
+        box-shadow: 0 4px 14px rgba(29, 78, 216, 0.35) !important;
         transform: translateY(-1px) !important;
     }
 
