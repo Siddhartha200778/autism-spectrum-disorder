@@ -7,13 +7,26 @@ try:
         load_default_dataset,
         preprocess_and_prepare,
         train_models_pipeline,
-        get_benchmark_models_and_data
+        get_benchmark_models_and_data,
     )
-except Exception as e:
-    import traceback
-    st.error(f"Module Import Error: {e}")
-    st.code(traceback.format_exc())
-    st.stop()
+    _ML_PIPELINE_OK = True
+except Exception as _ml_import_err:
+    import logging as _logging
+    _logging.warning("ml_pipeline import failed: %s", _ml_import_err)
+    _ML_PIPELINE_OK = False
+
+    # Stub fallbacks so the rest of app.py runs without crashing
+    def load_default_dataset():  # type: ignore[override]
+        return None
+
+    def preprocess_and_prepare(df):  # type: ignore[override]
+        return None
+
+    def train_models_pipeline(prep):  # type: ignore[override]
+        return None
+
+    def get_benchmark_models_and_data():  # type: ignore[override]
+        return None, None
 
 # Page Configuration
 st.set_page_config(
