@@ -46,11 +46,31 @@ def inject_custom_css() -> None:
         --secondary-background-color: #14243A !important;
     }
 
-    html, body, [class*="css"] {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    html, body, [class*="css"], .stApp {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
         color: #202B36;
         font-size: 14px;
         font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    /* ── Paragraph & Body Text (14–15px, weight 400) ──────────────────── */
+    p, .main p, [data-testid="stMarkdownContainer"] p, .body-text {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.6 !important;
+        color: #526071 !important;
+        margin-top: 0 !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Avoid excessively bold text — clean 600 weight for emphasis */
+    strong, b, .main strong, .main b {
+        font-weight: 600 !important;
+        color: #202B36 !important;
     }
 
     /* ── Universal Main Content Text ──────────────────────────────────── */
@@ -291,17 +311,44 @@ def inject_custom_css() -> None:
         -webkit-text-fill-color: #93C5FD !important;
     }
 
-    /* ── Headings ─────────────────────────────────────────────────────── */
-    h1, h2, h3, h4, h5, h6,
-    .main h1, .main h2, .main h3, .main h4, .main h5, .main h6 {
-        color: #202B36 !important;
+    /* ── Headings Hierarchy (Strict Specs) ───────────────────────────── */
+    h1, .main h1, .main-page-heading, .clinical-hero-title, .hero-title {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 26px !important;
         font-weight: 700 !important;
-        font-family: 'Inter', -apple-system, sans-serif !important;
+        line-height: 1.25 !important;
+        letter-spacing: -0.02em !important;
+        color: #202B36 !important;
+        margin: 0 0 10px 0 !important;
     }
 
-    h1, .main h1 { font-size: 26px !important; }
-    h2, .main h2 { font-size: 22px !important; }
-    h3, .main h3 { font-size: 17px !important; font-weight: 600 !important; }
+    h2, .main h2, h3, .main h3, .section-heading {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        line-height: 1.35 !important;
+        letter-spacing: -0.01em !important;
+        color: #202B36 !important;
+        margin: 0 0 8px 0 !important;
+    }
+
+    h4, .main h4 {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        line-height: 1.4 !important;
+        color: #202B36 !important;
+        margin: 0 0 6px 0 !important;
+    }
+
+    h5, .main h5, h6, .main h6 {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        line-height: 1.4 !important;
+        color: #202B36 !important;
+        margin: 0 0 4px 0 !important;
+    }
 
     /* ── Overall Background ───────────────────────────────────────────── */
     .stApp {
@@ -376,9 +423,11 @@ def inject_custom_css() -> None:
     [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] span,
     [data-testid="stSidebar"] label {
         color: #FFFFFF !important;
-        font-size: 14px !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 13px !important;
         font-weight: 500 !important;
         letter-spacing: 0.01em !important;
+        line-height: 1.35 !important;
         opacity: 1 !important;
     }
 
@@ -636,7 +685,7 @@ def inject_custom_css() -> None:
         margin: 0;
     }
 
-    /* ── Streamlit Metric ─────────────────────────────────────────────── */
+    /* ── Streamlit Metric (Strict Specs: 28–30px value, 11–12px label) ── */
     [data-testid="stMetric"] {
         background: #FFFFFF;
         padding: 16px 18px;
@@ -646,17 +695,25 @@ def inject_custom_css() -> None:
     }
 
     [data-testid="stMetricLabel"] {
-        font-size: 12px !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 11px !important;
         font-weight: 500 !important;
         color: #667085 !important;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+        text-transform: uppercase !important;
+        letter-spacing: 0.04em !important;
+        line-height: 1.35 !important;
     }
 
-    [data-testid="stMetricValue"] {
-        font-size: 30px !important;
+    [data-testid="stMetricValue"],
+    .metric-value-swiss,
+    .metric-value {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 28px !important;
         font-weight: 700 !important;
+        line-height: 1.15 !important;
+        letter-spacing: -0.02em !important;
         color: #167C80 !important;
+        margin-bottom: 4px !important;
     }
 
     /* ── Buttons (Enterprise Clinical Spec) ───────────────────────────── */
@@ -1382,12 +1439,12 @@ def render_section_header(title: str, subtitle: str | None = None, badge: str | 
     """Renders a consistent clinical section header with the professional palette."""
     badge_html = f'<div class="clinical-brand-badge">{badge}</div>' if badge else ""
     subtitle_html = (
-        f'<p style="color: #667085 !important; font-size: 14px; margin-top: 4px; '
-        f'margin-bottom: 20px; line-height: 1.5;">{subtitle}</p>'
+        f'<p style="color: #526071 !important; font-size: 14px; font-weight: 400; margin-top: 4px; '
+        f'margin-bottom: 16px; line-height: 1.6;">{subtitle}</p>'
     ) if subtitle else ""
-    html = f"""<div style="margin-bottom: 14px;">
+    html = f"""<div style="margin-bottom: 18px;">
 {badge_html}
-<h2 style="font-size: 26px; font-weight: 700; color: #202B36 !important; letter-spacing: -0.02em; margin: 0;">{title}</h2>
+<h1 style="font-size: 26px; font-weight: 700; color: #202B36 !important; letter-spacing: -0.02em; line-height: 1.25; margin: 0 0 6px 0;">{title}</h1>
 {subtitle_html}
 </div>"""
     render_html(html)
