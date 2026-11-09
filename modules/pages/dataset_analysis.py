@@ -122,7 +122,7 @@ def render():
         if target_col:
             fig, ax = plt.subplots(figsize=(6, 3.8))
             val_counts = raw_df[target_col].astype(str).value_counts()
-            colors = ["#167C80", "#167C80", "#5BA8AB", "#A78BFA"]
+            colors = ["#167C80", "#14243A"]
             ax.bar(val_counts.index, val_counts.values, color=colors[:len(val_counts)], width=0.55, edgecolor="#202B36", linewidth=1.2)
             ax.set_title("Target Class Distribution (ASD Traits)", fontsize=11, fontweight="bold", color="#202B36", pad=12)
             ax.set_ylabel("Count", fontweight="bold")
@@ -141,7 +141,7 @@ def render():
         if age_col:
             fig, ax = plt.subplots(figsize=(6, 3.8))
             ages = pd.to_numeric(raw_df[age_col], errors="coerce").dropna()
-            ax.hist(ages, bins=15, color="#1A9599", edgecolor="#14243A", alpha=0.85)
+            ax.hist(ages, bins=15, color="#167C80", edgecolor="#14243A", alpha=0.85)
             ax.set_title(f"Toddler Age Distribution ({age_col})", fontsize=11, fontweight="bold", color="#202B36", pad=12)
             ax.set_xlabel("Age (Months)", fontweight="bold")
             ax.set_ylabel("Frequency", fontweight="bold")

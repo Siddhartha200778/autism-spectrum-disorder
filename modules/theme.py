@@ -233,28 +233,43 @@ def inject_custom_css() -> None:
         opacity: 1 !important;
     }
 
-    /* Active sidebar item */
+    /* Active sidebar navigation indicator — high-visibility clinical indicator */
     [data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked),
-    [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) {
-        background: rgba(22, 124, 128, 0.3) !important;
-        border: 1px solid rgba(22, 124, 128, 0.5) !important;
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked),
+    [data-testid="stSidebar"] div[role="radiogroup"] label[aria-checked="true"] {
+        background: rgba(22, 124, 128, 0.35) !important;
+        border-left: 4px solid #167C80 !important;
+        border-top: 1px solid rgba(22, 124, 128, 0.5) !important;
+        border-right: 1px solid rgba(22, 124, 128, 0.5) !important;
+        border-bottom: 1px solid rgba(22, 124, 128, 0.5) !important;
         border-radius: 6px !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25) !important;
     }
 
     [data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) p,
     [data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) span,
     [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) p,
-    [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) span {
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) span,
+    [data-testid="stSidebar"] div[role="radiogroup"] label[aria-checked="true"] p,
+    [data-testid="stSidebar"] div[role="radiogroup"] label[aria-checked="true"] span {
         color: #FFFFFF !important;
         font-weight: 700 !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    /* Inactive sidebar items */
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:not(:has(input:checked)) p,
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:not(:has(input:checked)) span {
+        color: #B2BEC9 !important;
+        font-weight: 500 !important;
     }
 
     /* Hover on sidebar items */
     [data-testid="stSidebar"] div[data-testid="stRadio"] label:hover,
     [data-testid="stSidebar"] div[role="radiogroup"] > label:hover,
     [data-testid="stSidebar"] label[data-baseweb="radio"]:hover {
-        background: rgba(22, 124, 128, 0.18) !important;
-        border-color: rgba(22, 124, 128, 0.3) !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        border-left: 4px solid rgba(22, 124, 128, 0.6) !important;
     }
 
     [data-testid="stSidebar"] div[data-testid="stRadio"] label:hover p,
@@ -263,9 +278,15 @@ def inject_custom_css() -> None:
         font-weight: 600 !important;
     }
 
-    /* Radio dot in sidebar */
+    /* High-contrast radio dot indicator in sidebar */
+    [data-testid="stSidebar"] div[role="radiogroup"] input:checked + div,
+    [data-testid="stSidebar"] div[role="radiogroup"] input:checked + div > div {
+        background-color: #167C80 !important;
+        border-color: #167C80 !important;
+    }
     [data-testid="stSidebar"] div[role="radiogroup"] svg {
-        fill: #5BA8AB !important;
+        fill: #167C80 !important;
+        color: #167C80 !important;
     }
 
     /* Sidebar headings */
@@ -293,28 +314,15 @@ def inject_custom_css() -> None:
         margin-bottom: 12px;
     }
 
-    /* ── Hero Container ───────────────────────────────────────────────── */
+    /* ── Hero Container (Solid Clinical Palette) ──────────────────────── */
     .hero-container {
-        background: linear-gradient(135deg, #14243A 0%, #1B3A4B 55%, #14243A 100%);
-        border-radius: 12px;
-        padding: 40px 36px;
+        background: #14243A;
+        border-radius: 8px;
+        padding: 32px 36px;
         color: #FFFFFF;
-        box-shadow: 0 8px 24px -8px rgba(20, 36, 58, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        margin-bottom: 28px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hero-container::after {
-        content: "";
-        position: absolute;
-        top: -40%;
-        right: -20%;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(22, 124, 128, 0.2) 0%, transparent 70%);
-        pointer-events: none;
+        box-shadow: 0 1px 3px rgba(20, 36, 58, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 24px;
     }
 
     .hero-title {
@@ -502,7 +510,7 @@ def inject_custom_css() -> None:
         color: #167C80 !important;
     }
 
-    /* ── Buttons ──────────────────────────────────────────────────────── */
+    /* ── Buttons (Enterprise Clinical Spec) ───────────────────────────── */
     .stButton > button {
         border-radius: 6px !important;
         font-weight: 600 !important;
@@ -513,18 +521,82 @@ def inject_custom_css() -> None:
         font-family: 'Inter', sans-serif !important;
     }
 
+    /* Primary buttons: Dark navy #14243A background with pure white #FFFFFF text */
     .stButton > button[kind="primary"],
-    .stButton > button[data-testid="stBaseButton-primary"] {
+    .stButton > button[data-testid="stBaseButton-primary"],
+    button[kind="primary"],
+    button[data-testid="stBaseButton-primary"] {
         background-color: #14243A !important;
-        border-color: #14243A !important;
+        border: 1px solid #14243A !important;
         color: #FFFFFF !important;
     }
 
+    .stButton > button[kind="primary"] *,
+    .stButton > button[data-testid="stBaseButton-primary"] *,
+    button[kind="primary"] *,
+    button[data-testid="stBaseButton-primary"] *,
+    button[kind="primary"] p,
+    button[kind="primary"] span,
+    button[kind="primary"] div,
+    [data-testid="stBaseButton-primary"] p,
+    [data-testid="stBaseButton-primary"] span,
+    [data-testid="stBaseButton-primary"] div {
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+        opacity: 1 !important;
+    }
+
     .stButton > button[kind="primary"]:hover,
-    .stButton > button[data-testid="stBaseButton-primary"]:hover {
-        background-color: #1B3A4B !important;
-        border-color: #1B3A4B !important;
-        box-shadow: 0 2px 8px rgba(20, 36, 58, 0.2) !important;
+    .stButton > button[data-testid="stBaseButton-primary"]:hover,
+    button[kind="primary"]:hover,
+    button[data-testid="stBaseButton-primary"]:hover {
+        background-color: #167C80 !important;
+        border-color: #167C80 !important;
+        box-shadow: 0 2px 8px rgba(22, 124, 128, 0.25) !important;
+    }
+
+    .stButton > button[kind="primary"]:hover *,
+    .stButton > button[data-testid="stBaseButton-primary"]:hover *,
+    button[kind="primary"]:hover *,
+    button[data-testid="stBaseButton-primary"]:hover * {
+        color: #FFFFFF !important;
+    }
+
+    /* Secondary buttons: Crisp white card background with dark text */
+    .stButton > button[kind="secondary"],
+    .stButton > button[data-testid="stBaseButton-secondary"],
+    button[kind="secondary"],
+    button[data-testid="stBaseButton-secondary"] {
+        background-color: #FFFFFF !important;
+        border: 1px solid #E3E8EE !important;
+        color: #202B36 !important;
+    }
+
+    .stButton > button[kind="secondary"] *,
+    .stButton > button[data-testid="stBaseButton-secondary"] *,
+    button[kind="secondary"] *,
+    button[data-testid="stBaseButton-secondary"] *,
+    button[kind="secondary"] p,
+    button[kind="secondary"] span,
+    [data-testid="stBaseButton-secondary"] p,
+    [data-testid="stBaseButton-secondary"] span {
+        color: #202B36 !important;
+        font-weight: 500 !important;
+    }
+
+    .stButton > button[kind="secondary"]:hover,
+    .stButton > button[data-testid="stBaseButton-secondary"]:hover,
+    button[kind="secondary"]:hover,
+    button[data-testid="stBaseButton-secondary"]:hover {
+        background-color: #F4F6F8 !important;
+        border-color: #167C80 !important;
+    }
+
+    .stButton > button[kind="secondary"]:hover *,
+    .stButton > button[data-testid="stBaseButton-secondary"]:hover *,
+    button[kind="secondary"]:hover *,
+    button[data-testid="stBaseButton-secondary"]:hover * {
+        color: #167C80 !important;
     }
 
     /* ── Tabs ─────────────────────────────────────────────────────────── */
@@ -1146,15 +1218,17 @@ Academic Clinical AI Research Initiative &bull; Powered by PyTorch TabNet & Mult
 
 
 def apply_chart_theme(fig, ax):
-    """Applies modern styling to Matplotlib/Seaborn plots."""
+    """Applies standardized clinical styling to Matplotlib/Seaborn plots."""
     fig.patch.set_facecolor('#FFFFFF')
     ax.set_facecolor('#FFFFFF')
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.spines['left'].set_color('#E3E8EE')
     ax.spines['bottom'].set_color('#E3E8EE')
-    ax.tick_params(colors='#667085', labelsize=9)
-    ax.grid(True, linestyle='--', alpha=0.3, color='#E3E8EE')
+    ax.spines['left'].set_linewidth(1.0)
+    ax.spines['bottom'].set_linewidth(1.0)
+    ax.tick_params(colors='#526071', labelsize=9, width=1.0)
+    ax.grid(True, linestyle='--', alpha=0.35, color='#E3E8EE')
     ax.xaxis.label.set_color('#202B36')
     ax.xaxis.label.set_fontsize(10)
     ax.xaxis.label.set_weight('bold')

@@ -42,7 +42,7 @@ def render():
         st.write("**TabNet Confusion Matrix:**")
         fig, ax = plt.subplots(figsize=(5.5, 4.2))
         sns.heatmap(
-            tabnet["confusion_matrix"], annot=True, fmt="d", cmap="Blues", cbar=False, ax=ax,
+            tabnet["confusion_matrix"], annot=True, fmt="d", cmap=sns.light_palette("#167C80", as_cmap=True), cbar=False, ax=ax,
             annot_kws={"size": 13, "weight": "bold"}
         )
         ax.set_xlabel("Predicted Class", fontweight="bold", fontsize=10)
@@ -58,7 +58,7 @@ def render():
         st.write("**MLP Confusion Matrix:**")
         fig, ax = plt.subplots(figsize=(5.5, 4.2))
         sns.heatmap(
-            mlp["confusion_matrix"], annot=True, fmt="d", cmap="Purples", cbar=False, ax=ax,
+            mlp["confusion_matrix"], annot=True, fmt="d", cmap=sns.light_palette("#14243A", as_cmap=True), cbar=False, ax=ax,
             annot_kws={"size": 13, "weight": "bold"}
         )
         ax.set_xlabel(r"Predicted Class (Threshold $\ge$ 0.60)", fontweight="bold", fontsize=10)

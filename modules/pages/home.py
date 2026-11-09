@@ -206,12 +206,12 @@ def render() -> None:
                 background:#FFFFFF; border-bottom:1px solid #E3E8EE;
                 padding:10px 0 14px 0; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
         <div style="display:flex; align-items:center; gap:6px;">
-            <span style="font-size:0.72rem; font-weight:700; color:#8899A6;
-                         text-transform:uppercase; letter-spacing:0.08em;">
+            <span style="font-size:12px; font-weight:700; color:#526071;
+                         text-transform:uppercase; letter-spacing:0.06em;">
                 CLINICAL RESEARCH PLATFORM
             </span>
             <span style="color:#C5D0DA; font-size:0.85rem;">/</span>
-            <span style="font-size:0.72rem; font-weight:700; color:#202B36;
+            <span style="font-size:12px; font-weight:700; color:#202B36;
                          text-transform:uppercase; letter-spacing:0.08em;">
                 Overview
             </span>
@@ -222,13 +222,13 @@ def render() -> None:
                         border-radius:20px; padding:4px 12px;">
                 <span style="display:inline-block; width:7px; height:7px;
                              border-radius:50%; background:#167C80;"></span>
-                <span style="font-size:0.72rem; font-weight:600; color:#167C80;">
+                <span style="font-size:12px; font-weight:600; color:#167C80;">
                     Cohort: Q-CHAT-10 Toddler (12–36 Months)
                 </span>
             </div>
             <div style="background:#F4F6F8; border:1px solid #C5D0DA;
                         border-radius:20px; padding:4px 12px;
-                        font-size:0.72rem; font-weight:600; color:#667085;">
+                        font-size:12px; font-weight:600; color:#526071;">
                 IRB Protocol: #PR-2024-884A
             </div>
         </div>
@@ -254,11 +254,11 @@ def render() -> None:
             stroke-linecap="round"/>
     </svg>
         <div>
-            <span style="font-size:0.76rem; font-weight:800; color:#92400E;
+            <span style="font-size:12px; font-weight:700; color:#92400E;
                          text-transform:uppercase; letter-spacing:0.05em;">
                 RESEARCH SCREENING DECISION SUPPORT FRAMEWORK:&nbsp;
             </span>
-            <span style="font-size:0.78rem; color:#78350F; line-height:1.5;">
+            <span style="font-size:13px; color:#78350F; line-height:1.55;">
                 This system evaluates deep neural representation models for behavioral marker detection.
                 It is designed solely for academic and clinical research.
                 It does <strong>not</strong> constitute a definitive algorithmic or neurodevelopmental diagnosis.
@@ -276,15 +276,15 @@ def render() -> None:
         <div style="background:#FFFFFF; border:1px solid #E3E8EE;
                     border-radius:10px; padding:24px 28px;
                     box-shadow:0 1px 3px rgba(32,43,54,0.04);">
-            <div style="font-size:0.72rem; font-weight:700; color:#167C80;
-                         text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px;">
+            <div style="font-size:12px; font-weight:700; color:#167C80;
+                         text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
                 Interpretable Deep Learning for Early ASD Detection in Toddlers
             </div>
-            <h2 style="font-size:1.6rem; font-weight:800; color:#202B36;
-                        line-height:1.25; margin:0 0 12px 0;">
+            <h2 style="font-size:26px; font-weight:700; color:#202B36;
+                        line-height:1.25; margin:0 0 10px 0;">
                 Comparative Clinical Benchmark
             </h2>
-            <p style="font-size:0.88rem; color:#667085; line-height:1.65; margin:0;">
+            <p style="font-size:14px; color:#526071; line-height:1.6; margin:0;">
                 Investigating attention-based sparse-mask tabular transformers (TabNet) versus
                 baseline feedforward multilayer perceptrons (MLP) on
                 <strong style="color:#202B36;">1,054 toddler Q-CHAT-10</strong> screening records.
@@ -320,14 +320,14 @@ def render() -> None:
     with mc1:
         render_html(f"""
         <div style="{_card_style}">
-            <div style="font-size:0.68rem; font-weight:700; color:#8899A6;
-                         text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">
+            <div style="font-size:0.68rem; font-weight:700; color:#526071;
+                         text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Total Cohort Records
             </div>
-            <div style="font-size:2rem; font-weight:800; color:#202B36; line-height:1;">
+            <div style="font-size:30px; font-weight:700; color:#202B36; line-height:1.1; margin-bottom:6px;">
                 {cohort['total_records']:,}
             </div>
-            <div style="font-size:0.76rem; color:#667085; margin-top:6px;">
+            <div style="font-size:13px; color:#526071;">
                 Ages {cohort['min_age']}–{cohort['max_age']}m &bull; Median {cohort['median_age']:.0f}m
             </div>
         </div>
@@ -336,14 +336,14 @@ def render() -> None:
     with mc2:
         render_html(f"""
         <div style="{_card_style}">
-            <div style="font-size:0.68rem; font-weight:700; color:#8899A6;
-                         text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">
+            <div style="font-size:0.68rem; font-weight:700; color:#526071;
+                         text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Positive ASD Cases
             </div>
-            <div style="font-size:2rem; font-weight:800; color:#202B36; line-height:1;">
+            <div style="font-size:30px; font-weight:700; color:#202B36; line-height:1.1; margin-bottom:6px;">
                 {cohort['positive_cases']:,}
             </div>
-            <div style="font-size:0.76rem; color:#D97706; font-weight:700; margin-top:6px;">
+            <div style="font-size:13px; color:#B45309; font-weight:600;">
                 {cohort['prevalence_pct']:.2f}% Clinical Prevalence in Cohort
             </div>
         </div>
@@ -352,14 +352,14 @@ def render() -> None:
     with mc3:
         render_html(f"""
         <div style="{_card_style}">
-            <div style="font-size:0.68rem; font-weight:700; color:#8899A6;
-                         text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">
+            <div style="font-size:0.68rem; font-weight:700; color:#526071;
+                         text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 TabNet AUC-ROC (5-Fold CV)
             </div>
-            <div style="font-size:2rem; font-weight:800; color:#202B36; line-height:1;">
+            <div style="font-size:30px; font-weight:700; color:#202B36; line-height:1.1; margin-bottom:6px;">
                 {metrics['tabnet_auc']:.4f}
             </div>
-            <div style="font-size:0.76rem; color:#167C80; font-weight:600; margin-top:6px;">
+            <div style="font-size:13px; color:#167C80; font-weight:600;">
                 +{metrics['tabnet_acc']:.2f}% vs Baseline MLP
             </div>
         </div>
@@ -368,14 +368,14 @@ def render() -> None:
     with mc4:
         render_html(f"""
         <div style="{_card_style}">
-            <div style="font-size:0.68rem; font-weight:700; color:#8899A6;
-                         text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">
+            <div style="font-size:0.68rem; font-weight:700; color:#526071;
+                         text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Sparse Attention Sparsity
             </div>
-            <div style="font-size:2rem; font-weight:800; color:#202B36; line-height:1;">
+            <div style="font-size:30px; font-weight:700; color:#202B36; line-height:1.1; margin-bottom:6px;">
                 84.2%
             </div>
-            <div style="font-size:0.76rem; color:#667085; margin-top:6px;">
+            <div style="font-size:13px; color:#526071;">
                 Entmax Sparse-Mask Activation
             </div>
         </div>
@@ -395,7 +395,7 @@ def render() -> None:
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
                 <div style="width:4px; height:36px; background:#167C80; border-radius:2px;"></div>
                 <div>
-                    <div style="font-size:0.95rem; font-weight:800; color:#202B36;">
+                    <div style="font-size:14px; font-weight:700; color:#202B36;">
                         PROPOSED MODEL: TABNET ARCHITECTURE
                     </div>
                     <span style="display:inline-block; background:#EDF4F4; color:#167C80;
@@ -406,7 +406,7 @@ def render() -> None:
                     </span>
                 </div>
             </div>
-            <p style="font-size:0.82rem; color:#667085; line-height:1.6; margin:0 0 16px 0;">
+            <p style="font-size:13px; color:#526071; line-height:1.6; margin:0 0 14px 0;">
                 Uses sequential multi-step decision steps with attentive transformers to perform
                 instance-wise feature selection, enabling direct white-box interpretability
                 without external surrogate models.
@@ -414,24 +414,24 @@ def render() -> None:
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr;
                         gap:1px; background:#E3E8EE; border-radius:8px; overflow:hidden;">
                 <div style="background:#F4F6F8; padding:12px; text-align:center;">
-                    <div style="font-size:1.1rem; font-weight:800; color:#202B36;">
+                    <div style="font-size:16px; font-weight:700; color:#202B36;">
                         {metrics['tabnet_acc']:.2f}%
                     </div>
-                    <div style="font-size:0.65rem; color:#8899A6; font-weight:600;
+                    <div style="font-size:11px; color:#526071; font-weight:600;
                                 text-transform:uppercase;">Test Acc</div>
                 </div>
                 <div style="background:#F4F6F8; padding:12px; text-align:center;">
-                    <div style="font-size:1.1rem; font-weight:800; color:#202B36;">
+                    <div style="font-size:16px; font-weight:700; color:#202B36;">
                         {metrics['tabnet_prec']:.2f}%
                     </div>
-                    <div style="font-size:0.65rem; color:#8899A6; font-weight:600;
+                    <div style="font-size:11px; color:#526071; font-weight:600;
                                 text-transform:uppercase;">Precision</div>
                 </div>
                 <div style="background:#F4F6F8; padding:12px; text-align:center;">
-                    <div style="font-size:1.1rem; font-weight:800; color:#202B36;">
+                    <div style="font-size:16px; font-weight:700; color:#202B36;">
                         {metrics['tabnet_f1']:.4f}
                     </div>
-                    <div style="font-size:0.65rem; color:#8899A6; font-weight:600;
+                    <div style="font-size:11px; color:#526071; font-weight:600;
                                 text-transform:uppercase;">F1-Score</div>
                 </div>
             </div>
@@ -445,7 +445,7 @@ def render() -> None:
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
                 <div style="width:4px; height:36px; background:#14243A; border-radius:2px;"></div>
                 <div>
-                    <div style="font-size:0.95rem; font-weight:800; color:#202B36;">
+                    <div style="font-size:14px; font-weight:700; color:#202B36;">
                         BENCHMARK BASELINE: MULTILAYER PERCEPTRON
                     </div>
                     <span style="display:inline-block; background:#EDF4F4; color:#14243A;
@@ -456,7 +456,7 @@ def render() -> None:
                     </span>
                 </div>
             </div>
-            <p style="font-size:0.82rem; color:#667085; line-height:1.6; margin:0 0 16px 0;">
+            <p style="font-size:13px; color:#526071; line-height:1.6; margin:0 0 14px 0;">
                 Standard dense 4-layer fully connected network (10–178–64–32–1) with Batch
                 Normalization, ReLU activations and Dropout (p=0.25). High baseline accuracy
                 but lacks intrinsic feature-selection interpretability.
@@ -464,24 +464,24 @@ def render() -> None:
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr;
                         gap:1px; background:#E3E8EE; border-radius:8px; overflow:hidden;">
                 <div style="background:#F4F6F8; padding:12px; text-align:center;">
-                    <div style="font-size:1.1rem; font-weight:800; color:#202B36;">
+                    <div style="font-size:16px; font-weight:700; color:#202B36;">
                         {metrics['mlp_acc']:.2f}%
                     </div>
-                    <div style="font-size:0.65rem; color:#8899A6; font-weight:600;
+                    <div style="font-size:11px; color:#526071; font-weight:600;
                                 text-transform:uppercase;">Test Acc</div>
                 </div>
                 <div style="background:#F4F6F8; padding:12px; text-align:center;">
-                    <div style="font-size:1.1rem; font-weight:800; color:#202B36;">
+                    <div style="font-size:16px; font-weight:700; color:#202B36;">
                         {metrics['mlp_prec']:.2f}%
                     </div>
-                    <div style="font-size:0.65rem; color:#8899A6; font-weight:600;
+                    <div style="font-size:11px; color:#526071; font-weight:600;
                                 text-transform:uppercase;">Precision</div>
                 </div>
                 <div style="background:#F4F6F8; padding:12px; text-align:center;">
-                    <div style="font-size:1.1rem; font-weight:800; color:#202B36;">
+                    <div style="font-size:16px; font-weight:700; color:#202B36;">
                         {metrics['mlp_f1']:.4f}
                     </div>
-                    <div style="font-size:0.65rem; color:#8899A6; font-weight:600;
+                    <div style="font-size:11px; color:#526071; font-weight:600;
                                 text-transform:uppercase;">F1-Score</div>
                 </div>
             </div>
@@ -497,11 +497,11 @@ def render() -> None:
     <div style="display:flex; align-items:center; justify-content:space-between;
                 border-bottom:2px solid #202B36; padding-bottom:10px; margin-bottom:18px;">
         <div>
-            <div style="font-size:0.65rem; font-weight:800; color:#8899A6;
-                         text-transform:uppercase; letter-spacing:0.1em; margin-bottom:3px;">
+            <div style="font-size:12px; font-weight:700; color:#202B36;
+                         text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
                 COHORT DEMOGRAPHIC &amp; TRAIT DISTRIBUTION (N={cohort['total_records']:,})
             </div>
-            <div style="font-size:0.8rem; color:#667085;">
+            <div style="font-size:13px; color:#526071;">
                 Epidemiological distributions computed from the validated toddler screening dataset.
             </div>
         </div>
@@ -527,14 +527,14 @@ def render() -> None:
     with d1:
         render_html(f"""
         <div style="{_dm_style}">
-            <div style="font-size:0.65rem; font-weight:700; color:#8899A6;
-                         text-transform:uppercase; letter-spacing:0.07em; margin-bottom:8px;">
+            <div style="font-size:12px; font-weight:600; color:#526071;
+                         text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Sex Ratio
             </div>
-            <div style="font-size:1.3rem; font-weight:800; color:#167C80;">
+            <div style="font-size:22px; font-weight:700; color:#167C80;">
                 {cohort['male_pct']:.1f}% M
             </div>
-            <div style="font-size:0.76rem; color:#667085; margin-top:4px;">
+            <div style="font-size:13px; color:#526071; margin-top:4px;">
                 {cohort['male_count']} Male &bull; {cohort['female_count']} Female
                 ({cohort['female_pct']:.1f}% F)
             </div>
@@ -544,14 +544,14 @@ def render() -> None:
     with d2:
         render_html(f"""
         <div style="{_dm_style}">
-            <div style="font-size:0.65rem; font-weight:700; color:#8899A6;
-                         text-transform:uppercase; letter-spacing:0.07em; margin-bottom:8px;">
+            <div style="font-size:12px; font-weight:600; color:#526071;
+                         text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Neonatal Jaundice
             </div>
-            <div style="font-size:1.3rem; font-weight:800; color:#D97706;">
+            <div style="font-size:22px; font-weight:700; color:#D97706;">
                 {cohort['jaundice_pct']:.1f}%
             </div>
-            <div style="font-size:0.76rem; color:#667085; margin-top:4px;">
+            <div style="font-size:13px; color:#526071; margin-top:4px;">
                 {cohort['jaundice_count']} of {cohort['total_records']:,} subjects
             </div>
         </div>
@@ -560,14 +560,14 @@ def render() -> None:
     with d3:
         render_html(f"""
         <div style="{_dm_style}">
-            <div style="font-size:0.65rem; font-weight:700; color:#8899A6;
-                         text-transform:uppercase; letter-spacing:0.07em; margin-bottom:8px;">
+            <div style="font-size:12px; font-weight:600; color:#526071;
+                         text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Family ASD History
             </div>
-            <div style="font-size:1.3rem; font-weight:800; color:#167C80;">
+            <div style="font-size:22px; font-weight:700; color:#167C80;">
                 {cohort['fam_pct']:.1f}%
             </div>
-            <div style="font-size:0.76rem; color:#667085; margin-top:4px;">
+            <div style="font-size:13px; color:#526071; margin-top:4px;">
                 {cohort['fam_count']} family members with ASD
             </div>
         </div>
@@ -576,14 +576,14 @@ def render() -> None:
     with d4:
         render_html(f"""
         <div style="{_dm_style}">
-            <div style="font-size:0.65rem; font-weight:700; color:#8899A6;
-                         text-transform:uppercase; letter-spacing:0.07em; margin-bottom:8px;">
+            <div style="font-size:12px; font-weight:600; color:#526071;
+                         text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Top Discriminative Feature
             </div>
-            <div style="font-size:1.1rem; font-weight:800; color:#167C80;">
+            <div style="font-size:18px; font-weight:700; color:#167C80;">
                 {cohort['top_feature']}
             </div>
-            <div style="font-size:0.76rem; color:#667085; margin-top:4px;">
+            <div style="font-size:13px; color:#526071; margin-top:4px;">
                 Highest TabNet attention weight
             </div>
         </div>
@@ -600,7 +600,7 @@ def render() -> None:
                      text-transform:uppercase; letter-spacing:0.1em; margin-bottom:3px;">
             KEY PLATFORM CAPABILITIES
         </div>
-        <div style="font-size:0.8rem; color:#667085;">
+        <div style="font-size:13px; color:#526071;">
             Comprehensive clinical research toolkit for pediatric autism risk stratification.
         </div>
     </div>
@@ -615,10 +615,10 @@ def render() -> None:
     with cap1:
         render_html(f"""
         <div style="{_cap_style}">
-            <div style="font-size:0.85rem; font-weight:700; color:#202B36; margin-bottom:6px;">
+            <div style="font-size:15px; font-weight:700; color:#202B36; margin-bottom:6px;">
                 Instant Behavioral Risk Assessment
             </div>
-            <div style="font-size:0.8rem; color:#667085; line-height:1.6;">
+            <div style="font-size:13px; color:#526071; line-height:1.6;">
                 Interactive Q-CHAT-10 questionnaire guiding caregivers through toddler behavioral
                 evaluation across Social Communication (A-Domain) and Repetitive Behaviors (B-Domain)
                 with real-time TabNet confidence scores.
@@ -627,10 +627,10 @@ def render() -> None:
         """)
         render_html(f"""
         <div style="{_cap_style}">
-            <div style="font-size:0.85rem; font-weight:700; color:#202B36; margin-bottom:6px;">
+            <div style="font-size:15px; font-weight:700; color:#202B36; margin-bottom:6px;">
                 Multi-Format Dataset Processing
             </div>
-            <div style="font-size:0.8rem; color:#667085; line-height:1.6;">
+            <div style="font-size:13px; color:#526071; line-height:1.6;">
                 Drag-and-drop ingestion of CSV, XLS, and XLSX files with automatic schema
                 validation, automated categorical encoding, and zero-configuration preprocessing.
             </div>
@@ -640,10 +640,10 @@ def render() -> None:
     with cap2:
         render_html(f"""
         <div style="{_cap_style}">
-            <div style="font-size:0.85rem; font-weight:700; color:#202B36; margin-bottom:6px;">
+            <div style="font-size:15px; font-weight:700; color:#202B36; margin-bottom:6px;">
                 Comparative Analytics Dashboard
             </div>
-            <div style="font-size:0.8rem; color:#667085; line-height:1.6;">
+            <div style="font-size:13px; color:#526071; line-height:1.6;">
                 Side-by-side performance benchmarking across Accuracy, Precision, Recall, and
                 F1-score with interactive ROC-AUC curves and dynamic confusion matrices.
             </div>
@@ -651,10 +651,10 @@ def render() -> None:
         """)
         render_html(f"""
         <div style="{_cap_style}">
-            <div style="font-size:0.85rem; font-weight:700; color:#202B36; margin-bottom:6px;">
+            <div style="font-size:15px; font-weight:700; color:#202B36; margin-bottom:6px;">
                 Feature Salience Attribution
             </div>
-            <div style="font-size:0.8rem; color:#667085; line-height:1.6;">
+            <div style="font-size:13px; color:#526071; line-height:1.6;">
                 Direct extraction of TabNet sparse attention feature importances, revealing which
                 Q-CHAT-10 behavioral markers and demographic indicators drive predictive variance
                 without black-box opacity.
@@ -676,61 +676,61 @@ def render() -> None:
         </div>
         <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
             <div>
-                <div style="font-size:0.68rem; color:#8899A6; font-weight:600;
-                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                <div style="font-size:11px; color:#526071; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">
                     torch.runtime
                 </div>
-                <div style="font-size:0.82rem; font-weight:700; color:#202B36;
+                <div style="font-size:13px; font-weight:700; color:#202B36;
                              font-family:monospace;">
                     2.2.3+cpu
                 </div>
             </div>
             <div>
-                <div style="font-size:0.68rem; color:#8899A6; font-weight:600;
-                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                <div style="font-size:11px; color:#526071; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">
                     TabNet Engine
                 </div>
-                <div style="font-size:0.82rem; font-weight:700; color:#202B36;
+                <div style="font-size:13px; font-weight:700; color:#202B36;
                              font-family:monospace;">
                     py-tabnet 4.1
                 </div>
             </div>
             <div>
-                <div style="font-size:0.68rem; color:#8899A6; font-weight:600;
-                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                <div style="font-size:11px; color:#526071; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">
                     Validation Split
                 </div>
-                <div style="font-size:0.82rem; font-weight:700; color:#202B36;
+                <div style="font-size:13px; font-weight:700; color:#202B36;
                              font-family:monospace;">
                     5-Fold Stratified
                 </div>
             </div>
             <div>
-                <div style="font-size:0.68rem; color:#8899A6; font-weight:600;
-                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                <div style="font-size:11px; color:#526071; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">
                     Validated Pipeline
                 </div>
-                <div style="font-size:0.82rem; font-weight:700; color:#167C80;
+                <div style="font-size:13px; font-weight:700; color:#167C80;
                              font-family:monospace;">
                     &#10003; N=1,054
                 </div>
             </div>
             <div>
-                <div style="font-size:0.68rem; color:#8899A6; font-weight:600;
-                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                <div style="font-size:11px; color:#526071; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">
                     Imbalance Handling
                 </div>
-                <div style="font-size:0.82rem; font-weight:700; color:#202B36;
+                <div style="font-size:13px; font-weight:700; color:#202B36;
                              font-family:monospace;">
                     SMOTE (train-only)
                 </div>
             </div>
             <div>
-                <div style="font-size:0.68rem; color:#8899A6; font-weight:600;
-                             text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px;">
+                <div style="font-size:11px; color:#526071; font-weight:600;
+                             text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">
                     Deployment
                 </div>
-                <div style="font-size:0.82rem; font-weight:700; color:#202B36;
+                <div style="font-size:13px; font-weight:700; color:#202B36;
                              font-family:monospace;">
                     Streamlit Cloud
                 </div>

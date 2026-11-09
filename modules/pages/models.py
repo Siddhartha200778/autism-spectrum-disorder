@@ -70,7 +70,7 @@ def render():
             fig, ax = plt.subplots(figsize=(6, 5))
             sns.heatmap(
                 tabnet_res["confusion_matrix"],
-                annot=True, fmt="d", cmap="Blues", cbar=False, ax=ax,
+                annot=True, fmt="d", cmap=sns.light_palette("#167C80", as_cmap=True), cbar=False, ax=ax,
                 annot_kws={"size": 14, "weight": "bold"}
             )
             ax.set_xlabel("Predicted Label", fontweight="bold", fontsize=10, labelpad=8)
@@ -122,7 +122,7 @@ def render():
         with col_fig1:
             st.subheader(f"MLP ROC Curve (AUC = {mlp_res['auc']:.3f})")
             fig, ax = plt.subplots(figsize=(6.5, 5))
-            ax.plot(mlp_res["fpr"], mlp_res["tpr"], color="#167C80", lw=2.5, label=f"MLP (AUC = {mlp_res['auc']:.3f})")
+            ax.plot(mlp_res["fpr"], mlp_res["tpr"], color="#14243A", lw=2.5, label=f"MLP (AUC = {mlp_res['auc']:.3f})")
             ax.plot([0, 1], [0, 1], color="#8899A6", linestyle="--", lw=1.5, label="Chance Level")
             ax.set_title("Receiver Operating Characteristic (ROC)", fontsize=11, fontweight="bold", color="#202B36", pad=12)
             ax.set_xlabel("False Positive Rate", fontweight="bold")
@@ -137,7 +137,7 @@ def render():
             fig, ax = plt.subplots(figsize=(6, 5))
             sns.heatmap(
                 mlp_res["confusion_matrix"],
-                annot=True, fmt="d", cmap="Purples", cbar=False, ax=ax,
+                annot=True, fmt="d", cmap=sns.light_palette("#14243A", as_cmap=True), cbar=False, ax=ax,
                 annot_kws={"size": 14, "weight": "bold"}
             )
             ax.set_xlabel(r"Predicted Label (Threshold $\ge$ 0.60)", fontweight="bold", fontsize=10, labelpad=8)
