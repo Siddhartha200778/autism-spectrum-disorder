@@ -14,7 +14,7 @@ def render():
     )
 
     if "models_result" not in st.session_state:
-        st.info("💡 The models are initializing on the benchmark dataset...")
+        st.info("The models are initializing on the benchmark dataset...")
         return
 
     models = st.session_state["models_result"]
@@ -29,7 +29,7 @@ def render():
         render_html("""
         <div class="med-card" style="border-top: 4px solid #167C80;">
             <div class="med-card-header">
-                <div class="med-card-icon">🧠</div>
+                <div class="med-card-icon" style="color:#167C80; font-weight:700; font-size:11px;">TAB</div>
                 <span class="pill-badge pill-blue">Attentive Architecture</span>
             </div>
             <div class="med-card-title">TabNet Performance</div>

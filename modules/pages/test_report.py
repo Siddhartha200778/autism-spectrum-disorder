@@ -361,12 +361,12 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
     story.append(Spacer(1, 8))
 
     # 7. Signatures
-    examiner = data.get('examiner', 'Dr. Sarah Jenkins, MD, FAAP')
+    examiner = data.get('examiner', 'Evaluating Specialist (Clinical Assessment)')
     sig_left = [
         Paragraph("Evaluating Specialist / Clinician:", style_small),
         Spacer(1, 2),
         Paragraph(f"<strong>{examiner}</strong>", style_body_bold),
-        Paragraph("Board Certified Pediatric Neurodevelopmental Specialist", style_small),
+        Paragraph("Pediatric Assessment Protocol &bull; Clinical Screening Evaluation Record", style_small),
         Paragraph(institution, style_small)
     ]
     sig_right = [
@@ -414,7 +414,7 @@ def get_default_sample_report(risk_type="elevated"):
             "guardian_name": "Sarah Davis (Mother)",
             "mrn": "MRN-ASD-2026-0842",
             "date": datetime.date.today().strftime("%B %d, %Y"),
-            "examiner": "Dr. Sarah Jenkins, MD, FAAP",
+            "examiner": "Evaluating Specialist (Clinical Assessment)",
             "institution": "Pediatric Neurodevelopmental & Clinical AI Research Center",
             "Age": 24,
             "Sex": "m",
@@ -439,7 +439,7 @@ def get_default_sample_report(risk_type="elevated"):
             "guardian_name": "David Watson (Father)",
             "mrn": "MRN-TYP-2026-0199",
             "date": datetime.date.today().strftime("%B %d, %Y"),
-            "examiner": "Dr. Sarah Jenkins, MD, FAAP",
+            "examiner": "Evaluating Specialist (Clinical Assessment)",
             "institution": "Pediatric Neurodevelopmental & Clinical AI Research Center",
             "Age": 28,
             "Sex": "f",
@@ -604,14 +604,14 @@ def generate_standalone_html_report(data):
     <div class="no-print" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; background: #F4F6F8; border: 1.5px solid #E3E8EE; padding: 12px 18px; border-radius: 12px;">
         <div style="display: flex; gap: 10px; align-items: center;">
             <a href="https://autism-spectrum-disorder.streamlit.app" style="display: inline-flex; align-items: center; gap: 6px; background: #202B36; color: #FFFFFF; font-weight: 700; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-size: 0.9rem;">
-                🏠 Back to ASD Platform Website
+                &larr; Back to Platform Website
             </a>
             <button onclick="if(window.history.length &gt; 1) {{ window.history.back(); }} else {{ window.location.href='https://autism-spectrum-disorder.streamlit.app'; }}" style="background: #FFFFFF; color: #202B36; font-weight: 700; padding: 8px 16px; border: 1.5px solid #C5D0DA; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">
-                ⬅️ Previous Page
+                &larr; Previous Page
             </button>
         </div>
         <div>
-            <button onclick="window.print()" style="background: #167C80; color: #FFFFFF; font-weight: 700; padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; box-shadow: 0 2px 8px rgba(29,78,216,0.3);">
+            <button onclick="window.print()" style="background: #167C80; color: #FFFFFF; font-weight: 700; padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; box-shadow: 0 2px 8px rgba(22,124,128,0.25);">
                 Print Clinical Report
             </button>
         </div>
@@ -702,7 +702,7 @@ def generate_standalone_html_report(data):
     <div class="signature-section">
         <div>
             <div style="font-size: 0.85rem; color: #667085;">Evaluating Clinician / Informant:</div>
-            <div style="font-weight: 700; color: #202B36; margin-top: 4px;">{data.get('examiner', 'Dr. Sarah Jenkins, MD, FAAP')}</div>
+            <div style="font-weight: 700; color: #202B36; margin-top: 4px;">{data.get('examiner', 'Evaluating Specialist (Clinical Assessment)')}</div>
             <div style="font-size: 0.82rem; color: #667085;">Board Certified Pediatric Specialist</div>
         </div>
         <div>
@@ -736,12 +736,12 @@ def render():
     t_col1, t_col2, t_col3, t_col4 = st.columns([1.5, 1.5, 1.3, 1.3])
     
     with t_col1:
-        if st.button("📋 Load Elevated Risk Sample", use_container_width=True, help="Load representative toddler case with ASD traits"):
+        if st.button("Load Elevated Risk Sample", use_container_width=True, help="Load representative toddler case with ASD traits"):
             st.session_state["latest_patient_report"] = get_default_sample_report("elevated")
             st.rerun()
 
     with t_col2:
-        if st.button("📋 Load Typical Child Sample", use_container_width=True, help="Load representative toddler case with typical development"):
+        if st.button("Load Typical Child Sample", use_container_width=True, help="Load representative toddler case with typical development"):
             st.session_state["latest_patient_report"] = get_default_sample_report("typical")
             st.rerun()
 
@@ -751,20 +751,20 @@ def render():
             st.rerun()
 
     with t_col4:
-        if st.button("🩺 Back to Screener", use_container_width=True, help="Return to the ASD screening wizard"):
+        if st.button("Back to Screener", use_container_width=True, help="Return to the ASD screening wizard"):
             st.session_state["nav_target"] = "Early ASD Detection"
             st.rerun()
 
     report_data = st.session_state["latest_patient_report"]
 
-    with st.expander("✏️ Customize Patient Identification & Clinic Information", expanded=False):
+    with st.expander("Customize Patient Identification & Clinic Information", expanded=False):
         c1, c2 = st.columns(2)
         with c1:
             p_name = st.text_input("Patient Name / Child Identifier", value=report_data.get("patient_name", "Liam Davis"))
             p_mrn = st.text_input("Medical Record Number (MRN)", value=report_data.get("mrn", "MRN-ASD-2026-0842"))
             p_date = st.date_input("Evaluation Date", value=datetime.date.today()).strftime("%B %d, %Y")
         with c2:
-            p_examiner = st.text_input("Evaluating Specialist / Clinician", value=report_data.get("examiner", "Dr. Sarah Jenkins, MD, FAAP"))
+            p_examiner = st.text_input("Evaluating Specialist / Clinician", value=report_data.get("examiner", "Evaluating Specialist (Clinical Assessment)"))
             p_inst = st.text_input("Clinical Facility / Hospital", value=report_data.get("institution", "Pediatric Neurodevelopmental Research Center"))
         
         report_data["patient_name"] = p_name
@@ -1036,16 +1036,16 @@ def render():
         <!-- Sign-off Block -->
         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; border-top: 1px solid #E3E8EE; padding-top: 24px;">
             <div>
-                <div style="font-size: 0.82rem; color: #667085; text-transform: uppercase; font-weight: 700;">Evaluating Clinician</div>
+                <div style="font-size: 0.82rem; color: #526071; text-transform: uppercase; font-weight: 700;">Evaluating Clinician</div>
                 <div style="font-size: 1.05rem; font-weight: 800; color: #202B36; margin-top: 2px;">
-                    {report_data.get('examiner', 'Dr. Sarah Jenkins, MD, FAAP')}
+                    {report_data.get('examiner', 'Evaluating Clinician / Specialist')}
                 </div>
-                <div style="font-size: 0.85rem; color: #667085;">
-                    Pediatric Neurodevelopmental Specialist &bull; License #PEDI-48291
+                <div style="font-size: 0.85rem; color: #526071;">
+                    Pediatric Assessment Protocol &bull; Clinical Screening Evaluation Record
                 </div>
             </div>
             <div style="text-align: center;">
-                <div style="width: 240px; border-top: 1px solid #202B36; padding-top: 6px; font-size: 0.85rem; color: #667085;">
+                <div style="width: 240px; border-top: 1px solid #202B36; padding-top: 6px; font-size: 0.85rem; color: #526071;">
                     Authorized Signature & Date
                 </div>
             </div>
@@ -1060,7 +1060,7 @@ def render():
             st.session_state["nav_target"] = "Home"
             st.rerun()
     with b_col2:
-        if st.button("🔄 Start New Screening Test", use_container_width=True):
+        if st.button("Start New Screening Test", use_container_width=True):
             st.session_state["nav_target"] = "Early ASD Detection"
             st.session_state["wiz_step"] = 1
             st.rerun()

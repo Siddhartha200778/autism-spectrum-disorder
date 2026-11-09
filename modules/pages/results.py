@@ -15,7 +15,7 @@ def render():
     )
 
     if "models_result" not in st.session_state or "prepared_data" not in st.session_state:
-        st.info("💡 The models are initializing on the benchmark dataset...")
+        st.info("The models are initializing on the benchmark dataset...")
         return
 
     models = st.session_state["models_result"]

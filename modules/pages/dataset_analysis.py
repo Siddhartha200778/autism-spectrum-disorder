@@ -27,7 +27,7 @@ def render():
 
     with up_col2:
         st.write("**Or use the built-in research dataset:**")
-        if st.button("📁 Load Benchmark Dataset", use_container_width=True, help="Loads toddler_asd_dataset.csv (1,054 toddler records)"):
+        if st.button("Load Benchmark Dataset", use_container_width=True, help="Loads toddler_asd_dataset.csv (1,054 toddler records)"):
             with st.spinner("Loading benchmark dataset..."):
                 raw_df = load_default_dataset()
                 if raw_df is not None:
@@ -162,7 +162,7 @@ def render():
                 st.session_state["prepared_data"] = prep
                 st.session_state["models_result"] = models
                 st.session_state["data_preprocessed"] = True
-                st.success("✅ Models successfully trained on the dataset! Navigate to 'AI Models', 'Model Comparison', or 'Results & Visualization' to explore findings.")
+                st.success("Models successfully trained on the dataset! Navigate to 'AI Models', 'Model Comparison', or 'Results & Visualization' to explore findings.")
             except Exception as e:
                 st.error(f"Preprocessing / Training Error: {e}")
 
