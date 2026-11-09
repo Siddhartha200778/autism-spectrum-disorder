@@ -43,7 +43,7 @@ def inject_custom_css() -> None:
 
     [data-testid="stSidebar"],
     section[data-testid="stSidebar"] {
-        --secondary-background-color: #14243A !important;
+        background-color: #14243A !important;
     }
 
     html, body, [class*="css"], .stApp {
@@ -1420,14 +1420,60 @@ def inject_custom_css() -> None:
         }
     }
 
+    /* ══════════════════════════════════════════════════════════════════════
+       PRECAUTIONS ROYAL BLUE HERO BANNER (PURE WHITE TEXT GUARANTEE)
+       ══════════════════════════════════════════════════════════════════════ */
+    .precautions-hero-banner,
+    .precautions-hero-banner *,
+    .precautions-hero-banner div,
+    .precautions-hero-banner span,
+    .precautions-hero-banner h1,
+    .precautions-hero-banner h2,
+    .precautions-hero-banner h3,
+    .precautions-hero-banner p,
+    .precautions-hero-banner strong,
+    .precautions-hero-title,
+    .precautions-hero-desc,
+    .main .precautions-hero-banner,
+    .main .precautions-hero-banner *,
+    .main .precautions-hero-banner div,
+    .main .precautions-hero-banner span,
+    .main .precautions-hero-banner p,
+    .main .precautions-hero-banner strong,
+    [data-testid="stMain"] .precautions-hero-banner,
+    [data-testid="stMain"] .precautions-hero-banner *,
+    [data-testid="stMarkdownContainer"] .precautions-hero-banner,
+    [data-testid="stMarkdownContainer"] .precautions-hero-banner * {
+        color: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+    }
+
+    .precautions-hero-desc,
+    .precautions-hero-banner .precautions-hero-desc,
+    .precautions-hero-banner p,
+    .main .precautions-hero-banner p {
+        color: #E2E8F0 !important;
+        -webkit-text-fill-color: #E2E8F0 !important;
+    }
+
+    .precautions-hero-banner .hero-pill-badge,
+    .main .precautions-hero-banner .hero-pill-badge {
+        color: #93C5FD !important;
+        -webkit-text-fill-color: #93C5FD !important;
+    }
+
     </style>
     """
     st.markdown(custom_css, unsafe_allow_html=True)
 
 
 def render_html(content: str) -> None:
-    """Safely renders HTML using st.html (or fallback to st.markdown)."""
+    """Safely renders HTML using st.markdown or st.html."""
     if not content:
+        return
+    # When content contains <style> tags, always use st.markdown so DOMPurify does not strip or delay CSS
+    if "<style" in str(content).lower():
+        st.markdown(content, unsafe_allow_html=True)
         return
     if hasattr(st, "html"):
         st.html(content)

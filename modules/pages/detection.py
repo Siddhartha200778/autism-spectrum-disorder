@@ -190,18 +190,26 @@ Please enter the child's identity details and caregiver information. These will 
 </div>
 </div>""")
 
-        render_html("""<style>
+        st.markdown("""<style>
 div[data-testid="stTextInput"],
 div[data-testid="stTextInput"] div,
 div[data-testid="stTextInput"] div *,
+div[data-testid="stTextInput"] [data-baseweb="input"],
+div[data-testid="stTextInput"] [data-baseweb="input"] *,
+div[data-testid="stTextInput"] [data-baseweb="base-input"],
+div[data-testid="stTextInput"] [data-baseweb="base-input"] *,
 div[data-baseweb="input"],
 div[data-baseweb="input"] *,
 div[data-baseweb="base-input"],
-div[data-baseweb="base-input"] * {
+div[data-baseweb="base-input"] *,
+.main input,
+.main textarea,
+input[type="text"] {
     background-color: #FFFFFF !important;
     background: #FFFFFF !important;
     color: #202B36 !important;
     -webkit-text-fill-color: #202B36 !important;
+    caret-color: #202B36 !important;
 }
 div[data-testid="stTextInput"] input {
     background-color: #FFFFFF !important;
@@ -209,12 +217,21 @@ div[data-testid="stTextInput"] input {
     color: #202B36 !important;
     -webkit-text-fill-color: #202B36 !important;
     caret-color: #202B36 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
 }
 div[data-testid="stTextInput"] [data-baseweb="input"] {
     border: 1.5px solid #C5D0DA !important;
     border-radius: 8px !important;
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
 }
-</style>""")
+div[data-testid="stTextInput"] input::placeholder {
+    color: #8899A6 !important;
+    -webkit-text-fill-color: #8899A6 !important;
+    opacity: 1 !important;
+}
+</style>""", unsafe_allow_html=True)
         c1, c2 = st.columns(2)
         with c1:
             render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Child's Full Name / Identifier (Optional):</p>")
@@ -393,10 +410,13 @@ Please select demographic and clinical history details. These are encoded as non
 </div>
 </div>""")
 
-        render_html("""<style>
+        st.markdown("""<style>
 div[data-testid="stSelectbox"],
 div[data-testid="stSelectbox"] div,
 div[data-testid="stSelectbox"] div *,
+div[data-testid="stSelectbox"] [data-baseweb="select"],
+div[data-testid="stSelectbox"] [data-baseweb="select"] *,
+div[data-testid="stSelectbox"] [data-baseweb="select"] > div,
 div[data-baseweb="select"],
 div[data-baseweb="select"] * {
     background-color: #FFFFFF !important;
@@ -404,11 +424,34 @@ div[data-baseweb="select"] * {
     color: #202B36 !important;
     -webkit-text-fill-color: #202B36 !important;
 }
-div[data-testid="stSelectbox"] svg {
+div[data-testid="stSelectbox"] [data-baseweb="select"] > div {
+    border: 1.5px solid #C5D0DA !important;
+    border-radius: 8px !important;
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+}
+div[data-testid="stSelectbox"] svg,
+div[data-baseweb="select"] svg {
     fill: #202B36 !important;
     color: #202B36 !important;
 }
-</style>""")
+div[data-baseweb="popover"],
+div[data-baseweb="popover"] *,
+div[data-baseweb="popover"] ul,
+div[data-baseweb="popover"] ul li {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+    color: #202B36 !important;
+    -webkit-text-fill-color: #202B36 !important;
+}
+div[data-baseweb="popover"] ul li:hover,
+div[data-baseweb="popover"] ul li[aria-selected="true"] {
+    background-color: #EDF4F4 !important;
+    background: #EDF4F4 !important;
+    color: #167C80 !important;
+    -webkit-text-fill-color: #167C80 !important;
+}
+</style>""", unsafe_allow_html=True)
         col1, col2 = st.columns(2)
         with col1:
             render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Ethnicity / Cultural Background:</p>")
@@ -1064,38 +1107,55 @@ Calibrated Patient Affection Marker: <strong>{stage_info['affection_pct']:.1f}%<
         eval_date = datetime.date.today().strftime("%B %d, %Y")
 
         # 1. Breathtaking Royal Hero Banner
-        render_html(f"""<style>
-.main div.precautions-hero-banner,
-.main div.precautions-hero-banner *,
+        st.markdown(f"""<style>
+.precautions-hero-banner,
+.precautions-hero-banner *,
+.precautions-hero-banner div,
+.precautions-hero-banner span,
 .precautions-hero-banner h1,
 .precautions-hero-banner p,
-.precautions-hero-banner span,
-.precautions-hero-banner strong {{
+.precautions-hero-banner strong,
+.precautions-hero-title,
+.precautions-hero-desc,
+.main .precautions-hero-banner,
+.main .precautions-hero-banner *,
+.main .precautions-hero-banner div,
+.main .precautions-hero-banner span,
+.main .precautions-hero-banner p,
+.main .precautions-hero-banner strong,
+[data-testid="stMain"] .precautions-hero-banner,
+[data-testid="stMain"] .precautions-hero-banner *,
+[data-testid="stMarkdownContainer"] .precautions-hero-banner,
+[data-testid="stMarkdownContainer"] .precautions-hero-banner * {{
     color: #FFFFFF !important;
     -webkit-text-fill-color: #FFFFFF !important;
 }}
-.precautions-hero-banner p {{
+.precautions-hero-desc,
+.precautions-hero-banner .precautions-hero-desc,
+.precautions-hero-banner p,
+.main .precautions-hero-banner p {{
     color: #E2E8F0 !important;
     -webkit-text-fill-color: #E2E8F0 !important;
 }}
-.precautions-hero-banner .hero-pill-badge {{
+.precautions-hero-banner .hero-pill-badge,
+.main .precautions-hero-banner .hero-pill-badge {{
     color: #93C5FD !important;
     -webkit-text-fill-color: #93C5FD !important;
 }}
 </style>
-<div class="precautions-hero-banner" style="background: linear-gradient(135deg, #071326 0%, #0F284E 45%, #1E3A8A 100%); border-radius: 22px; padding: 40px 42px; color: #FFFFFF !important; margin-bottom: 30px; box-shadow: 0 20px 40px rgba(7,19,38,0.3); border: 1.5px solid rgba(255,255,255,0.12); position: relative; overflow: hidden;">
+<div class="precautions-hero-banner" style="background: linear-gradient(135deg, #071326 0%, #0F284E 45%, #1E3A8A 100%); border-radius: 22px; padding: 40px 42px; color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; margin-bottom: 30px; box-shadow: 0 20px 40px rgba(7,19,38,0.3); border: 1.5px solid rgba(255,255,255,0.12); position: relative; overflow: hidden;">
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-<span class="hero-pill-badge" style="background: rgba(255,255,255,0.16); color: #93C5FD !important; -webkit-text-fill-color: #93C5FD !important; font-size: 0.84rem; font-weight: 800; padding: 6px 16px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid rgba(255,255,255,0.2);">
+<span class="hero-pill-badge" style="background: rgba(255,255,255,0.16); color: #93C5FD !important; -webkit-text-fill-color: #93C5FD !important; font-size: 0.84rem; font-weight: 800; padding: 6px 16px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid rgba(255,255,255,0.2); display: inline-block;">
 CLINICAL PRECAUTIONS &amp; PROTECTIVE PARENTING GUIDE
 </span>
 </div>
-<h1 style="font-size: 2.25rem; font-weight: 800; color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; margin: 8px 0 14px 0; letter-spacing: -0.02em; line-height: 1.25;">
+<div class="precautions-hero-title" style="font-size: 28px; font-weight: 800; color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; margin: 8px 0 14px 0; letter-spacing: -0.02em; line-height: 1.25;">
 Essential Protective Precautions &amp; Everyday Guidance for {p_name}
-</h1>
-<p style="font-size: 1.08rem; line-height: 1.7; color: #E2E8F0 !important; -webkit-text-fill-color: #E2E8F0 !important; max-width: 900px; margin: 0;">
-Parenting a young toddler with developmental differences is an act of deep attentiveness. Below are evidence-based medical, environmental, and behavioral precautions formulated by pediatric developmental specialists to protect <strong style="color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important;">{p_name}</strong>'s sensory balance, physical safety, emotional security, and overall developmental flourishing.
-</p>
-</div>""")
+</div>
+<div class="precautions-hero-desc" style="font-size: 15px; line-height: 1.7; color: #E2E8F0 !important; -webkit-text-fill-color: #E2E8F0 !important; max-width: 900px; margin: 0;">
+Parenting a young toddler with developmental differences is an act of deep attentiveness. Below are evidence-based medical, environmental, and behavioral precautions formulated by pediatric developmental specialists to protect <strong style="color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; font-weight: 700;">{p_name}</strong>'s sensory balance, physical safety, emotional security, and overall developmental flourishing.
+</div>
+</div>""", unsafe_allow_html=True)
 
         # 2. 6 Comprehensive Precaution Cards
         st.subheader("Crucial Precautions & Caregiver Protective Practices")
