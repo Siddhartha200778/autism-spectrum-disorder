@@ -206,12 +206,12 @@ def render() -> None:
                 background:#FFFFFF; border-bottom:1px solid #E3E8EE;
                 padding:10px 0 14px 0; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
         <div style="display:flex; align-items:center; gap:6px;">
-            <span style="font-size:12px; font-weight:700; color:#526071;
+            <span style="font-size:11.5px; font-weight:600; color:#526071;
                          text-transform:uppercase; letter-spacing:0.06em;">
                 CLINICAL RESEARCH PLATFORM
             </span>
             <span style="color:#C5D0DA; font-size:0.85rem;">/</span>
-            <span style="font-size:12px; font-weight:700; color:#202B36;
+            <span style="font-size:11.5px; font-weight:600; color:#202B36;
                          text-transform:uppercase; letter-spacing:0.08em;">
                 Overview
             </span>
@@ -228,7 +228,7 @@ def render() -> None:
             </div>
             <div style="background:#F4F6F8; border:1px solid #C5D0DA;
                         border-radius:20px; padding:4px 12px;
-                        font-size:12px; font-weight:600; color:#526071;">
+                        font-size:11.5px; font-weight:600; color:#667085;">
                 Protocol: Q-CHAT-10 Toddler Benchmark
             </div>
         </div>
@@ -276,15 +276,15 @@ def render() -> None:
         <div style="background:#FFFFFF; border:1px solid #E3E8EE;
                     border-radius:10px; padding:24px 28px;
                     box-shadow:0 1px 3px rgba(32,43,54,0.04);">
-            <div style="font-size:12px; font-weight:700; color:#167C80;
+            <div style="font-size:11.5px; font-weight:600; color:#167C80;
                          text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
                 Interpretable Deep Learning for Early ASD Detection in Toddlers
             </div>
-            <h2 style="font-size:26px; font-weight:700; color:#202B36;
-                        line-height:1.25; margin:0 0 10px 0;">
+            <h2 style="font-size:28px; font-weight:600; color:#202B36;
+                        line-height:1.25; margin:0 0 10px 0; letter-spacing:-0.02em;">
                 Comparative Clinical Benchmark
             </h2>
-            <p style="font-size:14px; color:#526071; line-height:1.6; margin:0;">
+            <p style="font-size:14.5px; color:#526071; line-height:1.65; margin:0;">
                 Investigating attention-based sparse-mask tabular transformers (TabNet) versus
                 baseline feedforward multilayer perceptrons (MLP) on
                 <strong style="color:#202B36;">1,054 toddler Q-CHAT-10</strong> screening records.
@@ -320,7 +320,7 @@ def render() -> None:
     with mc1:
         render_html(f"""
         <div style="{_card_style}">
-            <div style="font-size:12px; font-weight:600; color:#526071;
+            <div style="font-size:11.5px; font-weight:600; color:#667085;
                          text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Total Cohort Records
             </div>
@@ -336,7 +336,7 @@ def render() -> None:
     with mc2:
         render_html(f"""
         <div style="{_card_style}">
-            <div style="font-size:12px; font-weight:600; color:#526071;
+            <div style="font-size:11.5px; font-weight:600; color:#667085;
                          text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Positive ASD Cases
             </div>
@@ -352,7 +352,7 @@ def render() -> None:
     with mc3:
         render_html(f"""
         <div style="{_card_style}">
-            <div style="font-size:12px; font-weight:600; color:#526071;
+            <div style="font-size:11.5px; font-weight:600; color:#667085;
                          text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 TabNet Test AUC-ROC
             </div>
@@ -368,7 +368,7 @@ def render() -> None:
     with mc4:
         render_html(f"""
         <div style="{_card_style}">
-            <div style="font-size:12px; font-weight:600; color:#526071;
+            <div style="font-size:11.5px; font-weight:600; color:#667085;
                          text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Sparse Attention Sparsity
             </div>
@@ -395,7 +395,7 @@ def render() -> None:
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
                 <div style="width:4px; height:36px; background:#167C80; border-radius:2px;"></div>
                 <div>
-                    <div style="font-size:13px; font-weight:600; color:#202B36; letter-spacing:0.02em;">
+                    <div style="font-size:15px; font-weight:600; color:#202B36; letter-spacing:0.01em;">
                         PROPOSED MODEL: TABNET ARCHITECTURE
                     </div>
                     <span style="display:inline-block; background:#EDF4F4; color:#167C80;
@@ -406,7 +406,7 @@ def render() -> None:
                     </span>
                 </div>
             </div>
-            <p style="font-size:14px; color:#526071; line-height:1.6; margin:0 0 14px 0;">
+            <p style="font-size:14.5px; color:#526071; line-height:1.65; margin:0 0 14px 0;">
                 Uses sequential multi-step decision steps with attentive transformers to perform
                 instance-wise feature selection, enabling direct white-box interpretability
                 without external surrogate models.
@@ -445,7 +445,7 @@ def render() -> None:
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
                 <div style="width:4px; height:36px; background:#14243A; border-radius:2px;"></div>
                 <div>
-                    <div style="font-size:13px; font-weight:600; color:#202B36; letter-spacing:0.02em;">
+                    <div style="font-size:15px; font-weight:600; color:#202B36; letter-spacing:0.01em;">
                         BENCHMARK BASELINE: MULTILAYER PERCEPTRON
                     </div>
                     <span style="display:inline-block; background:#EDF4F4; color:#14243A;
@@ -456,7 +456,7 @@ def render() -> None:
                     </span>
                 </div>
             </div>
-            <p style="font-size:14px; color:#526071; line-height:1.6; margin:0 0 14px 0;">
+            <p style="font-size:14.5px; color:#526071; line-height:1.65; margin:0 0 14px 0;">
                 Dense feedforward topology with 2 hidden layers (16 &rarr; 8 neurons), ReLU
                 activations, L2 weight regularization (&alpha;=0.1), and early stopping. High baseline accuracy
                 across engineered clinical domains but lacks intrinsic feature-selection interpretability.
@@ -497,8 +497,8 @@ def render() -> None:
     <div style="display:flex; align-items:center; justify-content:space-between;
                 border-bottom:2px solid #202B36; padding-bottom:10px; margin-bottom:18px;">
         <div>
-            <div style="font-size:18px; font-weight:600; color:#202B36;
-                         letter-spacing:-0.01em; margin-bottom:4px;">
+            <div style="font-size:19px; font-weight:600; color:#202B36;
+                         letter-spacing:-0.01em; margin-bottom:6px;">
                 Cohort Demographic &amp; Trait Distribution (N={cohort['total_records']:,})
             </div>
             <div style="font-size:14px; color:#526071; font-weight:400;">
@@ -527,7 +527,7 @@ def render() -> None:
     with d1:
         render_html(f"""
         <div style="{_dm_style}">
-            <div style="font-size:12px; font-weight:600; color:#526071;
+            <div style="font-size:11.5px; font-weight:600; color:#667085;
                          text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Sex Ratio
             </div>
@@ -544,7 +544,7 @@ def render() -> None:
     with d2:
         render_html(f"""
         <div style="{_dm_style}">
-            <div style="font-size:12px; font-weight:600; color:#526071;
+            <div style="font-size:11.5px; font-weight:600; color:#667085;
                          text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Neonatal Jaundice
             </div>
@@ -560,7 +560,7 @@ def render() -> None:
     with d3:
         render_html(f"""
         <div style="{_dm_style}">
-            <div style="font-size:12px; font-weight:600; color:#526071;
+            <div style="font-size:11.5px; font-weight:600; color:#667085;
                          text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Family ASD History
             </div>
@@ -576,7 +576,7 @@ def render() -> None:
     with d4:
         render_html(f"""
         <div style="{_dm_style}">
-            <div style="font-size:12px; font-weight:600; color:#526071;
+            <div style="font-size:11.5px; font-weight:600; color:#667085;
                          text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
                 Top Discriminative Feature
             </div>
@@ -596,8 +596,8 @@ def render() -> None:
     # ------------------------------------------------------------------
     render_html("""
     <div style="border-bottom:2px solid #202B36; padding-bottom:10px; margin-bottom:18px;">
-        <div style="font-size:18px; font-weight:600; color:#202B36;
-                     letter-spacing:-0.01em; margin-bottom:4px;">
+        <div style="font-size:19px; font-weight:600; color:#202B36;
+                     letter-spacing:-0.01em; margin-bottom:6px;">
             Key Platform Capabilities
         </div>
         <div style="font-size:14px; color:#526071; font-weight:400;">
@@ -615,10 +615,10 @@ def render() -> None:
     with cap1:
         render_html(f"""
         <div style="{_cap_style}">
-            <div style="font-size:13px; font-weight:600; color:#202B36; margin-bottom:6px;">
+            <div style="font-size:15px; font-weight:600; color:#202B36; margin-bottom:6px;">
                 Instant Behavioral Risk Assessment
             </div>
-            <div style="font-size:14px; color:#526071; font-weight:400; line-height:1.6;">
+            <div style="font-size:14.5px; color:#526071; font-weight:400; line-height:1.65;">
                 Interactive Q-CHAT-10 questionnaire guiding caregivers through toddler behavioral
                 evaluation across Social Communication (A-Domain) and Repetitive Behaviors (B-Domain)
                 with real-time TabNet confidence scores.
@@ -627,10 +627,10 @@ def render() -> None:
         """)
         render_html(f"""
         <div style="{_cap_style}">
-            <div style="font-size:13px; font-weight:600; color:#202B36; margin-bottom:6px;">
+            <div style="font-size:15px; font-weight:600; color:#202B36; margin-bottom:6px;">
                 Multi-Format Dataset Processing
             </div>
-            <div style="font-size:14px; color:#526071; font-weight:400; line-height:1.6;">
+            <div style="font-size:14.5px; color:#526071; font-weight:400; line-height:1.65;">
                 Drag-and-drop ingestion of CSV, XLS, and XLSX files with automatic schema
                 validation, automated categorical encoding, and zero-configuration preprocessing.
             </div>
@@ -640,10 +640,10 @@ def render() -> None:
     with cap2:
         render_html(f"""
         <div style="{_cap_style}">
-            <div style="font-size:13px; font-weight:600; color:#202B36; margin-bottom:6px;">
+            <div style="font-size:15px; font-weight:600; color:#202B36; margin-bottom:6px;">
                 Comparative Analytics Dashboard
             </div>
-            <div style="font-size:14px; color:#526071; font-weight:400; line-height:1.6;">
+            <div style="font-size:14.5px; color:#526071; font-weight:400; line-height:1.65;">
                 Side-by-side performance benchmarking across Accuracy, Precision, Recall, and
                 F1-score with interactive ROC-AUC curves and dynamic confusion matrices.
             </div>
@@ -651,10 +651,10 @@ def render() -> None:
         """)
         render_html(f"""
         <div style="{_cap_style}">
-            <div style="font-size:13px; font-weight:600; color:#202B36; margin-bottom:6px;">
+            <div style="font-size:15px; font-weight:600; color:#202B36; margin-bottom:6px;">
                 Feature Salience Attribution
             </div>
-            <div style="font-size:14px; color:#526071; font-weight:400; line-height:1.6;">
+            <div style="font-size:14.5px; color:#526071; font-weight:400; line-height:1.65;">
                 Direct extraction of TabNet sparse attention feature importances, revealing which
                 Q-CHAT-10 behavioral markers and demographic indicators drive predictive variance
                 without black-box opacity.
@@ -670,7 +670,7 @@ def render() -> None:
     render_html("""
     <div style="background:#F4F6F8; border:1px solid #E3E8EE; border-radius:10px;
                 padding:16px 20px; margin-bottom:20px;">
-        <div style="font-size:13px; font-weight:600; color:#202B36;
+        <div style="font-size:14px; font-weight:600; color:#202B36;
                      text-transform:uppercase; letter-spacing:0.04em; margin-bottom:12px;">
             Compute Environment &amp; Architecture Specs
         </div>

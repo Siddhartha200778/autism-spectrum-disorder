@@ -56,15 +56,15 @@ def inject_custom_css() -> None:
         text-rendering: optimizeLegibility;
     }
 
-    /* ── Paragraph & Body Text (14–15px, weight 400) ──────────────────── */
-    p, .main p, [data-testid="stMarkdownContainer"] p, .body-text {
+    /* ── Paragraph & Body Text (14–16px, comfortable line spacing) ───── */
+    p, .main p, [data-testid="stMarkdownContainer"] p, .body-text, .med-card-body, .arch-desc {
         font-family: 'Inter', sans-serif !important;
-        font-size: 14px !important;
+        font-size: 14.5px !important;
         font-weight: 400 !important;
-        line-height: 1.6 !important;
+        line-height: 1.65 !important;
         color: #526071 !important;
         margin-top: 0 !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 12px !important;
     }
 
     /* Avoid excessively bold text — clean 600 weight for emphasis */
@@ -311,25 +311,27 @@ def inject_custom_css() -> None:
         -webkit-text-fill-color: #93C5FD !important;
     }
 
-    /* ── Headings Hierarchy (Strict Specs) ───────────────────────────── */
+    /* ── Headings Hierarchy (Publication-Grade Clinical Specs) ────────── */
+    /* Main headings: 26–30px, semibold */
     h1, .main h1, .main-page-heading, .clinical-hero-title, .hero-title {
         font-family: 'Inter', sans-serif !important;
-        font-size: 26px !important;
-        font-weight: 700 !important;
+        font-size: 28px !important;
+        font-weight: 600 !important;
         line-height: 1.25 !important;
         letter-spacing: -0.02em !important;
         color: #202B36 !important;
-        margin: 0 0 10px 0 !important;
+        margin: 0 0 12px 0 !important;
     }
 
+    /* Section headings: 18–20px, semibold */
     h2, .main h2, h3, .main h3, .section-heading {
         font-family: 'Inter', sans-serif !important;
-        font-size: 18px !important;
+        font-size: 19px !important;
         font-weight: 600 !important;
         line-height: 1.35 !important;
         letter-spacing: -0.01em !important;
         color: #202B36 !important;
-        margin: 0 0 8px 0 !important;
+        margin: 0 0 10px 0 !important;
     }
 
     h4, .main h4 {
@@ -424,10 +426,10 @@ def inject_custom_css() -> None:
     [data-testid="stSidebar"] label {
         color: #FFFFFF !important;
         font-family: 'Inter', sans-serif !important;
-        font-size: 13px !important;
+        font-size: 13.5px !important;
         font-weight: 500 !important;
         letter-spacing: 0.01em !important;
-        line-height: 1.35 !important;
+        line-height: 1.4 !important;
         opacity: 1 !important;
     }
 
@@ -685,10 +687,10 @@ def inject_custom_css() -> None:
         margin: 0;
     }
 
-    /* ── Streamlit Metric (Strict Specs: 28–30px value, 11–12px label) ── */
+    /* ── Streamlit Metric (Specs: 28–32px bold value, 11–12px label) ── */
     [data-testid="stMetric"] {
         background: #FFFFFF;
-        padding: 16px 18px;
+        padding: 16px 20px;
         border-radius: 10px;
         border: 1px solid #E3E8EE;
         box-shadow: none;
@@ -696,11 +698,11 @@ def inject_custom_css() -> None:
 
     [data-testid="stMetricLabel"] {
         font-family: 'Inter', sans-serif !important;
-        font-size: 11px !important;
+        font-size: 11.5px !important;
         font-weight: 500 !important;
         color: #667085 !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.04em !important;
+        letter-spacing: 0.05em !important;
         line-height: 1.35 !important;
     }
 
@@ -708,7 +710,7 @@ def inject_custom_css() -> None:
     .metric-value-swiss,
     .metric-value {
         font-family: 'Inter', sans-serif !important;
-        font-size: 28px !important;
+        font-size: 30px !important;
         font-weight: 700 !important;
         line-height: 1.15 !important;
         letter-spacing: -0.02em !important;
@@ -1436,15 +1438,15 @@ def render_html(content: str) -> None:
 
 
 def render_section_header(title: str, subtitle: str | None = None, badge: str | None = None) -> None:
-    """Renders a consistent clinical section header with the professional palette."""
+    """Renders a publication-grade clinical section header with the professional palette."""
     badge_html = f'<div class="clinical-brand-badge">{badge}</div>' if badge else ""
     subtitle_html = (
-        f'<p style="color: #526071 !important; font-size: 14px; font-weight: 400; margin-top: 4px; '
-        f'margin-bottom: 16px; line-height: 1.6;">{subtitle}</p>'
+        f'<p style="color: #526071 !important; font-size: 14.5px; font-weight: 400; margin-top: 6px; '
+        f'margin-bottom: 18px; line-height: 1.65;">{subtitle}</p>'
     ) if subtitle else ""
-    html = f"""<div style="margin-bottom: 18px;">
+    html = f"""<div style="margin-bottom: 20px;">
 {badge_html}
-<h1 style="font-size: 26px; font-weight: 700; color: #202B36 !important; letter-spacing: -0.02em; line-height: 1.25; margin: 0 0 6px 0;">{title}</h1>
+<h1 style="font-size: 28px; font-weight: 600; color: #202B36 !important; letter-spacing: -0.02em; line-height: 1.25; margin: 0 0 8px 0;">{title}</h1>
 {subtitle_html}
 </div>"""
     render_html(html)
