@@ -103,7 +103,7 @@ with st.sidebar:
                     ASD TODDLER SCREENING
                 </div>
                 <div style="font-size: 0.68rem; color: #8899A6; font-weight: 500; margin-top: 2px;">
-                    TabNet v1.9EF &#183; py-tabnet 4.1
+                    TabNet Classifier &#183; py-tabnet 4.1.0
                 </div>
             </div>
         </div>

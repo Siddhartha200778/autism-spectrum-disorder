@@ -47,7 +47,7 @@ def extract_cohort_telemetry(raw_df: Optional[pd.DataFrame]) -> Dict[str, Any]:
         "jaundice_pct": 27.32,
         "fam_count": 170,
         "fam_pct": 16.13,
-        "top_feature": "Q6 (Joint Attention)",
+        "top_feature": "Q3 (Shared Attention & Pointing)",
     }
 
     if raw_df is None or not isinstance(raw_df, pd.DataFrame) or raw_df.empty:
@@ -136,7 +136,7 @@ def extract_cohort_telemetry(raw_df: Optional[pd.DataFrame]) -> Dict[str, Any]:
         "jaundice_pct": jaundice_pct,
         "fam_count": fam_count,
         "fam_pct": fam_pct,
-        "top_feature": "Q6 (Joint Attention)",
+        "top_feature": "Q3 (Shared Attention & Pointing)",
     }
 
 
@@ -376,7 +376,7 @@ def render() -> None:
                 84.2%
             </div>
             <div style="font-size:13px; color:#526071;">
-                Entmax Sparse-Mask Activation
+                Sparsemax Attentive Selection
             </div>
         </div>
         """)
@@ -457,9 +457,9 @@ def render() -> None:
                 </div>
             </div>
             <p style="font-size:13px; color:#526071; line-height:1.6; margin:0 0 14px 0;">
-                Standard dense 4-layer fully connected network (10–178–64–32–1) with Batch
-                Normalization, ReLU activations and Dropout (p=0.25). High baseline accuracy
-                but lacks intrinsic feature-selection interpretability.
+                Dense feedforward topology with 2 hidden layers (16 &rarr; 8 neurons), ReLU
+                activations, L2 weight regularization (&alpha;=0.1), and early stopping. High baseline accuracy
+                across engineered clinical domains but lacks intrinsic feature-selection interpretability.
             </p>
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr;
                         gap:1px; background:#E3E8EE; border-radius:8px; overflow:hidden;">
@@ -584,7 +584,7 @@ def render() -> None:
                 {cohort['top_feature']}
             </div>
             <div style="font-size:13px; color:#526071; margin-top:4px;">
-                Highest TabNet attention weight
+                Top behavioral item (attention: 0.065)
             </div>
         </div>
         """)

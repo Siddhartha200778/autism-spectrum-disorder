@@ -30,7 +30,7 @@ def render():
     s1.metric("Preprocessed Records", f"{len(prepared['processed_df']):,}")
     s2.metric("Evaluated Test Records", f"{len(prepared['y_test']):,}")
     s3.metric("Pre-SMOTE (Non-ASD : ASD)", f"{prepared['class_counts_before'].get(0, 0)} : {prepared['class_counts_before'].get(1, 0)}")
-    s4.metric("Post-SMOTE Balanced Folds", f"{prepared['class_counts_after'].get(0, 0)} : {prepared['class_counts_after'].get(1, 0)}")
+    s4.metric("Post-SMOTE Training Balance", f"{prepared['class_counts_after'].get(0, 0)} : {prepared['class_counts_after'].get(1, 0)}")
 
     st.markdown("<br>", unsafe_allow_html=True)
 
