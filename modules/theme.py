@@ -390,10 +390,14 @@ def inject_custom_css() -> None:
         gap: 2px !important;
     }
 
-    /* Sidebar radio item base */
+    /* Sidebar radio item base - perfect vertical centering of dot and label text */
     [data-testid="stSidebar"] div[data-testid="stRadio"] label,
     [data-testid="stSidebar"] div[role="radiogroup"] > label,
     [data-testid="stSidebar"] label[data-baseweb="radio"] {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
         background: transparent !important;
         border: 1px solid transparent !important;
         border-radius: 6px !important;
@@ -404,7 +408,38 @@ def inject_custom_css() -> None:
         box-shadow: none !important;
     }
 
-    /* Sidebar nav text — clean white */
+    /* Radio circle / dot container alignment - zero out any vertical offset */
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label > div:first-child,
+    [data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child,
+    [data-testid="stSidebar"] label[data-baseweb="radio"] > div:first-child,
+    [data-testid="stSidebar"] div[role="radiogroup"] input + div,
+    [data-testid="stSidebar"] label[data-baseweb="radio"] input + div {
+        margin: 0 10px 0 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding: 0 !important;
+        align-self: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+        top: 0 !important;
+        transform: none !important;
+    }
+
+    /* Radio label markdown container - vertically centered */
+    [data-testid="stSidebar"] div[data-testid="stRadio"] [data-testid="stMarkdownContainer"],
+    [data-testid="stSidebar"] div[role="radiogroup"] [data-testid="stMarkdownContainer"],
+    [data-testid="stSidebar"] label[data-baseweb="radio"] [data-testid="stMarkdownContainer"] {
+        display: flex !important;
+        align-items: center !important;
+        align-self: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1 !important;
+    }
+
+    /* Sidebar nav text — clean white, zero margin, vertically centered with dot */
     [data-testid="stSidebar"] .stRadio label,
     [data-testid="stSidebar"] .stRadio label *,
     [data-testid="stSidebar"] .stRadio label p,
@@ -429,8 +464,13 @@ def inject_custom_css() -> None:
         font-size: 13.5px !important;
         font-weight: 500 !important;
         letter-spacing: 0.01em !important;
-        line-height: 1.4 !important;
+        line-height: 1.25 !important;
         opacity: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        align-self: center !important;
     }
 
     /* Active sidebar navigation indicator — high-visibility clinical indicator */
@@ -478,11 +518,15 @@ def inject_custom_css() -> None:
         font-weight: 600 !important;
     }
 
-    /* High-contrast radio dot indicator in sidebar */
+    /* High-contrast radio dot indicator in sidebar - centered */
     [data-testid="stSidebar"] div[role="radiogroup"] input:checked + div,
     [data-testid="stSidebar"] div[role="radiogroup"] input:checked + div > div {
         background-color: #167C80 !important;
         border-color: #167C80 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        align-self: center !important;
     }
     [data-testid="stSidebar"] div[role="radiogroup"] svg {
         fill: #167C80 !important;
