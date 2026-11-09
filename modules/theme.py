@@ -25,7 +25,11 @@ def inject_custom_css() -> None:
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-    :root {
+    :root, html, body, .stApp {
+        --secondary-background-color: #FFFFFF !important;
+        --background-color: #F4F6F8 !important;
+        --text-color: #202B36 !important;
+        --primary-color: #167C80 !important;
         --bg: #F4F6F8;
         --card: #FFFFFF;
         --sidebar: #14243A;
@@ -35,6 +39,11 @@ def inject_custom_css() -> None:
         --text-muted: #667085;
         --border: #E3E8EE;
         --highlight: #EDF4F4;
+    }
+
+    [data-testid="stSidebar"],
+    section[data-testid="stSidebar"] {
+        --secondary-background-color: #14243A !important;
     }
 
     html, body, [class*="css"] {
@@ -122,58 +131,65 @@ def inject_custom_css() -> None:
     }
 
     /* ── Text Inputs, Text Areas, Number & Date Inputs (Clean White & High Contrast) ── */
-    .main .stTextInput,
-    .main .stTextArea,
-    .main .stNumberInput,
-    .main .stDateInput,
     div[data-testid="stTextInput"],
     div[data-testid="stTextArea"],
     div[data-testid="stNumberInput"],
-    div[data-testid="stDateInput"] {
+    div[data-testid="stDateInput"],
+    .stTextInput,
+    .stTextArea,
+    .stNumberInput,
+    .stDateInput {
         margin-bottom: 8px !important;
+        background-color: transparent !important;
     }
 
-    .main .stTextInput > div,
-    .main .stTextArea > div,
-    .main .stNumberInput > div,
-    .main .stDateInput > div,
+    div[data-testid="stTextInput"] div,
+    div[data-testid="stTextInput"] div *,
+    div[data-testid="stTextArea"] div,
+    div[data-testid="stTextArea"] div *,
+    div[data-testid="stNumberInput"] div,
+    div[data-testid="stNumberInput"] div *,
+    div[data-testid="stDateInput"] div,
+    div[data-testid="stDateInput"] div *,
     .main div[data-baseweb="input"],
+    .main div[data-baseweb="input"] *,
     .main div[data-baseweb="base-input"],
-    div[data-testid="stTextInput"] div[data-baseweb="input"],
-    div[data-testid="stTextInput"] div[data-baseweb="base-input"],
-    div[data-testid="stTextArea"] div[data-baseweb="textarea"],
-    div[data-testid="stNumberInput"] div[data-baseweb="input"],
-    div[data-testid="stDateInput"] div[data-baseweb="input"],
-    [data-testid="stMain"] div[data-baseweb="input"],
-    [data-testid="stMain"] div[data-baseweb="base-input"] {
+    .main div[data-baseweb="base-input"] *,
+    .main div[data-baseweb="textarea"],
+    .main div[data-baseweb="textarea"] * {
         background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
+    }
+
+    div[data-testid="stTextInput"] [data-baseweb="input"],
+    div[data-testid="stTextInput"] [data-baseweb="base-input"],
+    div[data-testid="stTextArea"] [data-baseweb="textarea"],
+    div[data-testid="stTextArea"] [data-baseweb="base-input"],
+    div[data-testid="stNumberInput"] [data-baseweb="input"],
+    div[data-testid="stDateInput"] [data-baseweb="input"] {
         border: 1.5px solid #C5D0DA !important;
         border-radius: 8px !important;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+        box-shadow: none !important;
+        overflow: hidden !important;
     }
 
-    .main div[data-baseweb="input"]:focus-within,
-    .main div[data-baseweb="base-input"]:focus-within,
-    div[data-testid="stTextInput"] div[data-baseweb="input"]:focus-within,
-    div[data-testid="stTextArea"] div[data-baseweb="textarea"]:focus-within,
-    [data-testid="stMain"] div[data-baseweb="input"]:focus-within {
+    div[data-testid="stTextInput"] [data-baseweb="input"]:focus-within,
+    div[data-testid="stTextArea"] [data-baseweb="textarea"]:focus-within {
         border-color: #167C80 !important;
         box-shadow: 0 0 0 2px rgba(22, 124, 128, 0.2) !important;
     }
 
-    .main .stTextInput input,
-    .main .stTextArea textarea,
-    .main .stNumberInput input,
-    .main .stDateInput input,
     div[data-testid="stTextInput"] input,
     div[data-testid="stTextArea"] textarea,
     div[data-testid="stNumberInput"] input,
     div[data-testid="stDateInput"] input,
-    div[data-baseweb="input"] input,
-    div[data-baseweb="base-input"] input,
-    [data-testid="stMain"] input,
-    [data-testid="stMain"] textarea {
+    .main input,
+    .main textarea,
+    input[type="text"],
+    input[type="number"],
+    textarea {
         background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
         color: #202B36 !important;
         -webkit-text-fill-color: #202B36 !important;
         caret-color: #202B36 !important;
@@ -184,55 +200,53 @@ def inject_custom_css() -> None:
         padding: 8px 12px !important;
     }
 
-    .main .stTextInput input::placeholder,
-    .main .stTextArea textarea::placeholder,
     div[data-testid="stTextInput"] input::placeholder,
     div[data-testid="stTextArea"] textarea::placeholder,
-    [data-testid="stMain"] input::placeholder,
-    [data-testid="stMain"] textarea::placeholder {
+    .main input::placeholder,
+    .main textarea::placeholder {
         color: #8899A6 !important;
         -webkit-text-fill-color: #8899A6 !important;
         font-weight: 400 !important;
     }
 
     /* ── Selectbox & Dropdowns (Clean White Background & Readable Text) ── */
-    .main .stSelectbox, .main .stSelectbox label, .main .stSelectbox label p,
-    div[data-testid="stSelectbox"] div[data-baseweb="select"],
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
-    .main div[data-baseweb="select"] > div,
-    [data-testid="stMain"] div[data-baseweb="select"] > div {
+    div[data-testid="stSelectbox"],
+    div[data-testid="stSelectbox"] div,
+    div[data-testid="stSelectbox"] div *,
+    .main div[data-baseweb="select"],
+    .main div[data-baseweb="select"] * {
         background-color: #FFFFFF !important;
-        border: 1.5px solid #C5D0DA !important;
-        border-radius: 8px !important;
-        color: #202B36 !important;
-    }
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] *,
-    .main div[data-baseweb="select"] *,
-    [data-testid="stMain"] div[data-baseweb="select"] * {
+        background: #FFFFFF !important;
         color: #202B36 !important;
         -webkit-text-fill-color: #202B36 !important;
-        font-weight: 600 !important;
-        font-size: 14px !important;
     }
-    div[data-testid="stSelectbox"] div[data-baseweb="select"]:focus-within,
-    .main div[data-baseweb="select"]:focus-within {
-        border-color: #167C80 !important;
-        box-shadow: 0 0 0 2px rgba(22, 124, 128, 0.2) !important;
+
+    div[data-testid="stSelectbox"] [data-baseweb="select"] > div {
+        border: 1.5px solid #C5D0DA !important;
+        border-radius: 8px !important;
+        box-shadow: none !important;
     }
+
     div[data-testid="stSelectbox"] svg,
     div[data-baseweb="select"] svg {
         fill: #202B36 !important;
         color: #202B36 !important;
     }
+
     div[data-baseweb="popover"],
+    div[data-baseweb="popover"] *,
     div[data-baseweb="popover"] ul,
     div[data-baseweb="popover"] ul li {
         background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
         color: #202B36 !important;
         -webkit-text-fill-color: #202B36 !important;
     }
-    div[data-baseweb="popover"] ul li:hover {
+
+    div[data-baseweb="popover"] ul li:hover,
+    div[data-baseweb="popover"] ul li[aria-selected="true"] {
         background-color: #EDF4F4 !important;
+        background: #EDF4F4 !important;
         color: #167C80 !important;
         -webkit-text-fill-color: #167C80 !important;
     }

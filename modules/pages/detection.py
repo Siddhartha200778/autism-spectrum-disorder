@@ -190,6 +190,31 @@ Please enter the child's identity details and caregiver information. These will 
 </div>
 </div>""")
 
+        render_html("""<style>
+div[data-testid="stTextInput"],
+div[data-testid="stTextInput"] div,
+div[data-testid="stTextInput"] div *,
+div[data-baseweb="input"],
+div[data-baseweb="input"] *,
+div[data-baseweb="base-input"],
+div[data-baseweb="base-input"] * {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+    color: #202B36 !important;
+    -webkit-text-fill-color: #202B36 !important;
+}
+div[data-testid="stTextInput"] input {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+    color: #202B36 !important;
+    -webkit-text-fill-color: #202B36 !important;
+    caret-color: #202B36 !important;
+}
+div[data-testid="stTextInput"] [data-baseweb="input"] {
+    border: 1.5px solid #C5D0DA !important;
+    border-radius: 8px !important;
+}
+</style>""")
         c1, c2 = st.columns(2)
         with c1:
             render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Child's Full Name / Identifier (Optional):</p>")
@@ -368,6 +393,22 @@ Please select demographic and clinical history details. These are encoded as non
 </div>
 </div>""")
 
+        render_html("""<style>
+div[data-testid="stSelectbox"],
+div[data-testid="stSelectbox"] div,
+div[data-testid="stSelectbox"] div *,
+div[data-baseweb="select"],
+div[data-baseweb="select"] * {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+    color: #202B36 !important;
+    -webkit-text-fill-color: #202B36 !important;
+}
+div[data-testid="stSelectbox"] svg {
+    fill: #202B36 !important;
+    color: #202B36 !important;
+}
+</style>""")
         col1, col2 = st.columns(2)
         with col1:
             render_html("<p style='font-size: 0.95rem; font-weight: 800; color: #0A192F !important; margin-bottom: 6px;'>Ethnicity / Cultural Background:</p>")
