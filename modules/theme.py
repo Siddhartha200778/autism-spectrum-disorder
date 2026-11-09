@@ -121,25 +121,160 @@ def inject_custom_css() -> None:
         font-weight: 600 !important;
     }
 
-    /* ── Selectbox ────────────────────────────────────────────────────── */
-    .main .stSelectbox, .main .stSelectbox label, .main .stSelectbox label p,
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] {
+    /* ── Text Inputs, Text Areas, Number & Date Inputs (Clean White & High Contrast) ── */
+    .main .stTextInput,
+    .main .stTextArea,
+    .main .stNumberInput,
+    .main .stDateInput,
+    div[data-testid="stTextInput"],
+    div[data-testid="stTextArea"],
+    div[data-testid="stNumberInput"],
+    div[data-testid="stDateInput"] {
+        margin-bottom: 8px !important;
+    }
+
+    .main .stTextInput > div,
+    .main .stTextArea > div,
+    .main .stNumberInput > div,
+    .main .stDateInput > div,
+    .main div[data-baseweb="input"],
+    .main div[data-baseweb="base-input"],
+    div[data-testid="stTextInput"] div[data-baseweb="input"],
+    div[data-testid="stTextInput"] div[data-baseweb="base-input"],
+    div[data-testid="stTextArea"] div[data-baseweb="textarea"],
+    div[data-testid="stNumberInput"] div[data-baseweb="input"],
+    div[data-testid="stDateInput"] div[data-baseweb="input"],
+    [data-testid="stMain"] div[data-baseweb="input"],
+    [data-testid="stMain"] div[data-baseweb="base-input"] {
         background-color: #FFFFFF !important;
-        border: 1px solid #E3E8EE !important;
+        border: 1.5px solid #C5D0DA !important;
         border-radius: 8px !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
     }
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
+
+    .main div[data-baseweb="input"]:focus-within,
+    .main div[data-baseweb="base-input"]:focus-within,
+    div[data-testid="stTextInput"] div[data-baseweb="input"]:focus-within,
+    div[data-testid="stTextArea"] div[data-baseweb="textarea"]:focus-within,
+    [data-testid="stMain"] div[data-baseweb="input"]:focus-within {
+        border-color: #167C80 !important;
+        box-shadow: 0 0 0 2px rgba(22, 124, 128, 0.2) !important;
+    }
+
+    .main .stTextInput input,
+    .main .stTextArea textarea,
+    .main .stNumberInput input,
+    .main .stDateInput input,
+    div[data-testid="stTextInput"] input,
+    div[data-testid="stTextArea"] textarea,
+    div[data-testid="stNumberInput"] input,
+    div[data-testid="stDateInput"] input,
+    div[data-baseweb="input"] input,
+    div[data-baseweb="base-input"] input,
+    [data-testid="stMain"] input,
+    [data-testid="stMain"] textarea {
+        background-color: #FFFFFF !important;
         color: #202B36 !important;
-        font-weight: 500 !important;
+        -webkit-text-fill-color: #202B36 !important;
+        caret-color: #202B36 !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 8px 12px !important;
     }
+
+    .main .stTextInput input::placeholder,
+    .main .stTextArea textarea::placeholder,
+    div[data-testid="stTextInput"] input::placeholder,
+    div[data-testid="stTextArea"] textarea::placeholder,
+    [data-testid="stMain"] input::placeholder,
+    [data-testid="stMain"] textarea::placeholder {
+        color: #8899A6 !important;
+        -webkit-text-fill-color: #8899A6 !important;
+        font-weight: 400 !important;
+    }
+
+    /* ── Selectbox & Dropdowns (Clean White Background & Readable Text) ── */
+    .main .stSelectbox, .main .stSelectbox label, .main .stSelectbox label p,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"],
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
+    .main div[data-baseweb="select"] > div,
+    [data-testid="stMain"] div[data-baseweb="select"] > div {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #C5D0DA !important;
+        border-radius: 8px !important;
+        color: #202B36 !important;
+    }
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] *,
+    .main div[data-baseweb="select"] *,
+    [data-testid="stMain"] div[data-baseweb="select"] * {
+        color: #202B36 !important;
+        -webkit-text-fill-color: #202B36 !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+    }
+    div[data-testid="stSelectbox"] div[data-baseweb="select"]:focus-within,
+    .main div[data-baseweb="select"]:focus-within {
+        border-color: #167C80 !important;
+        box-shadow: 0 0 0 2px rgba(22, 124, 128, 0.2) !important;
+    }
+    div[data-testid="stSelectbox"] svg,
+    div[data-baseweb="select"] svg {
+        fill: #202B36 !important;
+        color: #202B36 !important;
+    }
+    div[data-baseweb="popover"],
     div[data-baseweb="popover"] ul,
     div[data-baseweb="popover"] ul li {
         background-color: #FFFFFF !important;
         color: #202B36 !important;
+        -webkit-text-fill-color: #202B36 !important;
     }
     div[data-baseweb="popover"] ul li:hover {
         background-color: #EDF4F4 !important;
         color: #167C80 !important;
+        -webkit-text-fill-color: #167C80 !important;
+    }
+
+    /* ── Dark Hero Banners & Precautions Banner Contrast Fix ──────────── */
+    .main .precautions-hero-banner,
+    .main .precautions-hero-banner *,
+    .main div.precautions-hero-banner h1,
+    .main div.precautions-hero-banner h2,
+    .main div.precautions-hero-banner h3,
+    .main div.precautions-hero-banner p,
+    .main div.precautions-hero-banner span,
+    .main div.precautions-hero-banner strong,
+    div[class*="precautions-hero-banner"] h1,
+    div[class*="precautions-hero-banner"] p,
+    div[class*="precautions-hero-banner"] span,
+    div[class*="precautions-hero-banner"] strong,
+    .precautions-hero-banner,
+    .precautions-hero-banner *,
+    .precautions-hero-banner h1,
+    .precautions-hero-banner h2,
+    .precautions-hero-banner h3 {
+        color: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+    }
+    .main div.precautions-hero-banner p,
+    .precautions-hero-banner p,
+    .precautions-hero-banner div p {
+        color: #E2E8F0 !important;
+        -webkit-text-fill-color: #E2E8F0 !important;
+    }
+    .main div.precautions-hero-banner strong,
+    .precautions-hero-banner strong {
+        color: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+        font-weight: 700 !important;
+    }
+    .main div.precautions-hero-banner .hero-pill-badge,
+    .precautions-hero-banner .hero-pill-badge,
+    .precautions-hero-banner span.hero-pill-badge {
+        color: #93C5FD !important;
+        -webkit-text-fill-color: #93C5FD !important;
     }
 
     /* ── Headings ─────────────────────────────────────────────────────── */

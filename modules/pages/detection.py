@@ -1023,17 +1023,36 @@ Calibrated Patient Affection Marker: <strong>{stage_info['affection_pct']:.1f}%<
         eval_date = datetime.date.today().strftime("%B %d, %Y")
 
         # 1. Breathtaking Royal Hero Banner
-        render_html(f"""<div style="background: linear-gradient(135deg, #071326 0%, #0F284E 45%, #1E3A8A 100%); border-radius: 22px; padding: 40px 42px; color: #FFFFFF; margin-bottom: 30px; box-shadow: 0 20px 40px rgba(7,19,38,0.3); border: 1.5px solid rgba(255,255,255,0.12); position: relative; overflow: hidden;">
+        render_html(f"""<style>
+.main div.precautions-hero-banner,
+.main div.precautions-hero-banner *,
+.precautions-hero-banner h1,
+.precautions-hero-banner p,
+.precautions-hero-banner span,
+.precautions-hero-banner strong {{
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}}
+.precautions-hero-banner p {{
+    color: #E2E8F0 !important;
+    -webkit-text-fill-color: #E2E8F0 !important;
+}}
+.precautions-hero-banner .hero-pill-badge {{
+    color: #93C5FD !important;
+    -webkit-text-fill-color: #93C5FD !important;
+}}
+</style>
+<div class="precautions-hero-banner" style="background: linear-gradient(135deg, #071326 0%, #0F284E 45%, #1E3A8A 100%); border-radius: 22px; padding: 40px 42px; color: #FFFFFF !important; margin-bottom: 30px; box-shadow: 0 20px 40px rgba(7,19,38,0.3); border: 1.5px solid rgba(255,255,255,0.12); position: relative; overflow: hidden;">
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-<span style="background: rgba(255,255,255,0.16); color: #93C5FD; font-size: 0.84rem; font-weight: 800; padding: 6px 16px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid rgba(255,255,255,0.2);">
-🛡️ CLINICAL PRECAUTIONS & PROTECTIVE PARENTING GUIDE
+<span class="hero-pill-badge" style="background: rgba(255,255,255,0.16); color: #93C5FD !important; -webkit-text-fill-color: #93C5FD !important; font-size: 0.84rem; font-weight: 800; padding: 6px 16px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid rgba(255,255,255,0.2);">
+CLINICAL PRECAUTIONS &amp; PROTECTIVE PARENTING GUIDE
 </span>
 </div>
-<h1 style="font-size: 2.25rem; font-weight: 800; color: #FFFFFF; margin: 8px 0 14px 0; letter-spacing: -0.02em; line-height: 1.25;">
-Essential Protective Precautions & Everyday Guidance for {p_name}
+<h1 style="font-size: 2.25rem; font-weight: 800; color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; margin: 8px 0 14px 0; letter-spacing: -0.02em; line-height: 1.25;">
+Essential Protective Precautions &amp; Everyday Guidance for {p_name}
 </h1>
-<p style="font-size: 1.08rem; line-height: 1.7; color: #CBD5E1; max-width: 900px; margin: 0;">
-Parenting a young toddler with developmental differences is an act of deep attentiveness. Below are evidence-based medical, environmental, and behavioral precautions formulated by pediatric developmental specialists to protect <strong>{p_name}</strong>'s sensory balance, physical safety, emotional security, and overall developmental flourishing.
+<p style="font-size: 1.08rem; line-height: 1.7; color: #E2E8F0 !important; -webkit-text-fill-color: #E2E8F0 !important; max-width: 900px; margin: 0;">
+Parenting a young toddler with developmental differences is an act of deep attentiveness. Below are evidence-based medical, environmental, and behavioral precautions formulated by pediatric developmental specialists to protect <strong style="color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important;">{p_name}</strong>'s sensory balance, physical safety, emotional security, and overall developmental flourishing.
 </p>
 </div>""")
 
