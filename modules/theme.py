@@ -380,17 +380,20 @@ def inject_custom_css() -> None:
         opacity: 1 !important;
     }
 
-    /* Sidebar nav container */
+    /* Sidebar nav container - fully padded and filled */
     [data-testid="stSidebar"] div[data-testid="stRadio"] > div,
     [data-testid="stSidebar"] div[role="radiogroup"] {
         background: rgba(255, 255, 255, 0.03) !important;
         border-radius: 10px !important;
         padding: 6px 4px !important;
         border: 1px solid rgba(255, 255, 255, 0.06) !important;
-        gap: 2px !important;
+        gap: 3px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
     }
 
-    /* Sidebar radio item base - perfect vertical centering of dot and label text */
+    /* Sidebar radio item base - filled card with full padding & perfect vertical centering */
     [data-testid="stSidebar"] div[data-testid="stRadio"] label,
     [data-testid="stSidebar"] div[role="radiogroup"] > label,
     [data-testid="stSidebar"] label[data-baseweb="radio"] {
@@ -406,17 +409,15 @@ def inject_custom_css() -> None:
         transition: all 0.15s ease !important;
         cursor: pointer !important;
         box-shadow: none !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
-    /* Radio circle / dot container alignment - zero out any vertical offset */
+    /* Radio circle / dot container - perfectly centered with text on the exact same level */
     [data-testid="stSidebar"] div[data-testid="stRadio"] label > div:first-child,
     [data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child,
-    [data-testid="stSidebar"] label[data-baseweb="radio"] > div:first-child,
-    [data-testid="stSidebar"] div[role="radiogroup"] input + div,
-    [data-testid="stSidebar"] label[data-baseweb="radio"] input + div {
+    [data-testid="stSidebar"] label[data-baseweb="radio"] > div:first-child {
         margin: 0 10px 0 0 !important;
-        margin-top: 0 !important;
-        margin-bottom: 0 !important;
         padding: 0 !important;
         align-self: center !important;
         display: flex !important;
@@ -425,6 +426,31 @@ def inject_custom_css() -> None:
         flex-shrink: 0 !important;
         top: 0 !important;
         transform: none !important;
+        line-height: 1 !important;
+    }
+
+    [data-testid="stSidebar"] div[role="radiogroup"] input + div {
+        margin: 0 !important;
+        top: 0 !important;
+        align-self: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* Radio circle styling: checked vs unchecked */
+    [data-testid="stSidebar"] div[role="radiogroup"] input:checked + div {
+        background-color: #167C80 !important;
+        border: 2px solid #167C80 !important;
+    }
+    [data-testid="stSidebar"] div[role="radiogroup"] input:checked + div > div {
+        background-color: #FFFFFF !important;
+        border-color: #FFFFFF !important;
+    }
+    [data-testid="stSidebar"] div[role="radiogroup"] input:not(:checked) + div {
+        background-color: transparent !important;
+        background: transparent !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
     }
 
     /* Radio label markdown container - vertically centered */
@@ -440,16 +466,8 @@ def inject_custom_css() -> None:
     }
 
     /* Sidebar nav text — clean white, zero margin, vertically centered with dot */
-    [data-testid="stSidebar"] .stRadio label,
-    [data-testid="stSidebar"] .stRadio label *,
-    [data-testid="stSidebar"] .stRadio label p,
-    [data-testid="stSidebar"] .stRadio label span,
-    [data-testid="stSidebar"] div[data-testid="stRadio"] label,
-    [data-testid="stSidebar"] div[data-testid="stRadio"] label *,
     [data-testid="stSidebar"] div[data-testid="stRadio"] label p,
     [data-testid="stSidebar"] div[data-testid="stRadio"] label span,
-    [data-testid="stSidebar"] div[role="radiogroup"] label,
-    [data-testid="stSidebar"] div[role="radiogroup"] label *,
     [data-testid="stSidebar"] div[role="radiogroup"] label p,
     [data-testid="stSidebar"] div[role="radiogroup"] label span,
     [data-testid="stSidebar"] div[role="radiogroup"] > label p,
@@ -457,8 +475,7 @@ def inject_custom_css() -> None:
     [data-testid="stSidebar"] label[data-baseweb="radio"] p,
     [data-testid="stSidebar"] label[data-baseweb="radio"] span,
     [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
-    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] span,
-    [data-testid="stSidebar"] label {
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] span {
         color: #FFFFFF !important;
         font-family: 'Inter', sans-serif !important;
         font-size: 13.5px !important;
@@ -473,7 +490,7 @@ def inject_custom_css() -> None:
         align-self: center !important;
     }
 
-    /* Active sidebar navigation indicator — high-visibility clinical indicator */
+    /* Active sidebar navigation indicator — completely filled clinical card */
     [data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked),
     [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked),
     [data-testid="stSidebar"] div[role="radiogroup"] label[aria-checked="true"] {
@@ -483,6 +500,7 @@ def inject_custom_css() -> None:
         border-right: 1px solid rgba(22, 124, 128, 0.5) !important;
         border-bottom: 1px solid rgba(22, 124, 128, 0.5) !important;
         border-radius: 6px !important;
+        padding: 8px 14px !important;
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25) !important;
     }
 
@@ -510,6 +528,7 @@ def inject_custom_css() -> None:
     [data-testid="stSidebar"] label[data-baseweb="radio"]:hover {
         background: rgba(255, 255, 255, 0.06) !important;
         border-left: 4px solid rgba(22, 124, 128, 0.6) !important;
+        padding: 8px 14px !important;
     }
 
     [data-testid="stSidebar"] div[data-testid="stRadio"] label:hover p,
@@ -518,16 +537,6 @@ def inject_custom_css() -> None:
         font-weight: 600 !important;
     }
 
-    /* High-contrast radio dot indicator in sidebar - centered */
-    [data-testid="stSidebar"] div[role="radiogroup"] input:checked + div,
-    [data-testid="stSidebar"] div[role="radiogroup"] input:checked + div > div {
-        background-color: #167C80 !important;
-        border-color: #167C80 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        align-self: center !important;
-    }
     [data-testid="stSidebar"] div[role="radiogroup"] svg {
         fill: #167C80 !important;
         color: #167C80 !important;
