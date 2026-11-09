@@ -140,7 +140,7 @@ def render():
                 annot=True, fmt="d", cmap=sns.light_palette("#14243A", as_cmap=True), cbar=False, ax=ax,
                 annot_kws={"size": 14, "weight": "bold"}
             )
-            ax.set_xlabel(r"Predicted Label (Threshold $\ge$ 0.60)", fontweight="bold", fontsize=10, labelpad=8)
+            ax.set_xlabel(r"Predicted Label (Threshold $\geq$ 0.60)", fontweight="bold", fontsize=10, labelpad=8)
             ax.set_ylabel("Actual Label", fontweight="bold", fontsize=10, labelpad=8)
             ax.set_xticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")
             ax.set_yticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")

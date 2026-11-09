@@ -1160,6 +1160,58 @@ def inject_custom_css() -> None:
         pointer-events: none !important;
     }
 
+    /* ── Responsive Viewport Adjustments (Tablet & Mobile) ────────────── */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+            padding-top: 2rem !important;
+        }
+
+        .clinical-top-bar {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+        }
+
+        .protocol-pills-group {
+            width: 100% !important;
+        }
+
+        .med-card {
+            padding: 16px !important;
+            margin-bottom: 12px !important;
+        }
+
+        .report-table {
+            display: block !important;
+            overflow-x: auto !important;
+            white-space: nowrap !important;
+        }
+
+        .stepper-container {
+            padding: 10px 12px !important;
+            gap: 10px !important;
+        }
+
+        .arch-stats-grid {
+            grid-template-columns: 1fr !important;
+            gap: 8px !important;
+        }
+
+        .clinical-hero-card {
+            padding: 18px 20px !important;
+        }
+
+        .clinical-hero-title {
+            font-size: 20px !important;
+        }
+
+        .metric-value-swiss {
+            font-size: 24px !important;
+        }
+    }
+
     </style>
     """
     st.markdown(custom_css, unsafe_allow_html=True)
