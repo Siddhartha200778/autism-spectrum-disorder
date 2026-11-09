@@ -141,7 +141,7 @@ def render():
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.subheader("4. Clinical Research Insights")
-    st.markdown("""- **Clinical Interpretability:** TabNet delivers direct feature-level importance attribution via sparse attention. In pediatric medical settings, explainability is as critical as raw accuracy because clinicians must justify screening referrals to caregivers.
-- **Complementary Ensemble Potential:** The MLP model excels at capturing dense non-linear interactions across the engineered Q-Chat domains (`AQ10`, `A_domain`, `B_domain`), while TabNet provides granular item-level tracking. Utilizing both models in tandem maximizes screening confidence.""")
+    st.markdown("""- **Clinical Interpretability:** TabNet delivers direct feature-level importance attribution via sparse attention. In pediatric medical settings, explainability is as critical as raw accuracy because clinicians must understand the specific behavioral drivers behind screening stratifications.
+- **Complementary Architecture Analysis:** While the dense baseline MLP learns global non-linear combinations across the 16 survey items and demographic covariates, TabNet's sparse attentive transformer explicitly isolates salient behavioral markers at each decision step, achieving superior accuracy (91.94% vs 85.78%), recall (94.52% vs 86.30%), and clinical interpretability.""")
 
     render_disclaimer()

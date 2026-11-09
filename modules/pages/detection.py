@@ -1160,7 +1160,7 @@ Neurodiversity is a natural, profound variation of the human mind. The traits id
 </div>
 <div style="text-align: right;">
 <div style="font-size: 2.8rem; line-height: 1;">🎖️</div>
-<div style="font-size: 0.78rem; font-weight: 800; color: #059669; text-transform: uppercase; margin-top: 4px;">Verified Screening Dossier</div>
+<div style="font-size: 0.78rem; font-weight: 800; color: #059669; text-transform: uppercase; margin-top: 4px;">Completed Screening Dossier</div>
 </div>
 </div>
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; font-size: 0.92rem;">

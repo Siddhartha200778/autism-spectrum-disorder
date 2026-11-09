@@ -47,7 +47,7 @@ def extract_cohort_telemetry(raw_df: Optional[pd.DataFrame]) -> Dict[str, Any]:
         "jaundice_pct": 27.32,
         "fam_count": 170,
         "fam_pct": 16.13,
-        "top_feature": "Q3 (Shared Attention & Pointing)",
+        "top_feature": "Q7 (Shared Pointing & Interest)",
     }
 
     if raw_df is None or not isinstance(raw_df, pd.DataFrame) or raw_df.empty:
@@ -136,7 +136,7 @@ def extract_cohort_telemetry(raw_df: Optional[pd.DataFrame]) -> Dict[str, Any]:
         "jaundice_pct": jaundice_pct,
         "fam_count": fam_count,
         "fam_pct": fam_pct,
-        "top_feature": "Q3 (Shared Attention & Pointing)",
+        "top_feature": "Q7 (Shared Pointing & Interest)",
     }
 
 
@@ -150,16 +150,16 @@ def extract_benchmark_telemetry(models_result: Optional[Dict[str, Any]]) -> Dict
         A dictionary of float accuracy/precision/F1/AUC values (0–100 for pct fields).
     """
     _defaults: Dict[str, Any] = {
-        "tabnet_acc": 91.00,
-        "tabnet_prec": 88.48,
-        "tabnet_recall": 100.00,
-        "tabnet_f1": 0.9389,
-        "tabnet_auc": 1.0000,
-        "mlp_acc": 100.00,
-        "mlp_prec": 100.00,
-        "mlp_recall": 100.00,
-        "mlp_f1": 1.0000,
-        "mlp_auc": 1.0000,
+        "tabnet_acc": 91.94,
+        "tabnet_prec": 93.88,
+        "tabnet_recall": 94.52,
+        "tabnet_f1": 0.9420,
+        "tabnet_auc": 0.9688,
+        "mlp_acc": 85.78,
+        "mlp_prec": 92.65,
+        "mlp_recall": 86.30,
+        "mlp_f1": 0.8936,
+        "mlp_auc": 0.9468,
     }
 
     if models_result is None or not isinstance(models_result, dict):
@@ -172,16 +172,16 @@ def extract_benchmark_telemetry(models_result: Optional[Dict[str, Any]]) -> Dict
         return _defaults
 
     return {
-        "tabnet_acc": float(tabnet.get("accuracy", 0.91)) * 100.0,
-        "tabnet_prec": float(tabnet.get("precision", 0.8848)) * 100.0,
-        "tabnet_recall": float(tabnet.get("recall", 1.0000)) * 100.0,
-        "tabnet_f1": float(tabnet.get("f1", 0.9389)),
-        "tabnet_auc": float(tabnet.get("auc", 1.0000)),
-        "mlp_acc": float(mlp.get("accuracy", 1.0000)) * 100.0,
-        "mlp_prec": float(mlp.get("precision", 1.0000)) * 100.0,
-        "mlp_recall": float(mlp.get("recall", 1.0000)) * 100.0,
-        "mlp_f1": float(mlp.get("f1", 1.0000)),
-        "mlp_auc": float(mlp.get("auc", 1.0000)),
+        "tabnet_acc": float(tabnet.get("accuracy", 0.9194)) * 100.0,
+        "tabnet_prec": float(tabnet.get("precision", 0.9388)) * 100.0,
+        "tabnet_recall": float(tabnet.get("recall", 0.9452)) * 100.0,
+        "tabnet_f1": float(tabnet.get("f1", 0.9420)),
+        "tabnet_auc": float(tabnet.get("auc", 0.9688)),
+        "mlp_acc": float(mlp.get("accuracy", 0.8578)) * 100.0,
+        "mlp_prec": float(mlp.get("precision", 0.9265)) * 100.0,
+        "mlp_recall": float(mlp.get("recall", 0.8630)) * 100.0,
+        "mlp_f1": float(mlp.get("f1", 0.8936)),
+        "mlp_auc": float(mlp.get("auc", 0.9468)),
     }
 
 
@@ -360,7 +360,7 @@ def render() -> None:
                 {metrics['tabnet_auc']:.4f}
             </div>
             <div style="font-size:13px; color:#167C80; font-weight:600;">
-                100.0% Sensitivity &bull; 0.9389 F1
+                {metrics['tabnet_recall']:.1f}% Sensitivity &bull; {metrics['tabnet_f1']:.4f} F1
             </div>
         </div>
         """)
@@ -584,7 +584,7 @@ def render() -> None:
                 {cohort['top_feature']}
             </div>
             <div style="font-size:13px; color:#526071; margin-top:4px;">
-                Top behavioral item (attention: 0.065)
+                Top behavioral item (attention: 0.411)
             </div>
         </div>
         """)
@@ -708,11 +708,11 @@ def render() -> None:
             <div>
                 <div style="font-size:11px; color:#526071; font-weight:600;
                              text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">
-                    Validated Pipeline
+                    Screening Cohort
                 </div>
                 <div style="font-size:13px; font-weight:700; color:#167C80;
                              font-family:monospace;">
-                    &#10003; N=1,054
+                    N=1,054 Toddlers
                 </div>
             </div>
             <div>

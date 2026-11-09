@@ -61,7 +61,7 @@ def render():
             mlp["confusion_matrix"], annot=True, fmt="d", cmap=sns.light_palette("#14243A", as_cmap=True), cbar=False, ax=ax,
             annot_kws={"size": 13, "weight": "bold"}
         )
-        ax.set_xlabel(r"Predicted Class (Threshold $\geq$ 0.60)", fontweight="bold", fontsize=10)
+        ax.set_xlabel(r"Predicted Class (Threshold $\geq$ 0.50)", fontweight="bold", fontsize=10)
         ax.set_ylabel("Actual Class", fontweight="bold", fontsize=10)
         ax.set_xticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")
         ax.set_yticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")

@@ -134,7 +134,7 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
         Paragraph(f"<strong>MRN:</strong> {mrn}", style_header_meta),
         Paragraph(f"<strong>Evaluation Date:</strong> {eval_date}", style_header_meta),
         Paragraph("<strong>Protocol:</strong> Q-CHAT-10 Toddler", style_header_meta),
-        Paragraph("<strong>Status:</strong> Completed &amp; Verified", style_header_meta)
+        Paragraph("<strong>Status:</strong> Completed Assessment Record", style_header_meta)
     ]
     header_table = Table([[left_header, right_header]], colWidths=[printable_width * 0.70, printable_width * 0.30])
     header_table.setStyle(TableStyle([

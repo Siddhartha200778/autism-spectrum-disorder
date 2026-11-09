@@ -99,15 +99,17 @@ def get_benchmark_models_and_data():
 
 def preprocess_and_prepare(raw_df):
     """
-    Executes the exact research preprocessing pipeline:
-    - Drops Case_No if present
-    - Forward fills missing values
-    - Renames questionnaire and metadata columns
-    - Categorical label encoding
-    - Domain feature engineering (AQ10, A_domain, B_domain)
-    - Stratified Train-Test split
-    - Age standard scaling
-    - SMOTE oversampling on training set
+    Executes the scientifically rigorous, leakage-free preprocessing pipeline:
+    - Drops non-predictive identifiers (Case_No).
+    - Excludes Qchat-10-Score (and proxy sum aggregates) because Qchat-10-Score is the
+      deterministic label-construction proxy (sum(A1..A10) >= 4 -> ASD=Yes).
+    - Preserves 16 authentic clinical predictors: Q1..Q10, Age, Sex, Ethnicity,
+      Jaundice, Family_ASD, Screener.
+    - Categorical label encoding fitted deterministically.
+    - Stratified 80/20 train/test split.
+    - Independent validation split (80/20 of training set) created strictly from train fold.
+    - StandardScaler fitted ONLY on training age, transforming train, val, and test.
+    - SMOTE resampling applied strictly to the training fold.
     """
     data = raw_df.copy()
     
@@ -142,6 +144,9 @@ def preprocess_and_prepare(raw_df):
     if data.empty:
         raise ValueError("No usable rows remaining after dropping missing values.")
 
+    # Target binarization (1 = ASD, 0 = Non-ASD)
+    data["ASD"] = (data["ASD"].astype(str).str.strip().str.lower().isin(["yes", "1", "true"])).astype(int)
+
     # Categorical Encoding
     encoders = {}
     cat_cols = data.select_dtypes(include=["object", "category", "string"]).columns
@@ -156,32 +161,42 @@ def preprocess_and_prepare(raw_df):
 
     data = data.dropna().copy()
 
-    # Feature Engineering
-    data["AQ10"] = data[questions].sum(axis=1)
-    data["A_domain"] = data[questions[:9]].sum(axis=1)
-    data["B_domain"] = data["Q10"]
+    # SCIENTIFIC LEAKAGE CORRECTION:
+    # Exclude Qchat-10-Score (and do not engineer AQ10 / A_domain proxy sums)
+    # The predictive feature matrix X contains strictly the individual items and covariates.
+    cols_to_drop = ["ASD"]
+    for c in ["Qchat-10-Score", "AQ10", "A_domain", "B_domain"]:
+        if c in data.columns:
+            cols_to_drop.append(c)
 
-    X = data.drop(columns=["ASD"]).astype(float)
+    X = data.drop(columns=cols_to_drop).astype(float)
     y = data["ASD"].astype(int)
 
     if y.nunique() != 2:
         raise ValueError(f"Target column must be binary (found {y.nunique()} unique classes).")
 
-    # Train-test split (stratified 80/20)
-    X_train, X_test, y_train, y_test = train_test_split(
+    # 1. Stratified Train-Test split (80% train, 20% holdout test)
+    X_train_full, X_test, y_train_full, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
 
-    # Scaler for Age (fitted strictly on training set)
+    # 2. Validation split created EXCLUSIVELY from the training partition (80/20 split of train)
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_train_full, y_train_full, test_size=0.2, random_state=42, stratify=y_train_full
+    )
+
+    # 3. Scaler for Age (fitted STRICTLY on X_train)
     scaler = None
     if "Age" in X.columns:
         scaler = StandardScaler()
         X_train = X_train.copy()
+        X_val = X_val.copy()
         X_test = X_test.copy()
         X_train.loc[:, "Age"] = scaler.fit_transform(X_train[["Age"]]).ravel()
+        X_val.loc[:, "Age"] = scaler.transform(X_val[["Age"]]).ravel()
         X_test.loc[:, "Age"] = scaler.transform(X_test[["Age"]]).ravel()
 
-    # SMOTE resampling strictly on training data
+    # 4. SMOTE resampling applied STRICTLY to training data
     counts = y_train.value_counts()
     if len(counts) < 2 or counts.min() < 2:
         raise ValueError("Not enough minority-class training samples for SMOTE resampling.")
@@ -194,6 +209,8 @@ def preprocess_and_prepare(raw_df):
         "processed_df": data,
         "X_train_res": X_train_res,
         "y_train_res": y_train_res,
+        "X_val": X_val,
+        "y_val": y_val,
         "X_test": X_test,
         "y_test": y_test,
         "feature_names": list(X.columns),
@@ -206,14 +223,18 @@ def preprocess_and_prepare(raw_df):
 def train_models_pipeline(prepared_data):
     """
     Trains both TabNet and MLP models using exact parameters and computes true evaluation metrics.
+    Early stopping for TabNet monitors the validation partition X_val (NEVER the holdout test set).
+    Both models are evaluated on the identical holdout test set (X_test, y_test).
     """
     X_train_res = prepared_data["X_train_res"]
     y_train_res = prepared_data["y_train_res"]
+    X_val = prepared_data["X_val"]
+    y_val = prepared_data["y_val"]
     X_test = prepared_data["X_test"]
     y_test = prepared_data["y_test"]
     feature_names = prepared_data["feature_names"]
 
-    # 1. TabNet Model
+    # 1. TabNet Model (Attentive Tabular Transformer)
     tabnet = TabNetClassifier(
         n_d=16,
         n_a=16,
@@ -229,14 +250,15 @@ def train_models_pipeline(prepared_data):
     tabnet.fit(
         X_train_res.to_numpy(dtype=np.float32).copy(),
         y_train_res.to_numpy().copy(),
-        eval_set=[(X_test.to_numpy(dtype=np.float32).copy(), y_test.to_numpy().copy())],
+        eval_set=[(X_val.to_numpy(dtype=np.float32).copy(), y_val.to_numpy().copy())],
+        eval_metric=["accuracy"],
         max_epochs=100,
-        patience=10,
-        batch_size=256,
-        virtual_batch_size=128
+        patience=15,
+        batch_size=128,
+        virtual_batch_size=64
     )
 
-    # 2. MLP Model
+    # 2. MLP Model (Multi-Layer Perceptron)
     mlp = MLPClassifier(
         hidden_layer_sizes=(16, 8),
         max_iter=200,
@@ -247,34 +269,38 @@ def train_models_pipeline(prepared_data):
     )
     mlp.fit(X_train_res, y_train_res)
 
-    # TabNet Predictions & Probabilities
+    # TabNet Predictions & Probabilities on Holdout Test Set
     tabnet_pred = tabnet.predict(X_test.to_numpy(dtype=np.float32)).ravel().astype(int)
     tabnet_prob = tabnet.predict_proba(X_test.to_numpy(dtype=np.float32))[:, 1]
 
-    # MLP Predictions & Probabilities (Threshold 0.6 as in original project)
+    # MLP Predictions & Probabilities on Holdout Test Set
     mlp_prob = mlp.predict_proba(X_test)[:, 1]
-    mlp_pred = (mlp_prob >= 0.6).astype(int)
+    mlp_pred = (mlp_prob >= 0.5).astype(int)
 
     # TabNet Metrics
-    tabnet_acc = accuracy_score(y_test, tabnet_pred)
-    tabnet_prec = precision_score(y_test, tabnet_pred, zero_division=0)
-    tabnet_rec = recall_score(y_test, tabnet_pred, zero_division=0)
-    tabnet_f1 = f1_score(y_test, tabnet_pred, zero_division=0)
+    tabnet_acc = float(accuracy_score(y_test, tabnet_pred))
+    tabnet_prec = float(precision_score(y_test, tabnet_pred, zero_division=0))
+    tabnet_rec = float(recall_score(y_test, tabnet_pred, zero_division=0))
+    tabnet_f1 = float(f1_score(y_test, tabnet_pred, zero_division=0))
     tabnet_cm = confusion_matrix(y_test, tabnet_pred)
+    tn_tab, fp_tab, fn_tab, tp_tab = tabnet_cm.ravel()
+    tabnet_spec = float(tn_tab / (tn_tab + fp_tab)) if (tn_tab + fp_tab) > 0 else 0.0
     tabnet_report = classification_report(y_test, tabnet_pred, zero_division=0, output_dict=True)
     tabnet_fpr, tabnet_tpr, _ = roc_curve(y_test, tabnet_prob)
-    tabnet_auc = auc(tabnet_fpr, tabnet_tpr)
+    tabnet_auc = float(auc(tabnet_fpr, tabnet_tpr))
     tabnet_importance = pd.Series(tabnet.feature_importances_, index=feature_names).sort_values(ascending=False)
 
     # MLP Metrics
-    mlp_acc = accuracy_score(y_test, mlp_pred)
-    mlp_prec = precision_score(y_test, mlp_pred, zero_division=0)
-    mlp_rec = recall_score(y_test, mlp_pred, zero_division=0)
-    mlp_f1 = f1_score(y_test, mlp_pred, zero_division=0)
+    mlp_acc = float(accuracy_score(y_test, mlp_pred))
+    mlp_prec = float(precision_score(y_test, mlp_pred, zero_division=0))
+    mlp_rec = float(recall_score(y_test, mlp_pred, zero_division=0))
+    mlp_f1 = float(f1_score(y_test, mlp_pred, zero_division=0))
     mlp_cm = confusion_matrix(y_test, mlp_pred)
+    tn_mlp, fp_mlp, fn_mlp, tp_mlp = mlp_cm.ravel()
+    mlp_spec = float(tn_mlp / (tn_mlp + fp_mlp)) if (tn_mlp + fp_mlp) > 0 else 0.0
     mlp_report = classification_report(y_test, mlp_pred, zero_division=0, output_dict=True)
     mlp_fpr, mlp_tpr, _ = roc_curve(y_test, mlp_prob)
-    mlp_auc = auc(mlp_fpr, mlp_tpr)
+    mlp_auc = float(auc(mlp_fpr, mlp_tpr))
 
     return {
         "tabnet": {
@@ -284,6 +310,7 @@ def train_models_pipeline(prepared_data):
             "accuracy": tabnet_acc,
             "precision": tabnet_prec,
             "recall": tabnet_rec,
+            "specificity": tabnet_spec,
             "f1": tabnet_f1,
             "confusion_matrix": tabnet_cm,
             "classification_report": tabnet_report,
@@ -299,13 +326,14 @@ def train_models_pipeline(prepared_data):
             "accuracy": mlp_acc,
             "precision": mlp_prec,
             "recall": mlp_rec,
+            "specificity": mlp_spec,
             "f1": mlp_f1,
             "confusion_matrix": mlp_cm,
             "classification_report": mlp_report,
             "fpr": mlp_fpr,
             "tpr": mlp_tpr,
             "auc": mlp_auc,
-            "iterations": mlp.n_iter_
+            "iterations": int(mlp.n_iter_)
         },
         "y_test": y_test
     }
@@ -314,30 +342,23 @@ def run_single_patient_inference(patient_dict, models_dict, prepared_data):
     """
     Runs real-time inference on a single patient record using both TabNet and MLP.
     patient_dict contains: Q1..Q10, Age, Sex, Ethnicity, Jaundice, Family_ASD, Screener.
+    Excludes Qchat-10-Score and proxy aggregates from input features.
     """
     feature_names = prepared_data["feature_names"]
     encoders = prepared_data["encoders"]
     scaler = prepared_data["scaler"]
 
-    # Calculate domain scores
-    q_vals = [patient_dict[f"Q{i}"] for i in range(1, 11)]
+    # Calculate domain scores for clinical dossier and display
+    q_vals = [patient_dict.get(f"Q{i}", 0) for i in range(1, 11)]
     aq10_score = sum(q_vals)
     a_domain = sum(q_vals[:9])
     b_domain = q_vals[9]
 
-    # Create dictionary matching feature names
+    # Create dictionary matching feature names (the 16 predictive features)
     row_dict = {}
     for f in feature_names:
         if f in patient_dict:
             row_dict[f] = patient_dict[f]
-        elif f == "AQ10":
-            row_dict[f] = aq10_score
-        elif f == "A_domain":
-            row_dict[f] = a_domain
-        elif f == "B_domain":
-            row_dict[f] = b_domain
-        elif f == "Qchat-10-Score":
-            row_dict[f] = aq10_score
         else:
             row_dict[f] = 0
 
@@ -350,7 +371,6 @@ def run_single_patient_inference(patient_dict, models_dict, prepared_data):
             if val_str in enc.classes_:
                 df_row[col] = enc.transform([val_str])[0]
             else:
-                # If unseen label, assign 0
                 df_row[col] = 0
 
     # Ensure numeric conversion
@@ -373,7 +393,7 @@ def run_single_patient_inference(patient_dict, models_dict, prepared_data):
 
     # MLP
     mlp_prob = float(mlp.predict_proba(df_row[feature_names])[0, 1])
-    mlp_pred = int(mlp_prob >= 0.6)
+    mlp_pred = int(mlp_prob >= 0.5)
 
     return {
         "tabnet_prob": tabnet_prob,
