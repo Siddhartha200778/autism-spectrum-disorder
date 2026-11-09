@@ -27,7 +27,7 @@ def render():
                 ]
             )
             message = st.text_area("Message / Research Note", placeholder="Detail your research question, dataset inquiries, or clinical collaboration proposals...")
-            submitted = st.form_submit_button("✉️ Send Inquiry", type="primary", use_container_width=True)
+            submitted = st.form_submit_button("Send Inquiry", type="primary", use_container_width=True)
 
         if submitted:
             if not name or not email or not message:

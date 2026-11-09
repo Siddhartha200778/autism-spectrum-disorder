@@ -8,51 +8,51 @@ def render():
         badge="SCIENTIFIC METHODOLOGY"
     )
 
-    # Visual Workflow Diagram (High-Fidelity CSS & SVG Architecture)
+    # Visual Workflow Diagram (High-Fidelity Clinical Architecture)
     render_html("""
-    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 28px 20px; box-shadow: 0 4px 16px rgba(15,23,42,0.04); margin-bottom: 30px;">
-        <h4 style="color: #0A192F; font-size: 1.15rem; font-weight: 700; margin-bottom: 20px; text-align: center;">
+    <div style="background: #FFFFFF; border: 1px solid #E3E8EE; border-radius: 10px; padding: 24px 20px; box-shadow: 0 1px 3px rgba(32,43,54,0.03); margin-bottom: 24px;">
+        <h4 style="color: #202B36; font-size: 15px; font-weight: 700; margin-bottom: 18px; text-align: center; text-transform: uppercase; letter-spacing: 0.04em;">
             End-to-End Clinical Deep Learning Pipeline
         </h4>
         <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px;">
-            <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 110px;">
-                <div style="font-size: 1.2rem;">📁</div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: #1D4ED8; margin-top: 4px;">1. Dataset Collection</div>
+            <div style="background: #EDF4F4; border: 1px solid #D0E3E3; border-radius: 6px; padding: 10px 14px; text-align: center; min-width: 110px;">
+                <div style="font-size: 11px; font-weight: 700; color: #167C80;">STAGE 1</div>
+                <div style="font-size: 12px; font-weight: 600; color: #202B36; margin-top: 3px;">Dataset Ingestion</div>
             </div>
-            <div style="color: #94A3B8; font-weight: bold; font-size: 1.1rem;">➔</div>
-            <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 110px;">
-                <div style="font-size: 1.2rem;">🧹</div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: #1D4ED8; margin-top: 4px;">2. Preprocessing</div>
+            <div style="color: #667085; font-weight: bold; font-size: 12px;">→</div>
+            <div style="background: #EDF4F4; border: 1px solid #D0E3E3; border-radius: 6px; padding: 10px 14px; text-align: center; min-width: 110px;">
+                <div style="font-size: 11px; font-weight: 700; color: #167C80;">STAGE 2</div>
+                <div style="font-size: 12px; font-weight: 600; color: #202B36; margin-top: 3px;">Preprocessing</div>
             </div>
-            <div style="color: #94A3B8; font-weight: bold; font-size: 1.1rem;">➔</div>
-            <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 110px;">
-                <div style="font-size: 1.2rem;">⚙️</div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: #1D4ED8; margin-top: 4px;">3. Feature Eng.</div>
+            <div style="color: #667085; font-weight: bold; font-size: 12px;">→</div>
+            <div style="background: #EDF4F4; border: 1px solid #D0E3E3; border-radius: 6px; padding: 10px 14px; text-align: center; min-width: 110px;">
+                <div style="font-size: 11px; font-weight: 700; color: #167C80;">STAGE 3</div>
+                <div style="font-size: 12px; font-weight: 600; color: #202B36; margin-top: 3px;">Feature Eng.</div>
             </div>
-            <div style="color: #94A3B8; font-weight: bold; font-size: 1.1rem;">➔</div>
-            <div style="background: #F3E8FF; border: 1px solid #DDD6FE; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 110px;">
-                <div style="font-size: 1.2rem;">✂️</div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: #7C3AED; margin-top: 4px;">4. Train-Test Split</div>
+            <div style="color: #667085; font-weight: bold; font-size: 12px;">→</div>
+            <div style="background: #EDF4F4; border: 1px solid #D0E3E3; border-radius: 6px; padding: 10px 14px; text-align: center; min-width: 110px;">
+                <div style="font-size: 11px; font-weight: 700; color: #167C80;">STAGE 4</div>
+                <div style="font-size: 12px; font-weight: 600; color: #202B36; margin-top: 3px;">Stratified Split</div>
             </div>
-            <div style="color: #94A3B8; font-weight: bold; font-size: 1.1rem;">➔</div>
-            <div style="background: #F3E8FF; border: 1px solid #DDD6FE; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 110px;">
-                <div style="font-size: 1.2rem;">⚖️</div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: #7C3AED; margin-top: 4px;">5. SMOTE Resampling</div>
+            <div style="color: #667085; font-weight: bold; font-size: 12px;">→</div>
+            <div style="background: #EDF4F4; border: 1px solid #D0E3E3; border-radius: 6px; padding: 10px 14px; text-align: center; min-width: 110px;">
+                <div style="font-size: 11px; font-weight: 700; color: #167C80;">STAGE 5</div>
+                <div style="font-size: 12px; font-weight: 600; color: #202B36; margin-top: 3px;">SMOTE (Train)</div>
             </div>
-            <div style="color: #94A3B8; font-weight: bold; font-size: 1.1rem;">➔</div>
-            <div style="background: #FDF2F8; border: 1px solid #FBCFE8; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 110px;">
-                <div style="font-size: 1.2rem;">🤖</div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: #BE185D; margin-top: 4px;">6. TabNet & MLP Training</div>
+            <div style="color: #667085; font-weight: bold; font-size: 12px;">→</div>
+            <div style="background: #EDF4F4; border: 1px solid #D0E3E3; border-radius: 6px; padding: 10px 14px; text-align: center; min-width: 110px;">
+                <div style="font-size: 11px; font-weight: 700; color: #167C80;">STAGE 6</div>
+                <div style="font-size: 12px; font-weight: 600; color: #202B36; margin-top: 3px;">TabNet & MLP</div>
             </div>
-            <div style="color: #94A3B8; font-weight: bold; font-size: 1.1rem;">➔</div>
-            <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 110px;">
-                <div style="font-size: 1.2rem;">📊</div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: #047857; margin-top: 4px;">7. Model Evaluation</div>
+            <div style="color: #667085; font-weight: bold; font-size: 12px;">→</div>
+            <div style="background: #EDF4F4; border: 1px solid #D0E3E3; border-radius: 6px; padding: 10px 14px; text-align: center; min-width: 110px;">
+                <div style="font-size: 11px; font-weight: 700; color: #167C80;">STAGE 7</div>
+                <div style="font-size: 12px; font-weight: 600; color: #202B36; margin-top: 3px;">Evaluation</div>
             </div>
-            <div style="color: #94A3B8; font-weight: bold; font-size: 1.1rem;">➔</div>
-            <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 110px;">
-                <div style="font-size: 1.2rem;">📈</div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: #047857; margin-top: 4px;">8. Result Visualization</div>
+            <div style="color: #667085; font-weight: bold; font-size: 12px;">→</div>
+            <div style="background: #EDF4F4; border: 1px solid #D0E3E3; border-radius: 6px; padding: 10px 14px; text-align: center; min-width: 110px;">
+                <div style="font-size: 11px; font-weight: 700; color: #167C80;">STAGE 8</div>
+                <div style="font-size: 12px; font-weight: 600; color: #202B36; margin-top: 3px;">Visualization</div>
             </div>
         </div>
     </div>

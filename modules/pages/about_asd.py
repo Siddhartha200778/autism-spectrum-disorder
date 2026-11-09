@@ -10,9 +10,9 @@ def render():
 
     # Core Definition Card
     render_html("""
-    <div class="med-card" style="background: linear-gradient(135deg, #FFFFFF 0%, #F0F7FF 100%); border-left: 5px solid #1D4ED8;">
-        <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">What is Autism Spectrum Disorder?</div>
-        <div class="med-card-body" style="font-size: 1.02rem; color: #334155;">
+    <div class="med-card" style="background: #FFFFFF; border: 1px solid #E3E8EE; border-left: 4px solid #167C80; border-radius: 8px; padding: 22px;">
+        <div class="med-card-title" style="font-size: 1.35rem; color: #202B36;">What is Autism Spectrum Disorder?</div>
+        <div class="med-card-body" style="font-size: 1.02rem; color: #202B36;">
             <strong>Autism Spectrum Disorder (ASD)</strong> is a complex, neurodevelopmental condition characterized by persistent differences in social communication, reciprocal interaction, and restricted or repetitive patterns of behaviors, interests, or activities. 
             The term <em>"spectrum"</em> reflects the wide variety in challenges, presentation, and distinct strengths that each individual experiences across cognitive, verbal, and sensory dimensions.
         </div>
@@ -29,7 +29,7 @@ def render():
         render_html("""
         <div class="med-card">
             <div class="med-card-header">
-                <div class="med-card-icon">🗣️</div>
+                <div class="med-card-icon" style="color:#167C80; font-weight:700; font-size:12px;">Q1-9</div>
                 <span class="pill-badge pill-blue">Domain A</span>
             </div>
             <div class="med-card-title">Social Communication & Interaction</div>
@@ -49,7 +49,7 @@ def render():
         render_html("""
         <div class="med-card">
             <div class="med-card-header">
-                <div class="med-card-icon">🔄</div>
+                <div class="med-card-icon" style="color:#14243A; font-weight:700; font-size:12px;">Q10</div>
                 <span class="pill-badge pill-purple">Domain B</span>
             </div>
             <div class="med-card-title">Repetitive Behaviors & Sensory Traits</div>
@@ -74,7 +74,7 @@ def render():
         render_html("""
         <div class="med-card">
             <div class="med-card-header">
-                <div class="med-card-icon">🌱</div>
+                <div class="med-card-icon" style="color:#167C80; font-weight:700; font-size:12px;">DEV</div>
                 <span class="pill-badge pill-green">Neuroplasticity</span>
             </div>
             <div class="med-card-title">Peak Neural Malleability</div>
@@ -88,7 +88,7 @@ def render():
         render_html("""
         <div class="med-card">
             <div class="med-card-header">
-                <div class="med-card-icon">⏳</div>
+                <div class="med-card-icon" style="color:#D97706; font-weight:700; font-size:12px;">TIME</div>
                 <span class="pill-badge pill-amber">Latency Reduction</span>
             </div>
             <div class="med-card-title">Closing the Diagnostic Lag</div>
@@ -102,7 +102,7 @@ def render():
         render_html("""
         <div class="med-card">
             <div class="med-card-header">
-                <div class="med-card-icon">🤝</div>
+                <div class="med-card-icon" style="color:#167C80; font-weight:700; font-size:12px;">CARE</div>
                 <span class="pill-badge pill-blue">Family Empowerment</span>
             </div>
             <div class="med-card-title">Targeted Family Support</div>

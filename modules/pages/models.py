@@ -27,8 +27,8 @@ def render():
     if "TabNet" in tab_choice:
         # TabNet Section
         render_html("""
-        <div class="med-card" style="border-left: 5px solid #1D4ED8;">
-            <div class="med-card-title" style="font-size: 1.3rem; color: #0A192F;">
+        <div class="med-card" style="border-left: 5px solid #167C80;">
+            <div class="med-card-title" style="font-size: 1.3rem; color: #202B36;">
                 TabNet: Attentive Interpretable Tabular Learning
             </div>
             <div class="med-card-body" style="font-size: 0.98rem; line-height: 1.6;">
@@ -57,9 +57,9 @@ def render():
             importance = tabnet_res["feature_importance"].sort_values(ascending=True)
             # Take top 10 features if many
             top_importance = importance.tail(12)
-            colors = ["#93C5FD" if i < len(top_importance) - 3 else "#1D4ED8" for i in range(len(top_importance))]
-            ax.barh(top_importance.index, top_importance.values, color=colors, edgecolor="#0A192F", linewidth=0.8)
-            ax.set_title("TabNet Feature Salience (Top Contributors)", fontsize=11, fontweight="bold", color="#0A192F", pad=12)
+            colors = ["#5BA8AB" if i < len(top_importance) - 3 else "#167C80" for i in range(len(top_importance))]
+            ax.barh(top_importance.index, top_importance.values, color=colors, edgecolor="#202B36", linewidth=0.8)
+            ax.set_title("TabNet Feature Salience (Top Contributors)", fontsize=11, fontweight="bold", color="#202B36", pad=12)
             ax.set_xlabel("Relative Importance Score", fontweight="bold")
             apply_chart_theme(fig, ax)
             st.pyplot(fig)
@@ -77,7 +77,7 @@ def render():
             ax.set_ylabel("Actual Label", fontweight="bold", fontsize=10, labelpad=8)
             ax.set_xticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")
             ax.set_yticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")
-            ax.set_title("TabNet Confusion Matrix", fontsize=11, fontweight="bold", color="#0A192F", pad=12)
+            ax.set_title("TabNet Confusion Matrix", fontsize=11, fontweight="bold", color="#202B36", pad=12)
             apply_chart_theme(fig, ax)
             st.pyplot(fig)
             plt.close(fig)
@@ -96,8 +96,8 @@ def render():
     else:
         # MLP Section
         render_html("""
-        <div class="med-card" style="border-left: 5px solid #7C3AED;">
-            <div class="med-card-title" style="font-size: 1.3rem; color: #0A192F;">
+        <div class="med-card" style="border-left: 5px solid #167C80;">
+            <div class="med-card-title" style="font-size: 1.3rem; color: #202B36;">
                 Multi-Layer Perceptron (MLP) Neural Network
             </div>
             <div class="med-card-body" style="font-size: 0.98rem; line-height: 1.6;">
@@ -122,9 +122,9 @@ def render():
         with col_fig1:
             st.subheader(f"MLP ROC Curve (AUC = {mlp_res['auc']:.3f})")
             fig, ax = plt.subplots(figsize=(6.5, 5))
-            ax.plot(mlp_res["fpr"], mlp_res["tpr"], color="#7C3AED", lw=2.5, label=f"MLP (AUC = {mlp_res['auc']:.3f})")
-            ax.plot([0, 1], [0, 1], color="#94A3B8", linestyle="--", lw=1.5, label="Chance Level")
-            ax.set_title("Receiver Operating Characteristic (ROC)", fontsize=11, fontweight="bold", color="#0A192F", pad=12)
+            ax.plot(mlp_res["fpr"], mlp_res["tpr"], color="#167C80", lw=2.5, label=f"MLP (AUC = {mlp_res['auc']:.3f})")
+            ax.plot([0, 1], [0, 1], color="#8899A6", linestyle="--", lw=1.5, label="Chance Level")
+            ax.set_title("Receiver Operating Characteristic (ROC)", fontsize=11, fontweight="bold", color="#202B36", pad=12)
             ax.set_xlabel("False Positive Rate", fontweight="bold")
             ax.set_ylabel("True Positive Rate", fontweight="bold")
             ax.legend(loc="lower right", frameon=True)
@@ -144,7 +144,7 @@ def render():
             ax.set_ylabel("Actual Label", fontweight="bold", fontsize=10, labelpad=8)
             ax.set_xticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")
             ax.set_yticklabels(["Non-ASD (0)", "ASD (1)"], fontweight="bold")
-            ax.set_title("MLP Confusion Matrix", fontsize=11, fontweight="bold", color="#0A192F", pad=12)
+            ax.set_title("MLP Confusion Matrix", fontsize=11, fontweight="bold", color="#202B36", pad=12)
             apply_chart_theme(fig, ax)
             st.pyplot(fig)
             plt.close(fig)

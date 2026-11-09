@@ -87,9 +87,9 @@ def render():
         null_counts = raw_df.isnull().sum()
         total_missing = null_counts.sum()
         if total_missing == 0:
-            st.success("✅ **Zero Missing Values Detected.** All records are fully populated.")
+            st.success("**Zero Missing Values Detected.** All records are fully populated.")
         else:
-            st.warning(f"⚠️ **{total_missing} missing values detected across {sum(null_counts > 0)} columns.** Preprocessing will apply forward-fill and row filtering.")
+            st.warning(f"**{total_missing} missing values detected across {sum(null_counts > 0)} columns.** Preprocessing will apply forward-fill and row filtering.")
             df_missing = pd.DataFrame({
                 "Column": null_counts.index,
                 "Missing Values": null_counts.values,
@@ -122,9 +122,9 @@ def render():
         if target_col:
             fig, ax = plt.subplots(figsize=(6, 3.8))
             val_counts = raw_df[target_col].astype(str).value_counts()
-            colors = ["#1D4ED8", "#7C3AED", "#60A5FA", "#A78BFA"]
-            ax.bar(val_counts.index, val_counts.values, color=colors[:len(val_counts)], width=0.55, edgecolor="#0A192F", linewidth=1.2)
-            ax.set_title("Target Class Distribution (ASD Traits)", fontsize=11, fontweight="bold", color="#0A192F", pad=12)
+            colors = ["#167C80", "#167C80", "#5BA8AB", "#A78BFA"]
+            ax.bar(val_counts.index, val_counts.values, color=colors[:len(val_counts)], width=0.55, edgecolor="#202B36", linewidth=1.2)
+            ax.set_title("Target Class Distribution (ASD Traits)", fontsize=11, fontweight="bold", color="#202B36", pad=12)
             ax.set_ylabel("Count", fontweight="bold")
             apply_chart_theme(fig, ax)
             st.pyplot(fig)
@@ -141,8 +141,8 @@ def render():
         if age_col:
             fig, ax = plt.subplots(figsize=(6, 3.8))
             ages = pd.to_numeric(raw_df[age_col], errors="coerce").dropna()
-            ax.hist(ages, bins=15, color="#3B82F6", edgecolor="#1E3A8A", alpha=0.85)
-            ax.set_title(f"Toddler Age Distribution ({age_col})", fontsize=11, fontweight="bold", color="#0A192F", pad=12)
+            ax.hist(ages, bins=15, color="#1A9599", edgecolor="#14243A", alpha=0.85)
+            ax.set_title(f"Toddler Age Distribution ({age_col})", fontsize=11, fontweight="bold", color="#202B36", pad=12)
             ax.set_xlabel("Age (Months)", fontweight="bold")
             ax.set_ylabel("Frequency", fontweight="bold")
             apply_chart_theme(fig, ax)
@@ -154,7 +154,7 @@ def render():
     st.subheader("6. Preprocess & Train AI Models")
     st.write("Run the full preprocessing pipeline (Case_No dropping, label encoding, standard scaling, SMOTE resampling) and train TabNet and MLP neural networks.")
 
-    if st.button("🚀 Preprocess Dataset & Train Models", type="primary", use_container_width=True):
+    if st.button("Preprocess Dataset & Train Models", type="primary", use_container_width=True):
         with st.spinner("Executing preprocessing, SMOTE balance resampler, and training TabNet and MLP models..."):
             try:
                 prep = preprocess_and_prepare(raw_df)

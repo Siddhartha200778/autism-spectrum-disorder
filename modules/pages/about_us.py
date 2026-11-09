@@ -10,11 +10,11 @@ def render():
 
     # Core Research Overview
     render_html("""
-    <div class="med-card" style="border-left: 5px solid #1D4ED8; margin-bottom: 25px;">
-        <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
+    <div class="med-card" style="border-left: 5px solid #167C80; margin-bottom: 25px;">
+        <div class="med-card-title" style="font-size: 1.35rem; color: #202B36;">
             Interpretable Deep Learning for Early ASD Detection
         </div>
-        <div class="med-card-body" style="font-size: 1.02rem; line-height: 1.7; color: #334155;">
+        <div class="med-card-body" style="font-size: 1.02rem; line-height: 1.7; color: #202B36;">
             This project represents an academic deep learning research initiative dedicated to developing accurate, interpretable, and computationally efficient machine learning models for early behavioral screening of Autism Spectrum Disorder (ASD). 
             By systematically benchmarking attentive tabular neural networks (<strong>TabNet</strong>) against multi-layer perceptron (<strong>MLP</strong>) baselines on standardized pediatric screening cohorts, the framework demonstrates how deep learning can assist healthcare providers in identifying developmental risk markers during early childhood.
         </div>
@@ -26,7 +26,7 @@ def render():
     with c1:
         render_html("""
         <div class="med-card">
-            <div class="med-card-icon">🎯</div>
+            <div class="med-card-icon" style="color:#167C80; font-weight:700; font-size:11px;">GOAL</div>
             <div class="med-card-title" style="margin-top: 10px;">Our Mission</div>
             <div class="med-card-body">
                 To shorten the diagnostic latency between initial parental concern and clinical developmental intervention through reliable, non-invasive digital screening technology.
@@ -37,7 +37,7 @@ def render():
     with c2:
         render_html("""
         <div class="med-card">
-            <div class="med-card-icon">🔍</div>
+            <div class="med-card-icon" style="color:#167C80; font-weight:700; font-size:11px;">XAI</div>
             <div class="med-card-title" style="margin-top: 10px;">Algorithmic Transparency</div>
             <div class="med-card-body">
                 To eliminate the opacity of conventional "black-box" medical neural networks by leveraging sequential attention masks that directly reveal feature salience.
@@ -48,7 +48,7 @@ def render():
     with c3:
         render_html("""
         <div class="med-card">
-            <div class="med-card-icon">🌐</div>
+            <div class="med-card-icon" style="color:#167C80; font-weight:700; font-size:11px;">OPEN</div>
             <div class="med-card-title" style="margin-top: 10px;">Global Accessibility</div>
             <div class="med-card-body">
                 To engineer an ultra-lightweight, browser-deployable healthcare architecture capable of running reliably on mobile devices and low-resource healthcare networks.
@@ -65,7 +65,7 @@ def render():
     with t1:
         render_html("""
         <div class="med-card">
-            <div style="font-weight: 700; color: #1D4ED8; font-size: 1.1rem; margin-bottom: 6px;">Deep Learning</div>
+            <div style="font-weight: 700; color: #167C80; font-size: 1.1rem; margin-bottom: 6px;">Deep Learning</div>
             <div class="med-card-body">
                 &bull; PyTorch 2.x<br>
                 &bull; PyTorch-TabNet<br>
@@ -77,7 +77,7 @@ def render():
     with t2:
         render_html("""
         <div class="med-card">
-            <div style="font-weight: 700; color: #7C3AED; font-size: 1.1rem; margin-bottom: 6px;">Data Processing</div>
+            <div style="font-weight: 700; color: #167C80; font-size: 1.1rem; margin-bottom: 6px;">Data Processing</div>
             <div class="med-card-body">
                 &bull; Imbalanced-Learn (SMOTE)<br>
                 &bull; Pandas & NumPy<br>

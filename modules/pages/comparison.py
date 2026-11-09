@@ -27,7 +27,7 @@ def render():
     col_tab, col_mlp = st.columns(2)
     with col_tab:
         render_html("""
-        <div class="med-card" style="border-top: 4px solid #1D4ED8;">
+        <div class="med-card" style="border-top: 4px solid #167C80;">
             <div class="med-card-header">
                 <div class="med-card-icon">🧠</div>
                 <span class="pill-badge pill-blue">Attentive Architecture</span>
@@ -44,9 +44,9 @@ def render():
 
     with col_mlp:
         render_html("""
-        <div class="med-card" style="border-top: 4px solid #7C3AED;">
+        <div class="med-card" style="border-top: 4px solid #167C80;">
             <div class="med-card-header">
-                <div class="med-card-icon">⚡</div>
+                <div class="med-card-icon" style="color:#14243A; font-weight:700; font-size:11px;">MLP</div>
                 <span class="pill-badge pill-purple">Feedforward Network</span>
             </div>
             <div class="med-card-title">MLP Network Performance</div>
@@ -74,11 +74,11 @@ def render():
     x = np.arange(len(metrics_df))
     width = 0.35
 
-    rects1 = ax.bar(x - width/2, metrics_df["TabNet"], width, label="TabNet", color="#1D4ED8", edgecolor="#0A192F", linewidth=1.2)
-    rects2 = ax.bar(x + width/2, metrics_df["MLP"], width, label="MLP Neural Net", color="#7C3AED", edgecolor="#0A192F", linewidth=1.2)
+    rects1 = ax.bar(x - width/2, metrics_df["TabNet"], width, label="TabNet", color="#167C80", edgecolor="#202B36", linewidth=1.2)
+    rects2 = ax.bar(x + width/2, metrics_df["MLP"], width, label="MLP Neural Net", color="#14243A", edgecolor="#202B36", linewidth=1.2)
 
     ax.set_ylabel("Score (%)", fontweight="bold")
-    ax.set_title("TabNet vs MLP Performance Comparison on Pediatric Test Cohort", fontsize=11, fontweight="bold", color="#0A192F", pad=12)
+    ax.set_title("TabNet vs MLP Performance Comparison on Pediatric Test Cohort", fontsize=11, fontweight="bold", color="#202B36", pad=12)
     ax.set_xticks(x)
     ax.set_xticklabels(metrics_df["Metric"], fontweight="bold", fontsize=10)
     ax.set_ylim(0, 115)
@@ -88,11 +88,11 @@ def render():
     for rect in rects1:
         h = rect.get_height()
         ax.annotate(f'{h:.1f}%', xy=(rect.get_x() + rect.get_width() / 2, h),
-                    xytext=(0, 3), textcoords="offset points", ha='center', va='bottom', fontsize=9, fontweight='bold', color='#1D4ED8')
+                    xytext=(0, 3), textcoords="offset points", ha='center', va='bottom', fontsize=9, fontweight='bold', color='#167C80')
     for rect in rects2:
         h = rect.get_height()
         ax.annotate(f'{h:.1f}%', xy=(rect.get_x() + rect.get_width() / 2, h),
-                    xytext=(0, 3), textcoords="offset points", ha='center', va='bottom', fontsize=9, fontweight='bold', color='#7C3AED')
+                    xytext=(0, 3), textcoords="offset points", ha='center', va='bottom', fontsize=9, fontweight='bold', color='#14243A')
 
     apply_chart_theme(fig, ax)
     st.pyplot(fig)

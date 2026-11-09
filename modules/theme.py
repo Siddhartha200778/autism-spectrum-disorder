@@ -4,92 +4,86 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from textwrap import dedent
 
-# Primary Color Constants
-COLOR_NAVY = "#0A192F"
-COLOR_NAVY_LIGHT = "#1E293B"
-COLOR_ROYAL = "#1D4ED8"
-COLOR_ROYAL_LIGHT = "#3B82F6"
-COLOR_PURPLE = "#7C3AED"
-COLOR_PURPLE_LIGHT = "#A855F7"
-COLOR_BG_LIGHT = "#F0F7FF"
-COLOR_BG_ALT = "#F8FAFC"
-COLOR_CARD_BORDER = "#E2E8F0"
-COLOR_TEXT_MAIN = "#0F172A"
-COLOR_TEXT_MUTED = "#64748B"
-COLOR_SUCCESS = "#059669"
-COLOR_WARNING = "#D97706"
-COLOR_DANGER = "#DC2626"
+# ── Colour Tokens (Professional Clinical Palette) ────────────────────────
+COLOR_BG         = "#F4F6F8"
+COLOR_CARD       = "#FFFFFF"
+COLOR_SIDEBAR    = "#14243A"
+COLOR_ACCENT     = "#167C80"
+COLOR_ACCENT_LT  = "#1A9599"
+COLOR_TEXT_MAIN   = "#202B36"
+COLOR_TEXT_MUTED  = "#667085"
+COLOR_BORDER     = "#E3E8EE"
+COLOR_HIGHLIGHT  = "#EDF4F4"
+COLOR_SUCCESS    = "#059669"
+COLOR_WARNING    = "#D97706"
+COLOR_DANGER     = "#DC2626"
 
-def inject_custom_css():
-    """Injects modern, healthcare-grade AI design system CSS into Streamlit."""
+
+def inject_custom_css() -> None:
+    """Injects the professional clinical design system CSS into Streamlit."""
     custom_css = """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
     :root {
-        --primary-navy: #0A192F;
-        --royal-blue: #1D4ED8;
-        --royal-blue-light: #2563EB;
-        --soft-purple: #7C3AED;
-        --light-blue-bg: #F0F7FF;
-        --slate-bg: #F8FAFC;
-        --border-color: #E2E8F0;
-        --text-primary: #0F172A;
-        --text-secondary: #475569;
+        --bg: #F4F6F8;
+        --card: #FFFFFF;
+        --sidebar: #14243A;
+        --accent: #167C80;
+        --accent-lt: #1A9599;
+        --text-main: #202B36;
+        --text-muted: #667085;
+        --border: #E3E8EE;
+        --highlight: #EDF4F4;
     }
 
     html, body, [class*="css"] {
-        font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        color: #0F172A;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: #202B36;
+        font-size: 14px;
+        font-weight: 400;
     }
 
-    /* Universal High-Contrast Main Content Text Rules */
+    /* ── Universal Main Content Text ──────────────────────────────────── */
     .stApp,
     .main,
     [data-testid="stAppViewContainer"],
     [data-testid="stMain"],
     [data-testid="stMainBlockContainer"] {
-        color: #0F172A !important;
+        color: #202B36 !important;
     }
 
-    /* Force all text elements in the main body to be deep navy/slate */
-    .main p,
-    .main span,
-    .main div,
-    .main label,
-    .main li,
+    .main p, .main span, .main div, .main label, .main li,
     [data-testid="stMain"] p,
     [data-testid="stMain"] span,
     [data-testid="stMain"] label,
     [data-testid="stMain"] li {
-        color: #0F172A !important;
+        color: #202B36 !important;
     }
 
-    /* All form widget labels, titles, and text in MAIN container */
+    /* ── Form Widget Labels (MAIN) ────────────────────────────────────── */
     .main [data-testid="stWidgetLabel"],
     .main [data-testid="stWidgetLabel"] *,
-    .main [data-testid="stWidgetLabel"] p,
-    .main [data-testid="stWidgetLabel"] span,
-    .main label[data-testid="stWidgetLabel"],
     [data-testid="stMain"] [data-testid="stWidgetLabel"],
     [data-testid="stMain"] [data-testid="stWidgetLabel"] * {
-        color: #0A192F !important;
-        font-weight: 700 !important;
+        color: #202B36 !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
         opacity: 1 !important;
     }
 
-    /* Radio button option cards & question text (MAIN CONTAINER ONLY) */
+    /* ── Radio Buttons (MAIN — detection wizard) ──────────────────────── */
     .main div[data-testid="stRadio"] div[role="radiogroup"] > label,
     .main div[data-testid="stRadio"] label[data-baseweb="radio"],
     [data-testid="stMain"] div[data-testid="stRadio"] div[role="radiogroup"] > label,
     [data-testid="stMain"] div[data-testid="stRadio"] label[data-baseweb="radio"] {
         background-color: #FFFFFF !important;
-        border: 1.5px solid #CBD5E1 !important;
-        border-radius: 10px !important;
+        border: 1px solid #E3E8EE !important;
+        border-radius: 8px !important;
         padding: 8px 16px !important;
         margin: 4px 10px 6px 0 !important;
-        transition: all 0.2s ease !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        transition: all 0.15s ease !important;
+        box-shadow: none !important;
         cursor: pointer !important;
     }
 
@@ -97,9 +91,8 @@ def inject_custom_css():
     .main div[data-testid="stRadio"] label[data-baseweb="radio"]:hover,
     [data-testid="stMain"] div[data-testid="stRadio"] div[role="radiogroup"] > label:hover,
     [data-testid="stMain"] div[data-testid="stRadio"] label[data-baseweb="radio"]:hover {
-        border-color: #1D4ED8 !important;
-        background-color: #EFF6FF !important;
-        transform: translateY(-1px) !important;
+        border-color: #167C80 !important;
+        background-color: #EDF4F4 !important;
     }
 
     .main div[data-testid="stRadio"] div[role="radiogroup"] > label p,
@@ -107,114 +100,113 @@ def inject_custom_css():
     .main div[data-testid="stRadio"] label[data-baseweb="radio"] p,
     .main div[data-testid="stRadio"] label[data-baseweb="radio"] span,
     .main div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p,
-    .main .stRadio label p,
-    .main .stRadio label span,
+    .main .stRadio label p, .main .stRadio label span,
     [data-testid="stMain"] div[data-testid="stRadio"] div[role="radiogroup"] > label p,
     [data-testid="stMain"] div[data-testid="stRadio"] div[role="radiogroup"] > label span,
     [data-testid="stMain"] div[data-testid="stRadio"] label[data-baseweb="radio"] p,
     [data-testid="stMain"] div[data-testid="stRadio"] label[data-baseweb="radio"] span,
     [data-testid="stMain"] div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {
-        color: #0A192F !important;
-        font-weight: 700 !important;
-        font-size: 0.95rem !important;
+        color: #202B36 !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
         opacity: 1 !important;
         line-height: 1.4 !important;
     }
 
-    /* Slider labels and values */
-    .main .stSlider,
-    .main .stSlider label,
-    .main .stSlider label p,
-    .main .stSlider div[data-baseweb="slider"],
-    .main .stSlider span,
+    /* ── Sliders ──────────────────────────────────────────────────────── */
+    .main .stSlider, .main .stSlider label, .main .stSlider label p,
+    .main .stSlider div[data-baseweb="slider"], .main .stSlider span,
     div[data-testid="stSlider"] [data-testid="stWidgetLabel"] p {
-        color: #0A192F !important;
-        font-weight: 700 !important;
+        color: #202B36 !important;
+        font-weight: 600 !important;
     }
 
-    /* Dropdown/Selectbox labels and text */
-    .main .stSelectbox,
-    .main .stSelectbox label,
-    .main .stSelectbox label p,
+    /* ── Selectbox ────────────────────────────────────────────────────── */
+    .main .stSelectbox, .main .stSelectbox label, .main .stSelectbox label p,
     div[data-testid="stSelectbox"] div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
-        border: 1.5px solid #CBD5E1 !important;
-        border-radius: 10px !important;
+        border: 1px solid #E3E8EE !important;
+        border-radius: 8px !important;
     }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
-        color: #0A192F !important;
-        font-weight: 700 !important;
+        color: #202B36 !important;
+        font-weight: 500 !important;
     }
     div[data-baseweb="popover"] ul,
     div[data-baseweb="popover"] ul li {
         background-color: #FFFFFF !important;
-        color: #0A192F !important;
+        color: #202B36 !important;
     }
     div[data-baseweb="popover"] ul li:hover {
-        background-color: #EFF6FF !important;
-        color: #1D4ED8 !important;
+        background-color: #EDF4F4 !important;
+        color: #167C80 !important;
     }
 
-    /* Headings in main body */
+    /* ── Headings ─────────────────────────────────────────────────────── */
     h1, h2, h3, h4, h5, h6,
     .main h1, .main h2, .main h3, .main h4, .main h5, .main h6 {
-        color: #0A192F !important;
-        font-weight: 800 !important;
+        color: #202B36 !important;
+        font-weight: 700 !important;
+        font-family: 'Inter', -apple-system, sans-serif !important;
     }
 
-    /* Overall Background */
+    h1, .main h1 { font-size: 26px !important; }
+    h2, .main h2 { font-size: 22px !important; }
+    h3, .main h3 { font-size: 17px !important; font-weight: 600 !important; }
+
+    /* ── Overall Background ───────────────────────────────────────────── */
     .stApp {
-        background: linear-gradient(180deg, #F8FAFC 0%, #F0F7FF 50%, #F8FAFC 100%);
+        background: #F4F6F8;
     }
 
-    /* ========================================================
-       SIDEBAR & LEFT NAVIGATION HIGH-CONTRAST STYLING
-       ======================================================== */
+    /* ══════════════════════════════════════════════════════════════════════
+       SIDEBAR
+       ══════════════════════════════════════════════════════════════════════ */
     [data-testid="stSidebar"],
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #071326 0%, #0B192C 60%, #151A30 100%) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+        background: #14243A !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
     }
 
-    /* "Platform Navigation" Header Label in Sidebar */
+    /* Platform Navigation label */
     [data-testid="stSidebar"] [data-testid="stWidgetLabel"],
     [data-testid="stSidebar"] [data-testid="stWidgetLabel"] label,
     [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
     [data-testid="stSidebar"] [data-testid="stWidgetLabel"] span {
-        color: #60A5FA !important;
-        font-size: 0.78rem !important;
-        font-weight: 800 !important;
+        color: #5BA8AB !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.08em !important;
         margin-bottom: 8px !important;
         opacity: 1 !important;
     }
 
-    /* Sidebar Navigation Menu Container */
+    /* Sidebar nav container */
     [data-testid="stSidebar"] div[data-testid="stRadio"] > div,
     [data-testid="stSidebar"] div[role="radiogroup"] {
-        background: rgba(255, 255, 255, 0.04) !important;
-        border-radius: 12px !important;
-        padding: 8px 6px !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        gap: 3px !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-radius: 10px !important;
+        padding: 6px 4px !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        gap: 2px !important;
     }
 
-    /* Sidebar Radio Item Button Base */
+    /* Sidebar radio item base */
     [data-testid="stSidebar"] div[data-testid="stRadio"] label,
     [data-testid="stSidebar"] div[role="radiogroup"] > label,
     [data-testid="stSidebar"] label[data-baseweb="radio"] {
         background: transparent !important;
         border: 1px solid transparent !important;
-        border-radius: 8px !important;
-        padding: 9px 14px !important;
-        margin: 2px 0 !important;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border-radius: 6px !important;
+        padding: 8px 14px !important;
+        margin: 1px 0 !important;
+        transition: all 0.15s ease !important;
         cursor: pointer !important;
         box-shadow: none !important;
     }
 
-    /* Sidebar Navigation Item Text - Luminous Pure White for maximum legibility */
+    /* Sidebar nav text — clean white */
     [data-testid="stSidebar"] .stRadio label,
     [data-testid="stSidebar"] .stRadio label *,
     [data-testid="stSidebar"] .stRadio label p,
@@ -235,18 +227,18 @@ def inject_custom_css():
     [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] span,
     [data-testid="stSidebar"] label {
         color: #FFFFFF !important;
-        font-size: 0.95rem !important;
-        font-weight: 600 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
         letter-spacing: 0.01em !important;
         opacity: 1 !important;
     }
 
-    /* Active / Selected Sidebar Item */
+    /* Active sidebar item */
     [data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked),
     [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) {
-        background: linear-gradient(135deg, rgba(29, 78, 216, 0.45) 0%, rgba(37, 99, 235, 0.35) 100%) !important;
-        border: 1px solid #3B82F6 !important;
-        border-radius: 8px !important;
+        background: rgba(22, 124, 128, 0.3) !important;
+        border: 1px solid rgba(22, 124, 128, 0.5) !important;
+        border-radius: 6px !important;
     }
 
     [data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) p,
@@ -254,30 +246,29 @@ def inject_custom_css():
     [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) p,
     [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) span {
         color: #FFFFFF !important;
-        font-weight: 800 !important;
+        font-weight: 700 !important;
     }
 
-    /* Hover effect on sidebar items: royal blue glow with pure white bold text */
+    /* Hover on sidebar items */
     [data-testid="stSidebar"] div[data-testid="stRadio"] label:hover,
     [data-testid="stSidebar"] div[role="radiogroup"] > label:hover,
     [data-testid="stSidebar"] label[data-baseweb="radio"]:hover {
-        background: rgba(37, 99, 235, 0.28) !important;
-        border-color: rgba(96, 165, 250, 0.45) !important;
-        transform: translateX(4px) !important;
+        background: rgba(22, 124, 128, 0.18) !important;
+        border-color: rgba(22, 124, 128, 0.3) !important;
     }
 
     [data-testid="stSidebar"] div[data-testid="stRadio"] label:hover p,
     [data-testid="stSidebar"] div[data-testid="stRadio"] label:hover span {
         color: #FFFFFF !important;
-        font-weight: 800 !important;
+        font-weight: 600 !important;
     }
 
-    /* Radio dot icon in sidebar */
+    /* Radio dot in sidebar */
     [data-testid="stSidebar"] div[role="radiogroup"] svg {
-        fill: #60A5FA !important;
+        fill: #5BA8AB !important;
     }
 
-    /* Sidebar general text headers */
+    /* Sidebar headings */
     [data-testid="stSidebar"] h1,
     [data-testid="stSidebar"] h2,
     [data-testid="stSidebar"] h3,
@@ -285,31 +276,32 @@ def inject_custom_css():
         color: #FFFFFF !important;
     }
 
-    /* Header & Branding Containers */
+    /* ── Brand Badge ──────────────────────────────────────────────────── */
     .clinical-brand-badge {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: rgba(29, 78, 216, 0.1);
-        color: #1D4ED8;
-        padding: 6px 14px;
+        background: rgba(22, 124, 128, 0.08);
+        color: #167C80;
+        padding: 5px 14px;
         border-radius: 9999px;
-        font-size: 0.82rem;
-        font-weight: 700;
+        font-size: 12px;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        border: 1px solid rgba(29, 78, 216, 0.25);
+        border: 1px solid rgba(22, 124, 128, 0.2);
         margin-bottom: 12px;
     }
 
+    /* ── Hero Container ───────────────────────────────────────────────── */
     .hero-container {
-        background: linear-gradient(135deg, #0A192F 0%, #1E3A8A 55%, #312E81 100%);
-        border-radius: 20px;
-        padding: 44px 40px;
+        background: linear-gradient(135deg, #14243A 0%, #1B3A4B 55%, #14243A 100%);
+        border-radius: 12px;
+        padding: 40px 36px;
         color: #FFFFFF;
-        box-shadow: 0 20px 40px -15px rgba(10, 25, 47, 0.35);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin-bottom: 30px;
+        box-shadow: 0 8px 24px -8px rgba(20, 36, 58, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        margin-bottom: 28px;
         position: relative;
         overflow: hidden;
     }
@@ -319,135 +311,133 @@ def inject_custom_css():
         position: absolute;
         top: -40%;
         right: -20%;
-        width: 450px;
-        height: 450px;
-        background: radial-gradient(circle, rgba(124, 58, 237, 0.35) 0%, rgba(37, 99, 235, 0) 70%);
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(22, 124, 128, 0.2) 0%, transparent 70%);
         pointer-events: none;
     }
 
     .hero-title {
-        font-size: 2.35rem;
-        font-weight: 800;
+        font-size: 26px;
+        font-weight: 700;
         line-height: 1.25;
         letter-spacing: -0.02em;
         color: #FFFFFF;
-        margin-bottom: 14px;
+        margin-bottom: 12px;
     }
 
     .hero-subtitle {
-        font-size: 1.12rem;
+        font-size: 14px;
         font-weight: 400;
         line-height: 1.6;
-        color: #CBD5E1;
+        color: #C1CCD6;
         max-width: 820px;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
     }
 
     .hero-stats-bar {
         display: flex;
         flex-wrap: wrap;
-        gap: 16px;
-        margin-top: 24px;
-        padding-top: 24px;
-        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        gap: 14px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .hero-stat-item {
-        background: rgba(255, 255, 255, 0.07);
-        backdrop-filter: blur(8px);
-        padding: 12px 20px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        padding: 10px 18px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
         display: flex;
         flex-direction: column;
     }
 
     .hero-stat-value {
-        font-size: 1.45rem;
-        font-weight: 800;
-        color: #93C5FD;
+        font-size: 20px;
+        font-weight: 700;
+        color: #5BA8AB;
     }
 
     .hero-stat-label {
-        font-size: 0.78rem;
-        font-weight: 600;
-        color: #E2E8F0;
+        font-size: 12px;
+        font-weight: 500;
+        color: #C1CCD6;
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
 
-    /* Medical Cards */
+    /* ── Medical Cards ────────────────────────────────────────────────── */
     .med-card {
         background: #FFFFFF;
-        border-radius: 16px;
-        padding: 24px 24px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-bottom: 20px;
+        border-radius: 10px;
+        padding: 22px;
+        border: 1px solid #E3E8EE;
+        box-shadow: none;
+        transition: all 0.15s ease;
+        margin-bottom: 16px;
         height: 100%;
         display: flex;
         flex-direction: column;
     }
 
     .med-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.09);
-        border-color: #93C5FD;
+        box-shadow: 0 4px 16px rgba(32, 43, 54, 0.06);
+        border-color: #C5D0DA;
     }
 
     .med-card-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 14px;
+        margin-bottom: 12px;
     }
 
     .med-card-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.35rem;
-        background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
-        border: 1px solid #BFDBFE;
+        font-size: 1.2rem;
+        background: #EDF4F4;
+        border: 1px solid #D0E3E3;
     }
 
     .med-card-title {
-        font-size: 1.18rem;
-        font-weight: 700;
-        color: #0F172A;
-        margin-bottom: 8px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #202B36;
+        margin-bottom: 6px;
     }
 
     .med-card-body {
-        font-size: 0.95rem;
-        color: #475569;
+        font-size: 14px;
+        color: #667085;
         line-height: 1.6;
         flex-grow: 1;
     }
 
-    /* Pill Badges */
+    /* ── Pill Badges ──────────────────────────────────────────────────── */
     .pill-badge {
         display: inline-block;
-        padding: 4px 10px;
+        padding: 3px 10px;
         border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 700;
+        font-size: 12px;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.04em;
     }
 
     .pill-blue {
-        background: #DBEAFE;
-        color: #1E40AF;
+        background: #EDF4F4;
+        color: #167C80;
     }
 
     .pill-purple {
-        background: #F3E8FF;
-        color: #6B21A8;
+        background: #EDF4F4;
+        color: #14243A;
     }
 
     .pill-green {
@@ -460,110 +450,112 @@ def inject_custom_css():
         color: #92400E;
     }
 
-    /* Medical Disclaimer Banner */
+    /* ── Disclaimer Banner ────────────────────────────────────────────── */
     .disclaimer-banner {
         background: linear-gradient(90deg, #FEF2F2 0%, #FFFBEB 100%);
-        border-left: 5px solid #EF4444;
-        border-radius: 12px;
-        padding: 18px 22px;
-        margin: 20px 0 30px 0;
+        border-left: 4px solid #EF4444;
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 16px 0 24px 0;
         border-top: 1px solid #FEE2E2;
         border-right: 1px solid #FEE2E2;
         border-bottom: 1px solid #FEE2E2;
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.05);
     }
 
     .disclaimer-title {
-        font-size: 0.98rem;
+        font-size: 14px;
         font-weight: 700;
         color: #991B1B;
         display: flex;
         align-items: center;
         gap: 8px;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
     }
 
     .disclaimer-text {
-        font-size: 0.88rem;
+        font-size: 13px;
         color: #7F1D1D;
         line-height: 1.5;
         margin: 0;
     }
 
-    /* Streamlit Metric Customization */
+    /* ── Streamlit Metric ─────────────────────────────────────────────── */
     [data-testid="stMetric"] {
         background: #FFFFFF;
-        padding: 18px 20px;
-        border-radius: 14px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+        padding: 16px 18px;
+        border-radius: 10px;
+        border: 1px solid #E3E8EE;
+        box-shadow: none;
     }
 
     [data-testid="stMetricLabel"] {
-        font-size: 0.85rem !important;
-        font-weight: 600 !important;
-        color: #64748B !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        color: #667085 !important;
         text-transform: uppercase;
         letter-spacing: 0.04em;
     }
 
     [data-testid="stMetricValue"] {
-        font-size: 1.85rem !important;
-        font-weight: 800 !important;
-        color: #1D4ED8 !important;
+        font-size: 30px !important;
+        font-weight: 700 !important;
+        color: #167C80 !important;
     }
 
-    /* Buttons */
+    /* ── Buttons ──────────────────────────────────────────────────────── */
     .stButton > button {
-        border-radius: 8px !important;
+        border-radius: 6px !important;
         font-weight: 600 !important;
-        padding: 9px 18px !important;
-        transition: all 0.18s ease !important;
-        border: 1px solid #CBD5E1 !important;
+        font-size: 14px !important;
+        padding: 8px 18px !important;
+        transition: all 0.15s ease !important;
+        border: 1px solid #E3E8EE !important;
+        font-family: 'Inter', sans-serif !important;
     }
 
     .stButton > button[kind="primary"],
     .stButton > button[data-testid="stBaseButton-primary"] {
-        background-color: #1D4ED8 !important;
-        border-color: #1D4ED8 !important;
+        background-color: #14243A !important;
+        border-color: #14243A !important;
         color: #FFFFFF !important;
     }
 
     .stButton > button[kind="primary"]:hover,
     .stButton > button[data-testid="stBaseButton-primary"]:hover {
-        background-color: #1E40AF !important;
-        border-color: #1E40AF !important;
-        box-shadow: 0 4px 14px rgba(29, 78, 216, 0.35) !important;
-        transform: translateY(-1px) !important;
+        background-color: #1B3A4B !important;
+        border-color: #1B3A4B !important;
+        box-shadow: 0 2px 8px rgba(20, 36, 58, 0.2) !important;
     }
 
-    /* Tabs Styling */
+    /* ── Tabs ─────────────────────────────────────────────────────────── */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background: #F1F5F9;
-        padding: 6px;
-        border-radius: 12px;
+        gap: 6px;
+        background: #F4F6F8;
+        padding: 4px;
+        border-radius: 8px;
     }
 
     .stTabs [data-baseweb="tab"] {
-        border-radius: 8px;
-        padding: 8px 18px;
-        font-weight: 600;
-        color: #475569;
+        border-radius: 6px;
+        padding: 8px 16px;
+        font-weight: 500;
+        color: #667085;
         border: none;
+        font-size: 14px;
     }
 
     .stTabs [aria-selected="true"] {
         background: #FFFFFF !important;
-        color: #1D4ED8 !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        color: #167C80 !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        font-weight: 600;
     }
 
-    /* Clinical Progress & Meter Bars */
+    /* ── Progress Bars ────────────────────────────────────────────────── */
     .domain-meter-container {
-        background: #E2E8F0;
+        background: #E3E8EE;
         border-radius: 9999px;
-        height: 10px;
+        height: 8px;
         width: 100%;
         overflow: hidden;
         margin: 6px 0 12px 0;
@@ -572,54 +564,53 @@ def inject_custom_css():
     .domain-meter-fill {
         height: 100%;
         border-radius: 9999px;
-        transition: width 0.6s ease;
+        transition: width 0.5s ease;
     }
 
-    /* Step-by-Step Wizard Stepper */
+    /* ── Wizard Stepper ───────────────────────────────────────────────── */
     .stepper-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
         background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 14px;
-        padding: 14px 22px;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+        border: 1px solid #E3E8EE;
+        border-radius: 10px;
+        padding: 12px 20px;
+        margin-bottom: 20px;
         overflow-x: auto;
     }
 
     .step-node {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 0.84rem;
-        font-weight: 700;
-        color: #64748B;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #667085;
         white-space: nowrap;
     }
 
     .step-node.active {
-        color: #1D4ED8;
+        color: #167C80;
     }
 
     .step-circle {
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #F1F5F9;
-        color: #475569;
-        font-size: 0.82rem;
-        font-weight: 800;
+        background: #F4F6F8;
+        color: #667085;
+        font-size: 12px;
+        font-weight: 700;
     }
 
     .step-node.active .step-circle {
-        background: #1D4ED8;
+        background: #167C80;
         color: #FFFFFF;
-        box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.2);
+        box-shadow: 0 0 0 3px rgba(22, 124, 128, 0.15);
     }
 
     .step-node.completed .step-circle {
@@ -627,62 +618,59 @@ def inject_custom_css():
         color: #FFFFFF;
     }
 
-    /* Official Printable Report Styling */
+    /* ── Printable Report ─────────────────────────────────────────────── */
     .printable-report {
         background: #FFFFFF;
-        border: 2px solid #CBD5E1;
-        border-radius: 16px;
-        padding: 36px 40px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-        color: #0F172A;
+        border: 1px solid #E3E8EE;
+        border-radius: 10px;
+        padding: 32px 36px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        color: #202B36;
         font-family: 'Inter', -apple-system, sans-serif;
-        margin-bottom: 30px;
+        margin-bottom: 24px;
     }
 
     .report-header-banner {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 2px solid #1D4ED8;
-        padding-bottom: 18px;
-        margin-bottom: 22px;
+        border-bottom: 2px solid #167C80;
+        padding-bottom: 16px;
+        margin-bottom: 20px;
     }
 
     .report-table {
         width: 100%;
         border-collapse: collapse;
-        margin: 14px 0 20px 0;
-        font-size: 0.92rem;
+        margin: 12px 0 18px 0;
+        font-size: 14px;
     }
 
     .report-table th {
-        background: #F1F5F9;
-        color: #0F172A;
-        font-weight: 700;
+        background: #F4F6F8;
+        color: #202B36;
+        font-weight: 600;
         text-align: left;
         padding: 10px 14px;
-        border-bottom: 2px solid #CBD5E1;
+        border-bottom: 2px solid #E3E8EE;
     }
 
     .report-table td {
         padding: 9px 14px;
-        border-bottom: 1px solid #E2E8F0;
-        color: #334155;
+        border-bottom: 1px solid #E3E8EE;
+        color: #202B36;
     }
 
     .report-table tr:hover {
-        background: #F8FAFC;
+        background: #F4F6F8;
     }
 
-    /* Print Stylesheet */
+    /* ── Print Stylesheet ─────────────────────────────────────────────── */
     @media print {
         [data-testid="stSidebar"],
         [data-testid="stHeader"],
-        .stButton,
-        .no-print,
-        header,
-        footer,
-        .clinical-footer {
+        .stButton, .no-print,
+        header, footer, .clinical-footer {
             display: none !important;
         }
 
@@ -712,133 +700,111 @@ def inject_custom_css():
         }
     }
 
-    /* ========================================================
-       SWISS CLINICAL RESEARCH PLATFORM DESIGN SYSTEM (SPEC 2.4)
-       ======================================================== */
+    /* ══════════════════════════════════════════════════════════════════════
+       SWISS CLINICAL LAYOUT CLASSES
+       ══════════════════════════════════════════════════════════════════════ */
     .clinical-top-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 4px 0 16px 0;
+        padding: 4px 0 14px 0;
         margin-bottom: 12px;
-        border-bottom: 1px solid #E2E8F0;
+        border-bottom: 1px solid #E3E8EE;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 10px;
     }
 
     .clinical-breadcrumbs {
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 0.82rem;
+        font-size: 12px;
     }
 
     .crumb-root {
-        font-weight: 800;
-        color: #1E293B;
+        font-weight: 700;
+        color: #202B36;
         letter-spacing: 0.05em;
         text-transform: uppercase;
     }
 
-    .crumb-sep {
-        color: #94A3B8;
-        font-weight: 400;
-    }
+    .crumb-sep { color: #C5D0DA; font-weight: 400; }
 
-    .crumb-current {
-        color: #64748B;
-        font-weight: 600;
-    }
+    .crumb-current { color: #667085; font-weight: 500; }
 
     .protocol-pills-group {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         flex-wrap: wrap;
     }
 
     .protocol-pill {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 4px 12px;
+        gap: 5px;
+        padding: 3px 12px;
         border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 12px;
+        font-weight: 500;
     }
 
     .protocol-pill-teal {
-        background: #F0FDFA;
-        border: 1px solid #CCFBF1;
-        color: #0F766E;
+        background: #EDF4F4;
+        border: 1px solid #D0E3E3;
+        color: #167C80;
     }
 
     .protocol-pill-teal .pill-dot {
-        width: 6px;
-        height: 6px;
+        width: 6px; height: 6px;
         border-radius: 50%;
-        background: #0D9488;
+        background: #167C80;
         display: inline-block;
     }
 
     .protocol-pill-slate {
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        color: #475569;
+        background: #F4F6F8;
+        border: 1px solid #E3E8EE;
+        color: #667085;
     }
 
-    /* Decision Support Amber Banner */
+    /* Decision Support Banner */
     .decision-support-banner {
         background: #FFFBEB;
         border: 1px solid #FDE68A;
         border-radius: 8px;
-        padding: 12px 18px;
+        padding: 12px 16px;
         display: flex;
         align-items: flex-start;
         gap: 12px;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
     }
 
-    .decision-banner-icon {
-        font-size: 1.15rem;
-        line-height: 1.2;
-    }
+    .decision-banner-icon { font-size: 1.1rem; line-height: 1.2; }
+    .decision-banner-content { font-size: 13px; color: #92400E; line-height: 1.5; }
+    .decision-banner-title { font-weight: 700; letter-spacing: 0.02em; margin-right: 4px; text-transform: uppercase; }
 
-    .decision-banner-content {
-        font-size: 0.81rem;
-        color: #92400E;
-        line-height: 1.5;
-    }
-
-    .decision-banner-title {
-        font-weight: 800;
-        letter-spacing: 0.02em;
-        margin-right: 4px;
-        text-transform: uppercase;
-    }
-
-    /* Enterprise Clinical Hero Card */
+    /* Hero Card */
     .clinical-hero-card {
         background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 12px;
-        padding: 24px 28px;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-        margin-bottom: 22px;
+        border: 1px solid #E3E8EE;
+        border-radius: 10px;
+        padding: 22px 26px;
+        margin-bottom: 20px;
     }
 
     .clinical-hero-title {
-        font-size: 1.68rem;
-        font-weight: 800;
-        color: #16324F !important;
+        font-size: 26px;
+        font-weight: 700;
+        color: #202B36 !important;
         letter-spacing: -0.02em;
         line-height: 1.25;
         margin: 0 0 8px 0;
     }
 
     .clinical-hero-desc {
-        font-size: 0.92rem;
-        color: #475569 !important;
+        font-size: 14px;
+        color: #667085 !important;
         line-height: 1.55;
         margin: 0;
         max-width: 860px;
@@ -847,10 +813,9 @@ def inject_custom_css():
     /* Swiss Metric Cards */
     .metric-card-swiss {
         background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 18px 20px;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+        border: 1px solid #E3E8EE;
+        border-radius: 8px;
+        padding: 16px 18px;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -858,34 +823,33 @@ def inject_custom_css():
     }
 
     .metric-label-swiss {
-        font-size: 0.78rem;
-        font-weight: 600;
-        color: #64748B;
+        font-size: 12px;
+        font-weight: 500;
+        color: #667085;
         text-transform: capitalize;
         margin-bottom: 6px;
     }
 
     .metric-value-swiss {
-        font-size: 1.85rem;
-        font-weight: 800;
-        color: #0F172A;
+        font-size: 30px;
+        font-weight: 700;
+        color: #202B36;
         letter-spacing: -0.02em;
         line-height: 1.1;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
 
     .metric-meta-swiss {
-        font-size: 0.74rem;
-        color: #64748B;
+        font-size: 12px;
+        color: #667085;
     }
 
-    /* Architecture Benchmark Cards */
+    /* Architecture Cards */
     .arch-card-swiss {
         background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 20px 22px;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+        border: 1px solid #E3E8EE;
+        border-radius: 8px;
+        padding: 18px 20px;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -900,42 +864,42 @@ def inject_custom_css():
     }
 
     .arch-title {
-        font-size: 0.82rem;
-        font-weight: 800;
-        color: #0F172A;
+        font-size: 13px;
+        font-weight: 700;
+        color: #202B36;
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
 
     .arch-badge-teal {
-        background: #CCFBF1;
-        border: 1px solid #99F6E4;
-        color: #0F766E;
-        font-size: 0.68rem;
-        font-weight: 700;
+        background: #EDF4F4;
+        border: 1px solid #D0E3E3;
+        color: #167C80;
+        font-size: 11px;
+        font-weight: 600;
         padding: 2px 8px;
-        border-radius: 6px;
+        border-radius: 4px;
         text-transform: uppercase;
         letter-spacing: 0.04em;
     }
 
     .arch-badge-blue {
-        background: #E0F2FE;
-        border: 1px solid #BAE6FD;
-        color: #0369A1;
-        font-size: 0.68rem;
-        font-weight: 700;
+        background: #EDF4F4;
+        border: 1px solid #D0E3E3;
+        color: #14243A;
+        font-size: 11px;
+        font-weight: 600;
         padding: 2px 8px;
-        border-radius: 6px;
+        border-radius: 4px;
         text-transform: uppercase;
         letter-spacing: 0.04em;
     }
 
     .arch-desc {
-        font-size: 0.83rem;
-        color: #475569 !important;
+        font-size: 13px;
+        color: #667085 !important;
         line-height: 1.5;
-        margin: 0 0 16px 0;
+        margin: 0 0 14px 0;
         flex-grow: 1;
     }
 
@@ -943,28 +907,25 @@ def inject_custom_css():
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 8px;
-        padding-top: 14px;
-        border-top: 1px solid #F1F5F9;
+        padding-top: 12px;
+        border-top: 1px solid #E3E8EE;
     }
 
-    .arch-stat-box {
-        display: flex;
-        flex-direction: column;
-    }
+    .arch-stat-box { display: flex; flex-direction: column; }
 
     .arch-stat-lbl {
-        font-size: 0.68rem;
-        color: #94A3B8;
-        font-weight: 600;
+        font-size: 11px;
+        color: #667085;
+        font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.03em;
         margin-bottom: 2px;
     }
 
     .arch-stat-val {
-        font-size: 0.96rem;
-        font-weight: 800;
-        color: #0F172A;
+        font-size: 15px;
+        font-weight: 700;
+        color: #202B36;
     }
 
     /* Section Bar */
@@ -972,17 +933,17 @@ def inject_custom_css():
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 0 12px 0;
-        margin: 28px 0 16px 0;
-        border-bottom: 1px solid #E2E8F0;
+        padding: 8px 0 10px 0;
+        margin: 24px 0 14px 0;
+        border-bottom: 1px solid #E3E8EE;
         flex-wrap: wrap;
         gap: 8px;
     }
 
     .section-bar-title {
-        font-size: 0.86rem;
-        font-weight: 800;
-        color: #0F172A;
+        font-size: 13px;
+        font-weight: 700;
+        color: #202B36;
         letter-spacing: 0.06em;
         text-transform: uppercase;
     }
@@ -990,28 +951,30 @@ def inject_custom_css():
     .section-bar-badge {
         display: inline-flex;
         align-items: center;
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        color: #475569;
-        font-size: 0.72rem;
-        font-weight: 600;
-        padding: 3px 10px;
+        background: #F4F6F8;
+        border: 1px solid #E3E8EE;
+        color: #667085;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 2px 10px;
         border-radius: 9999px;
     }
 
     /* Footer */
     .clinical-footer {
         text-align: center;
-        padding: 35px 20px 20px 20px;
-        margin-top: 50px;
-        border-top: 1px solid #E2E8F0;
-        color: #64748B;
-        font-size: 0.86rem;
+        padding: 30px 20px 16px 20px;
+        margin-top: 40px;
+        border-top: 1px solid #E3E8EE;
+        color: #667085;
+        font-size: 13px;
     }
 
-    /* ── Hamburger Sidebar Toggle Button (3 horizontal bars) ──────── */
+    /* ══════════════════════════════════════════════════════════════════════
+       HAMBURGER SIDEBAR TOGGLE
+       ══════════════════════════════════════════════════════════════════════ */
 
-    /* Container for collapse control (when sidebar is COLLAPSED) */
+    /* Collapsed control */
     [data-testid="collapsedControl"],
     [data-testid="stSidebarCollapsedControl"],
     header [data-testid="collapsedControl"],
@@ -1028,45 +991,42 @@ def inject_custom_css():
     [data-testid="collapsedControl"] button,
     [data-testid="stSidebarCollapsedControl"] button {
         background: #FFFFFF !important;
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 8px !important;
-        width: 40px !important;
-        height: 40px !important;
-        min-width: 40px !important;
-        min-height: 40px !important;
+        border: 1px solid #E3E8EE !important;
+        border-radius: 6px !important;
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        min-height: 38px !important;
         padding: 0 !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        box-shadow: 0 2px 8px rgba(15,23,42,0.12) !important;
+        box-shadow: 0 1px 4px rgba(32,43,54,0.08) !important;
         cursor: pointer !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.15s ease !important;
         position: relative !important;
     }
 
     [data-testid="collapsedControl"] button:hover,
     [data-testid="stSidebarCollapsedControl"] button:hover {
-        background: #F8FAFC !important;
-        border-color: #94A3B8 !important;
-        box-shadow: 0 4px 12px rgba(15,23,42,0.18) !important;
+        background: #F4F6F8 !important;
+        border-color: #C5D0DA !important;
     }
 
-    /* Hide the default chevron SVG inside the collapsed control */
     [data-testid="collapsedControl"] svg,
     [data-testid="stSidebarCollapsedControl"] svg {
         display: none !important;
     }
 
-    /* Draw 3 hamburger lines using pseudo-element inside button */
     [data-testid="collapsedControl"] button::before,
     [data-testid="stSidebarCollapsedControl"] button::before {
         content: '' !important;
         display: block !important;
-        width: 18px !important;
+        width: 16px !important;
         height: 2px !important;
-        background: #0F172A !important;
-        border-radius: 2px !important;
-        box-shadow: 0 -6px 0 0 #0F172A, 0 6px 0 0 #0F172A !important;
+        background: #202B36 !important;
+        border-radius: 1px !important;
+        box-shadow: 0 -5px 0 0 #202B36, 0 5px 0 0 #202B36 !important;
         pointer-events: none !important;
     }
 
@@ -1075,7 +1035,7 @@ def inject_custom_css():
         display: none !important;
     }
 
-    /* The close/toggle button inside the sidebar (when it is EXPANDED) */
+    /* Sidebar close/toggle button (expanded) */
     [data-testid="stSidebarCollapseButton"],
     [data-testid="stSidebarHeader"] {
         display: flex !important;
@@ -1086,47 +1046,45 @@ def inject_custom_css():
     [data-testid="stSidebarCollapseButton"] button,
     [data-testid="stSidebarHeader"] button,
     [data-testid="stSidebar"] button[kind="header"] {
-        background: rgba(255,255,255,0.08) !important;
-        border: 1px solid rgba(255,255,255,0.15) !important;
-        border-radius: 8px !important;
-        width: 36px !important;
-        height: 36px !important;
-        min-width: 36px !important;
-        min-height: 36px !important;
+        background: rgba(255,255,255,0.06) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        border-radius: 6px !important;
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        min-height: 34px !important;
         padding: 0 !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         cursor: pointer !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.15s ease !important;
         position: relative !important;
     }
 
     [data-testid="stSidebarCollapseButton"] button:hover,
     [data-testid="stSidebarHeader"] button:hover,
     [data-testid="stSidebar"] button[kind="header"]:hover {
-        background: rgba(255,255,255,0.18) !important;
-        border-color: rgba(255,255,255,0.3) !important;
+        background: rgba(255,255,255,0.14) !important;
+        border-color: rgba(255,255,255,0.25) !important;
     }
 
-    /* Hide default X/chevron SVG in sidebar close button */
     [data-testid="stSidebarCollapseButton"] svg,
     [data-testid="stSidebarHeader"] svg,
     [data-testid="stSidebar"] button[kind="header"] svg {
         display: none !important;
     }
 
-    /* Draw 3 lines on sidebar close button too */
     [data-testid="stSidebarCollapseButton"] button::before,
     [data-testid="stSidebarHeader"] button::before,
     [data-testid="stSidebar"] button[kind="header"]::before {
         content: '' !important;
         display: block !important;
-        width: 16px !important;
+        width: 14px !important;
         height: 2px !important;
         background: #FFFFFF !important;
-        border-radius: 2px !important;
-        box-shadow: 0 -5px 0 0 #FFFFFF, 0 5px 0 0 #FFFFFF !important;
+        border-radius: 1px !important;
+        box-shadow: 0 -4px 0 0 #FFFFFF, 0 4px 0 0 #FFFFFF !important;
         pointer-events: none !important;
     }
 
@@ -1134,8 +1092,9 @@ def inject_custom_css():
     """
     st.markdown(custom_css, unsafe_allow_html=True)
 
-def render_html(content):
-    """Safely renders HTML using st.html (or fallback to st.markdown) without treating indentation as code."""
+
+def render_html(content: str) -> None:
+    """Safely renders HTML using st.html (or fallback to st.markdown)."""
     if not content:
         return
     if hasattr(st, "html"):
@@ -1145,39 +1104,46 @@ def render_html(content):
         cleaned_html = " ".join(cleaned_lines)
         st.markdown(cleaned_html, unsafe_allow_html=True)
 
-def render_section_header(title, subtitle=None, badge=None):
-    """Renders a consistent, high-impact clinical section header."""
+
+def render_section_header(title: str, subtitle: str | None = None, badge: str | None = None) -> None:
+    """Renders a consistent clinical section header with the professional palette."""
     badge_html = f'<div class="clinical-brand-badge">{badge}</div>' if badge else ""
-    subtitle_html = f'<p style="color: #475569 !important; font-size: 1.05rem; margin-top: 4px; margin-bottom: 24px; line-height: 1.5;">{subtitle}</p>' if subtitle else ""
-    html = f"""<div style="margin-bottom: 16px;">
+    subtitle_html = (
+        f'<p style="color: #667085 !important; font-size: 14px; margin-top: 4px; '
+        f'margin-bottom: 20px; line-height: 1.5;">{subtitle}</p>'
+    ) if subtitle else ""
+    html = f"""<div style="margin-bottom: 14px;">
 {badge_html}
-<h2 style="font-size: 1.9rem; font-weight: 800; color: #0A192F !important; letter-spacing: -0.02em; margin: 0;">{title}</h2>
+<h2 style="font-size: 26px; font-weight: 700; color: #202B36 !important; letter-spacing: -0.02em; margin: 0;">{title}</h2>
 {subtitle_html}
 </div>"""
     render_html(html)
 
-def render_disclaimer():
+
+def render_disclaimer() -> None:
     """Renders the standard healthcare AI clinical disclaimer banner."""
     html = """<div class="disclaimer-banner">
-<div class="disclaimer-title"><span>⚠️</span> RESEARCH & CLINICAL DECISION SUPPORT NOTICE</div>
+<div class="disclaimer-title"><span>&#9888;</span> RESEARCH & CLINICAL DECISION SUPPORT NOTICE</div>
 <p class="disclaimer-text">
-This system is an academic research platform designed for developmental risk stratification using machine learning and deep tabular networks. 
+This system is an academic research platform designed for developmental risk stratification using machine learning and deep tabular networks.
 It is <strong>not</strong> a certified diagnostic medical device and does <strong>not</strong> substitute for comprehensive multidisciplinary evaluation by pediatricians, child psychiatrists, or developmental specialists.
 </p>
 </div>"""
     render_html(html)
 
-def render_footer():
+
+def render_footer() -> None:
     """Renders the modern platform footer."""
     html = """<div class="clinical-footer">
-<p style="font-weight: 600; color: #0F172A; margin-bottom: 4px;">
+<p style="font-weight: 600; color: #202B36; margin-bottom: 4px;">
 Interpretable Deep Learning for Early ASD Detection
 </p>
-<p style="margin: 0; color: #64748B; font-size: 0.82rem;">
+<p style="margin: 0; color: #667085; font-size: 13px;">
 Academic Clinical AI Research Initiative &bull; Powered by PyTorch TabNet & Multi-Layer Perceptrons &bull; Streamlit Cloud
 </p>
 </div>"""
     render_html(html)
+
 
 def apply_chart_theme(fig, ax):
     """Applies modern styling to Matplotlib/Seaborn plots."""
@@ -1185,14 +1151,14 @@ def apply_chart_theme(fig, ax):
     ax.set_facecolor('#FFFFFF')
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
-    ax.spines['left'].set_color('#CBD5E1')
-    ax.spines['bottom'].set_color('#CBD5E1')
-    ax.tick_params(colors='#475569', labelsize=9)
-    ax.grid(True, linestyle='--', alpha=0.35, color='#CBD5E1')
-    ax.xaxis.label.set_color('#0F172A')
+    ax.spines['left'].set_color('#E3E8EE')
+    ax.spines['bottom'].set_color('#E3E8EE')
+    ax.tick_params(colors='#667085', labelsize=9)
+    ax.grid(True, linestyle='--', alpha=0.3, color='#E3E8EE')
+    ax.xaxis.label.set_color('#202B36')
     ax.xaxis.label.set_fontsize(10)
     ax.xaxis.label.set_weight('bold')
-    ax.yaxis.label.set_color('#0F172A')
+    ax.yaxis.label.set_color('#202B36')
     ax.yaxis.label.set_fontsize(10)
     ax.yaxis.label.set_weight('bold')
     return fig, ax

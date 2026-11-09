@@ -92,17 +92,17 @@ with st.sidebar:
     render_html("""
     <div style="padding: 10px 0 18px 0; border-bottom: 1px solid rgba(255,255,255,0.12); margin-bottom: 20px;">
         <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="background: #1D4ED8; width: 44px; height: 44px; border-radius: 10px;
+            <div style="background: #167C80; width: 44px; height: 44px; border-radius: 10px;
                         display: flex; align-items: center; justify-content: center;
                         font-size: 1.1rem; font-weight: 900; color: #FFFFFF;
-                        flex-shrink: 0; box-shadow: 0 4px 14px rgba(29,78,216,0.5);">
+                        flex-shrink: 0; box-shadow: 0 2px 8px rgba(22,124,128,0.35);">
                 AS
             </div>
             <div>
                 <div style="font-weight: 800; font-size: 0.95rem; color: #FFFFFF; line-height: 1.2;">
                     ASD TODDLER SCREENING
                 </div>
-                <div style="font-size: 0.68rem; color: #94A3B8; font-weight: 600; margin-top: 2px;">
+                <div style="font-size: 0.68rem; color: #8899A6; font-weight: 500; margin-top: 2px;">
                     TabNet v1.9EF &#183; py-tabnet 4.1
                 </div>
             </div>
@@ -137,10 +137,10 @@ with st.sidebar:
         mlp_acc = st.session_state["models_result"]["mlp"]["accuracy"] * 100
         status_html = f"""
         <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px; margin-top: 10px;">
-            <div style="font-size: 0.72rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">SYSTEM STATUS</div>
+            <div style="font-size: 0.72rem; font-weight: 700; color: #8899A6; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">SYSTEM STATUS</div>
             <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
                 <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10B981; box-shadow: 0 0 8px rgba(16,185,129,0.6);"></span>
-                <span style="font-size: 0.82rem; color: #E2E8F0; font-weight: 700;">Models Active & Calibrated</span>
+                <span style="font-size: 0.82rem; color: #D1DBE5; font-weight: 600;">Models Active & Calibrated</span>
             </div>
             <div style="font-size: 0.74rem; color: #94A3B8; margin-left: 14px;">TabNet: {tab_acc:.1f}% &bull; MLP: {mlp_acc:.1f}%</div>
         </div>
@@ -148,10 +148,10 @@ with st.sidebar:
     else:
         status_html = """
         <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px; margin-top: 10px;">
-            <div style="font-size: 0.72rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">SYSTEM STATUS</div>
+            <div style="font-size: 0.72rem; font-weight: 700; color: #8899A6; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">SYSTEM STATUS</div>
             <div style="display: flex; align-items: center; gap: 6px;">
                 <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #F59E0B;"></span>
-                <span style="font-size: 0.82rem; color: #E2E8F0; font-weight: 700;">Awaiting Data Training</span>
+                <span style="font-size: 0.82rem; color: #D1DBE5; font-weight: 600;">Awaiting Data Training</span>
             </div>
         </div>
         """
@@ -159,7 +159,7 @@ with st.sidebar:
 
     # Sidebar Research Attribution
     render_html("""
-    <div style="padding: 16px 4px 4px 4px; font-size: 0.74rem; color: #64748B; text-align: center; margin-top: 15px;">
+    <div style="padding: 16px 4px 4px 4px; font-size: 0.74rem; color: #8899A6; text-align: center; margin-top: 15px;">
         Interpretable Deep Learning for Early ASD Detection<br>
         Research Platform &bull; Streamlit Cloud
     </div>
@@ -223,7 +223,7 @@ render_fn()
 
 # Universal Bottom Navigation Bar (on every page except Home)
 if selected_page != "Home":
-    st.markdown("<br><hr style='border: none; border-top: 1px solid #E2E8F0; margin: 25px 0 15px 0;'>", unsafe_allow_html=True)
+    st.markdown("<br><hr style='border: none; border-top: 1px solid #E3E8EE; margin: 25px 0 15px 0;'>", unsafe_allow_html=True)
     prev_target = st.session_state["nav_history"][-1] if st.session_state["nav_history"] else "Home"
     b_c1, b_c2, b_c3, b_spacer = st.columns([1.6, 1.6, 2.0, 4.8])
     with b_c1:

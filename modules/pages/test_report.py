@@ -39,11 +39,11 @@ if _REPORTLAB_AVAILABLE:
         def draw_page_number(self, page_count):
             self.saveState()
             self.setFont('Helvetica', 7)
-            self.setFillColor(colors.HexColor('#64748B'))
+            self.setFillColor(colors.HexColor('#667085'))
             text = f"CONFIDENTIAL CLINICAL DOCUMENT  •  Generated: {datetime.date.today().strftime('%Y-%m-%d')}  •  Page {self._pageNumber} of {page_count}"
             self.drawRightString(A4[0] - 36, 18, text)
             self.drawString(36, 18, "ASD DeepScreen  •  Interpretable Clinical Research Platform")
-            self.setStrokeColor(colors.HexColor('#E2E8F0'))
+            self.setStrokeColor(colors.HexColor('#E3E8EE'))
             self.setLineWidth(0.5)
             self.line(36, 26, A4[0] - 36, 26)
             self.restoreState()
@@ -72,50 +72,50 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
 
     style_badge = ParagraphStyle(
         'Badge', fontName='Helvetica-Bold', fontSize=7.5,
-        textColor=colors.HexColor('#1D4ED8'), textTransform='uppercase', spaceAfter=3
+        textColor=colors.HexColor('#167C80'), textTransform='uppercase', spaceAfter=3
     )
     style_main_title = ParagraphStyle(
         'MainTitle', fontName='Helvetica-Bold', fontSize=15, leading=18,
-        textColor=colors.HexColor('#0A192F'), spaceAfter=2
+        textColor=colors.HexColor('#202B36'), spaceAfter=2
     )
     style_subtitle = ParagraphStyle(
         'Subtitle', fontName='Helvetica', fontSize=8.5, leading=11,
-        textColor=colors.HexColor('#64748B'), spaceAfter=0
+        textColor=colors.HexColor('#667085'), spaceAfter=0
     )
     style_header_meta = ParagraphStyle(
         'HeaderMeta', fontName='Helvetica', fontSize=8, leading=11,
-        alignment=TA_RIGHT, textColor=colors.HexColor('#475569')
+        alignment=TA_RIGHT, textColor=colors.HexColor('#667085')
     )
     style_status_title = ParagraphStyle(
         'StatusTitle', fontName='Helvetica-Bold', fontSize=11.5, leading=14, alignment=TA_CENTER
     )
     style_status_body = ParagraphStyle(
         'StatusBody', fontName='Helvetica', fontSize=8, leading=11,
-        alignment=TA_CENTER, textColor=colors.HexColor('#334155')
+        alignment=TA_CENTER, textColor=colors.HexColor('#202B36')
     )
     style_section_title = ParagraphStyle(
         'SectionTitle', fontName='Helvetica-Bold', fontSize=9, leading=12,
-        textColor=colors.HexColor('#0F172A'), spaceAfter=4
+        textColor=colors.HexColor('#202B36'), spaceAfter=4
     )
     style_body = ParagraphStyle(
-        'Body', fontName='Helvetica', fontSize=8, leading=11, textColor=colors.HexColor('#1E293B')
+        'Body', fontName='Helvetica', fontSize=8, leading=11, textColor=colors.HexColor('#202B36')
     )
     style_body_bold = ParagraphStyle(
-        'BodyBold', fontName='Helvetica-Bold', fontSize=8, leading=11, textColor=colors.HexColor('#0F172A')
+        'BodyBold', fontName='Helvetica-Bold', fontSize=8, leading=11, textColor=colors.HexColor('#202B36')
     )
     style_small = ParagraphStyle(
-        'Small', fontName='Helvetica', fontSize=7, leading=9.5, textColor=colors.HexColor('#64748B')
+        'Small', fontName='Helvetica', fontSize=7, leading=9.5, textColor=colors.HexColor('#667085')
     )
     style_metric_val = ParagraphStyle(
         'MetricVal', fontName='Helvetica-Bold', fontSize=14, leading=17, alignment=TA_CENTER
     )
     style_metric_label = ParagraphStyle(
         'MetricLabel', fontName='Helvetica-Bold', fontSize=7.5, leading=9.5,
-        alignment=TA_CENTER, textColor=colors.HexColor('#475569')
+        alignment=TA_CENTER, textColor=colors.HexColor('#667085')
     )
     style_metric_sub = ParagraphStyle(
         'MetricSub', fontName='Helvetica', fontSize=6.5, leading=8.5,
-        alignment=TA_CENTER, textColor=colors.HexColor('#64748B')
+        alignment=TA_CENTER, textColor=colors.HexColor('#667085')
     )
 
     story = []
@@ -146,7 +146,7 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
     ]))
     story.append(header_table)
     story.append(Spacer(1, 6))
-    story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor('#1D4ED8'), spaceBefore=2, spaceAfter=8))
+    story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor('#167C80'), spaceBefore=2, spaceAfter=8))
 
     # 2. Risk Banner
     is_elevated = (data.get("tabnet_pred") == 1) or (data.get("mlp_pred") == 1) or (data.get("aq10_score", 0) >= 3)
@@ -213,15 +213,15 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
     demo_table = Table([demo_title_row, demo_row1, demo_row2], colWidths=[col_w4]*4)
     demo_table.setStyle(TableStyle([
         ('SPAN', (0,0), (3,0)),
-        ('BACKGROUND', (0,0), (3,0), colors.HexColor('#F1F5F9')),
+        ('BACKGROUND', (0,0), (3,0), colors.HexColor('#F4F6F8')),
         ('BOTTOMPADDING', (0,0), (3,0), 3),
         ('TOPPADDING', (0,0), (3,0), 3),
         ('LEFTPADDING', (0,0), (-1,-1), 6),
         ('RIGHTPADDING', (0,0), (-1,-1), 6),
         ('TOPPADDING', (0,1), (-1,-1), 4),
         ('BOTTOMPADDING', (0,1), (-1,-1), 4),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#CBD5E1')),
-        ('INNERGRID', (0,1), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#C5D0DA')),
+        ('INNERGRID', (0,1), (-1,-1), 0.5, colors.HexColor('#E3E8EE')),
     ]))
     story.append(demo_table)
     story.append(Spacer(1, 8))
@@ -236,30 +236,30 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
     card1 = [
         Paragraph("TABNET ATTENTIVE NETWORK", style_metric_label),
         Spacer(1, 2),
-        Paragraph(f"{tabnet_prob:.1f}%", ParagraphStyle('TVal', parent=style_metric_val, textColor=colors.HexColor('#1D4ED8'))),
+        Paragraph(f"{tabnet_prob:.1f}%", ParagraphStyle('TVal', parent=style_metric_val, textColor=colors.HexColor('#167C80'))),
         Spacer(1, 1),
         Paragraph("Risk Probability (Sparse Attention)", style_metric_sub)
     ]
     card2 = [
         Paragraph("MLP NEURAL BASELINE", style_metric_label),
         Spacer(1, 2),
-        Paragraph(f"{mlp_prob:.1f}%", ParagraphStyle('MVal', parent=style_metric_val, textColor=colors.HexColor('#7C3AED'))),
+        Paragraph(f"{mlp_prob:.1f}%", ParagraphStyle('MVal', parent=style_metric_val, textColor=colors.HexColor('#167C80'))),
         Spacer(1, 1),
         Paragraph("Sigmoid Output (Threshold &ge; 60%)", style_metric_sub)
     ]
     card3 = [
         Paragraph("Q-CHAT-10 SCORE", style_metric_label),
         Spacer(1, 2),
-        Paragraph(f"{aq10_score} / 10", ParagraphStyle('QVal', parent=style_metric_val, textColor=colors.HexColor('#0F172A'))),
+        Paragraph(f"{aq10_score} / 10", ParagraphStyle('QVal', parent=style_metric_val, textColor=colors.HexColor('#202B36'))),
         Spacer(1, 1),
         Paragraph(f"Domain A: {a_dom}/9 &bull; Domain B: {b_dom}/1", style_metric_sub)
     ]
     col_w3 = printable_width / 3.0
     eval_table = Table([[card1, card2, card3]], colWidths=[col_w3]*3)
     eval_table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F8FAFC')),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#CBD5E1')),
-        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#CBD5E1')),
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F4F6F8')),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#C5D0DA')),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#C5D0DA')),
         ('TOPPADDING', (0,0), (-1,-1), 6),
         ('BOTTOMPADDING', (0,0), (-1,-1), 6),
         ('LEFTPADDING', (0,0), (-1,-1), 6),
@@ -294,10 +294,10 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
     matrix_rows = [matrix_title_row, matrix_header_row]
     row_styles = [
         ('SPAN', (0,0), (3,0)),
-        ('BACKGROUND', (0,0), (3,0), colors.HexColor('#F1F5F9')),
-        ('BACKGROUND', (0,1), (3,1), colors.HexColor('#E2E8F0')),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#CBD5E1')),
-        ('INNERGRID', (0,1), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
+        ('BACKGROUND', (0,0), (3,0), colors.HexColor('#F4F6F8')),
+        ('BACKGROUND', (0,1), (3,1), colors.HexColor('#E3E8EE')),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#C5D0DA')),
+        ('INNERGRID', (0,1), (-1,-1), 0.5, colors.HexColor('#E3E8EE')),
         ('TOPPADDING', (0,0), (-1,-1), 2.5),
         ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
         ('LEFTPADDING', (0,0), (-1,-1), 5),
@@ -314,8 +314,8 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
             score_text = "Typical (0)"
             score_color = colors.HexColor('#065F46')
 
-        desc_para = Paragraph(f"<strong>{qtitle}</strong> &bull; <font color='#64748B'>{qdesc}</font>", style_body)
-        dom_para = Paragraph(f"<font color='#475569'>{dom}</font>", style_body)
+        desc_para = Paragraph(f"<strong>{qtitle}</strong> &bull; <font color='#667085'>{qdesc}</font>", style_body)
+        dom_para = Paragraph(f"<font color='#667085'>{dom}</font>", style_body)
         score_para = Paragraph(f"<font color='{score_color.hexval()}'>{score_text}</font>", style_body)
 
         matrix_rows.append([
@@ -325,7 +325,7 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
             score_para
         ])
         if idx % 2 == 1:
-            row_styles.append(('BACKGROUND', (0, idx), (-1, idx), colors.HexColor('#F8FAFC')))
+            row_styles.append(('BACKGROUND', (0, idx), (-1, idx), colors.HexColor('#F4F6F8')))
 
     matrix_table = Table(matrix_rows, colWidths=col_w_matrix)
     matrix_table.setStyle(TableStyle(row_styles))
@@ -350,8 +350,8 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
         rec_paras.append(Spacer(1, 1.5))
     rec_table = Table([[rec_paras]], colWidths=[printable_width])
     rec_table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F8FAFC')),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#CBD5E1')),
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F4F6F8')),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#C5D0DA')),
         ('LEFTPADDING', (0,0), (-1,-1), 8),
         ('RIGHTPADDING', (0,0), (-1,-1), 8),
         ('TOPPADDING', (0,0), (-1,-1), 6),
@@ -371,7 +371,7 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
     ]
     sig_right = [
         Spacer(1, 14),
-        HRFlowable(width="80%", thickness=1, color=colors.HexColor('#0F172A'), spaceBefore=0, spaceAfter=2, hAlign='RIGHT'),
+        HRFlowable(width="80%", thickness=1, color=colors.HexColor('#202B36'), spaceBefore=0, spaceAfter=2, hAlign='RIGHT'),
         Paragraph("Physician / Licensed Examiner Signature &amp; Date", ParagraphStyle('SigCap', parent=style_small, alignment=TA_RIGHT))
     ]
     sig_table = Table([[sig_left, sig_right]], colWidths=[printable_width * 0.60, printable_width * 0.40])
@@ -487,7 +487,7 @@ def generate_standalone_html_report(data):
         table_rows += f"""
         <tr>
             <td style="font-weight: 700;">{qid}</td>
-            <td><strong>{qtitle}</strong><br><span style="font-size: 0.85rem; color: #64748B;">{qdesc}</span></td>
+            <td><strong>{qtitle}</strong><br><span style="font-size: 0.85rem; color: #667085;">{qdesc}</span></td>
             <td><span style="font-size: 0.78rem; font-weight: 700; padding: 2px 8px; border-radius: 9999px; {badge_style}">{dom}</span></td>
             <td><span style="font-size: 0.82rem; font-weight: 700; padding: 4px 10px; border-radius: 9999px; {badge_style}">{val_text}</span></td>
         </tr>
@@ -502,7 +502,7 @@ def generate_standalone_html_report(data):
         @page {{ size: A4; margin: 20mm; }}
         body {{
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-            color: #0F172A;
+            color: #202B36;
             background: #FFFFFF;
             margin: 0;
             padding: 25px;
@@ -513,7 +513,7 @@ def generate_standalone_html_report(data):
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 2px solid #1D4ED8;
+            border-bottom: 2px solid #167C80;
             padding-bottom: 14px;
             margin-bottom: 20px;
         }}
@@ -536,16 +536,16 @@ def generate_standalone_html_report(data):
             margin-bottom: 20px;
         }}
         .info-table th {{
-            background: #F1F5F9;
-            color: #0F172A;
+            background: #F4F6F8;
+            color: #202B36;
             text-align: left;
             padding: 8px 12px;
-            border-bottom: 2px solid #CBD5E1;
+            border-bottom: 2px solid #C5D0DA;
             font-size: 0.88rem;
         }}
         .info-table td {{
             padding: 8px 12px;
-            border-bottom: 1px solid #E2E8F0;
+            border-bottom: 1px solid #E3E8EE;
             font-size: 0.9rem;
         }}
         .eval-grid {{
@@ -555,33 +555,33 @@ def generate_standalone_html_report(data):
         }}
         .eval-card {{
             flex: 1;
-            border: 1px solid #CBD5E1;
+            border: 1px solid #C5D0DA;
             border-radius: 10px;
             padding: 14px;
-            background: #F8FAFC;
+            background: #F4F6F8;
         }}
         .eval-title {{
             font-size: 0.85rem;
             font-weight: 700;
-            color: #475569;
+            color: #667085;
             text-transform: uppercase;
             margin-bottom: 4px;
         }}
         .eval-val {{
             font-size: 1.6rem;
             font-weight: 800;
-            color: #1D4ED8;
+            color: #167C80;
         }}
         .signature-section {{
             margin-top: 30px;
             display: flex;
             justify-content: space-between;
-            border-top: 1px solid #E2E8F0;
+            border-top: 1px solid #E3E8EE;
             padding-top: 20px;
         }}
         .sig-line {{
             width: 250px;
-            border-top: 1px solid #0F172A;
+            border-top: 1px solid #202B36;
             margin-top: 40px;
             text-align: center;
             font-size: 0.85rem;
@@ -601,50 +601,50 @@ def generate_standalone_html_report(data):
     </style>
 </head>
 <body>
-    <div class="no-print" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; border: 1.5px solid #E2E8F0; padding: 12px 18px; border-radius: 12px;">
+    <div class="no-print" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; background: #F4F6F8; border: 1.5px solid #E3E8EE; padding: 12px 18px; border-radius: 12px;">
         <div style="display: flex; gap: 10px; align-items: center;">
-            <a href="https://autism-spectrum-disorder.streamlit.app" style="display: inline-flex; align-items: center; gap: 6px; background: #0A192F; color: #FFFFFF; font-weight: 700; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-size: 0.9rem;">
+            <a href="https://autism-spectrum-disorder.streamlit.app" style="display: inline-flex; align-items: center; gap: 6px; background: #202B36; color: #FFFFFF; font-weight: 700; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-size: 0.9rem;">
                 🏠 Back to ASD Platform Website
             </a>
-            <button onclick="if(window.history.length &gt; 1) {{ window.history.back(); }} else {{ window.location.href='https://autism-spectrum-disorder.streamlit.app'; }}" style="background: #FFFFFF; color: #0F172A; font-weight: 700; padding: 8px 16px; border: 1.5px solid #CBD5E1; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">
+            <button onclick="if(window.history.length &gt; 1) {{ window.history.back(); }} else {{ window.location.href='https://autism-spectrum-disorder.streamlit.app'; }}" style="background: #FFFFFF; color: #202B36; font-weight: 700; padding: 8px 16px; border: 1.5px solid #C5D0DA; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">
                 ⬅️ Previous Page
             </button>
         </div>
         <div>
-            <button onclick="window.print()" style="background: #1D4ED8; color: #FFFFFF; font-weight: 700; padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; box-shadow: 0 2px 8px rgba(29,78,216,0.3);">
-                🖨️ Print Clinical Report
+            <button onclick="window.print()" style="background: #167C80; color: #FFFFFF; font-weight: 700; padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; box-shadow: 0 2px 8px rgba(29,78,216,0.3);">
+                Print Clinical Report
             </button>
         </div>
     </div>
 
     <div class="report-header">
         <div>
-            <div style="font-size: 0.78rem; font-weight: 800; color: #1D4ED8; letter-spacing: 0.08em; text-transform: uppercase;">
+            <div style="font-size: 0.78rem; font-weight: 800; color: #167C80; letter-spacing: 0.08em; text-transform: uppercase;">
                 OFFICIAL CLINICAL SCREENING ASSESSMENT
             </div>
-            <h1 style="font-size: 1.6rem; font-weight: 800; margin: 4px 0 0 0; color: #0A192F;">
+            <h1 style="font-size: 1.6rem; font-weight: 800; margin: 4px 0 0 0; color: #202B36;">
                 Pediatric Autism Spectrum Developmental Evaluation
             </h1>
-            <div style="font-size: 0.88rem; color: #64748B; margin-top: 3px;">
+            <div style="font-size: 0.88rem; color: #667085; margin-top: 3px;">
                 {data.get('institution', 'Pediatric Neurodevelopmental Research Center')}
             </div>
         </div>
         <div style="text-align: right;">
-            <div style="font-size: 0.82rem; color: #64748B;">MRN: <strong>{data.get('mrn', 'N/A')}</strong></div>
-            <div style="font-size: 0.82rem; color: #64748B;">Date: <strong>{data.get('date', datetime.date.today().strftime('%B %d, %Y'))}</strong></div>
+            <div style="font-size: 0.82rem; color: #667085;">MRN: <strong>{data.get('mrn', 'N/A')}</strong></div>
+            <div style="font-size: 0.82rem; color: #667085;">Date: <strong>{data.get('date', datetime.date.today().strftime('%B %d, %Y'))}</strong></div>
         </div>
     </div>
 
     <div class="status-box">
         <div class="status-title">{status_text}</div>
-        <p style="margin: 0; font-size: 0.95rem; color: #334155;">
+        <p style="margin: 0; font-size: 0.95rem; color: #202B36;">
             Multivariate screening based on standardized <strong>Q-CHAT-10</strong> protocol combined with calibrated deep tabular models (TabNet Attentive Learning & Multi-Layer Perceptron).
         </p>
     </div>
 
     <table class="info-table">
         <tr>
-            <th colspan="4" style="background: #E2E8F0; font-size: 0.95rem;">1. PATIENT DEMOGRAPHICS & CLINICAL HISTORY</th>
+            <th colspan="4" style="background: #E3E8EE; font-size: 0.95rem;">1. PATIENT DEMOGRAPHICS & CLINICAL HISTORY</th>
         </tr>
         <tr>
             <td><strong>Child's Name / ID:</strong> {data.get('patient_name', 'Liam Davis')}</td>
@@ -664,17 +664,17 @@ def generate_standalone_html_report(data):
         <div class="eval-card">
             <div class="eval-title">TabNet Attentive Output</div>
             <div class="eval-val">{data.get('tabnet_prob', 0) * 100:.1f}%</div>
-            <div style="font-size: 0.82rem; color: #64748B;">Risk Confidence (Sparse Attention)</div>
+            <div style="font-size: 0.82rem; color: #667085;">Risk Confidence (Sparse Attention)</div>
         </div>
         <div class="eval-card">
             <div class="eval-title">MLP Neural Net Output</div>
-            <div class="eval-val" style="color: #7C3AED;">{data.get('mlp_prob', 0) * 100:.1f}%</div>
-            <div style="font-size: 0.82rem; color: #64748B;">Sigmoid Prob (Cutoff &ge; 0.60)</div>
+            <div class="eval-val" style="color: #167C80;">{data.get('mlp_prob', 0) * 100:.1f}%</div>
+            <div style="font-size: 0.82rem; color: #667085;">Sigmoid Prob (Cutoff &ge; 0.60)</div>
         </div>
         <div class="eval-card">
             <div class="eval-title">Q-CHAT Total Score</div>
-            <div class="eval-val" style="color: #0F172A;">{data.get('aq10_score', 0)} / 10</div>
-            <div style="font-size: 0.82rem; color: #64748B;">Domain A: {data.get('a_domain', 0)}/9 &bull; Domain B: {data.get('b_domain', 0)}/1</div>
+            <div class="eval-val" style="color: #202B36;">{data.get('aq10_score', 0)} / 10</div>
+            <div style="font-size: 0.82rem; color: #667085;">Domain A: {data.get('a_domain', 0)}/9 &bull; Domain B: {data.get('b_domain', 0)}/1</div>
         </div>
     </div>
 
@@ -693,17 +693,17 @@ def generate_standalone_html_report(data):
     </table>
 
     <div style="margin-top: 20px;">
-        <h4 style="margin: 0 0 8px 0; font-size: 1rem; color: #0A192F;">Clinical Recommendation & Referral Plan:</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 0.92rem; color: #334155;">
+        <h4 style="margin: 0 0 8px 0; font-size: 1rem; color: #202B36;">Clinical Recommendation & Referral Plan:</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.92rem; color: #202B36;">
             {'<li><strong>Priority Pediatric Referral:</strong> Schedule comprehensive multidisciplinary developmental diagnostic evaluation (ADOS-2 / ADI-R).</li><li><strong>Immediate Early Intervention:</strong> Refer to state/regional early intervention services for communication and occupational support.</li><li><strong>Audiological Clearance:</strong> Complete formal hearing examination to rule out sensory peripheral deficits.</li>' if is_elevated else '<li><strong>Developmental Surveillance:</strong> Continue routine 18- and 24-month well-child pediatric developmental monitoring.</li><li><strong>Milestone Tracking:</strong> Follow standard communication and social play milestones with pediatrician.</li>'}
         </ul>
     </div>
 
     <div class="signature-section">
         <div>
-            <div style="font-size: 0.85rem; color: #64748B;">Evaluating Clinician / Informant:</div>
-            <div style="font-weight: 700; color: #0F172A; margin-top: 4px;">{data.get('examiner', 'Dr. Sarah Jenkins, MD, FAAP')}</div>
-            <div style="font-size: 0.82rem; color: #64748B;">Board Certified Pediatric Specialist</div>
+            <div style="font-size: 0.85rem; color: #667085;">Evaluating Clinician / Informant:</div>
+            <div style="font-weight: 700; color: #202B36; margin-top: 4px;">{data.get('examiner', 'Dr. Sarah Jenkins, MD, FAAP')}</div>
+            <div style="font-size: 0.82rem; color: #667085;">Board Certified Pediatric Specialist</div>
         </div>
         <div>
             <div class="sig-line">
@@ -746,7 +746,7 @@ def render():
             st.rerun()
 
     with t_col3:
-        if st.button("🏠 Return to Home", use_container_width=True, help="Navigate back to the main homepage"):
+        if st.button("Return to Home", use_container_width=True, help="Navigate back to the main homepage"):
             st.session_state["nav_target"] = "Home"
             st.rerun()
 
@@ -826,7 +826,7 @@ def render():
 
     with p_col3:
         render_html("""
-        <button onclick="window.print()" style="background: #F8FAFC; color: #0F172A; font-weight: 700; padding: 9px 16px; border-radius: 8px; border: 1px solid #CBD5E1; cursor: pointer; width: 100%; font-size: 0.9rem; transition: all 0.2s ease;">
+        <button onclick="window.print()" style="background: #F4F6F8; color: #202B36; font-weight: 700; padding: 9px 16px; border-radius: 8px; border: 1px solid #C5D0DA; cursor: pointer; width: 100%; font-size: 0.9rem; transition: all 0.2s ease;">
             Print Document
         </button>
         """)
@@ -843,17 +843,17 @@ def render():
         <div class="report-header-banner">
             <div>
                 <span class="clinical-brand-badge" style="margin-bottom: 6px;">CONFIDENTIAL MEDICAL SCREENING DOCUMENT</span>
-                <h2 style="font-size: 1.65rem; font-weight: 800; color: #0A192F; margin: 4px 0 2px 0;">
+                <h2 style="font-size: 1.65rem; font-weight: 800; color: #202B36; margin: 4px 0 2px 0;">
                     Pediatric Autism Spectrum Developmental Evaluation
                 </h2>
-                <div style="font-size: 0.92rem; color: #64748B;">
+                <div style="font-size: 0.92rem; color: #667085;">
                     {report_data.get('institution', 'Pediatric Neurodevelopmental Research Center')}
                 </div>
             </div>
             <div style="text-align: right;">
-                <div style="font-size: 0.88rem; color: #0F172A;"><strong>MRN:</strong> {report_data.get('mrn', 'N/A')}</div>
-                <div style="font-size: 0.88rem; color: #64748B;"><strong>Date:</strong> {report_data.get('date', datetime.date.today().strftime('%B %d, %Y'))}</div>
-                <div style="font-size: 0.78rem; color: #94A3B8; margin-top: 4px;">Protocol: Q-CHAT-10 / DeepScreen AI</div>
+                <div style="font-size: 0.88rem; color: #202B36;"><strong>MRN:</strong> {report_data.get('mrn', 'N/A')}</div>
+                <div style="font-size: 0.88rem; color: #667085;"><strong>Date:</strong> {report_data.get('date', datetime.date.today().strftime('%B %d, %Y'))}</div>
+                <div style="font-size: 0.78rem; color: #8899A6; margin-top: 4px;">Protocol: Q-CHAT-10 / DeepScreen AI</div>
             </div>
         </div>
 
@@ -871,14 +871,16 @@ def render():
                         {'Atypical response patterns identified across early social communication and motor behavioral markers. Multidisciplinary clinical evaluation is advised.' if is_elevated else 'Response distribution falls within typical normative milestones. Continue routine pediatric surveillance.'}
                     </p>
                 </div>
-                <div style="font-size: 2.8rem; margin-left: 20px;">
-                    {'⚠️' if is_elevated else '✅'}
+                <div style="margin-left: 20px; align-self: center;">
+                    <span style="display: inline-block; padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; background: {'#FEF2F2' if is_elevated else '#ECFDF5'}; color: {'#991B1B' if is_elevated else '#065F46'}; border: 1px solid {'#FCA5A5' if is_elevated else '#A7F3D0'};">
+                        {'HIGH RISK' if is_elevated else 'LOW RISK'}
+                    </span>
                 </div>
             </div>
         </div>
 
         <!-- Patient Demographics Table -->
-        <h4 style="color: #0A192F; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">
+        <h4 style="color: #202B36; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">
             1. Patient Demographics & Clinical History
         </h4>
         <table class="report-table">
@@ -897,38 +899,38 @@ def render():
         </table>
 
         <!-- Model Predictions -->
-        <h4 style="color: #0A192F; font-size: 1.05rem; font-weight: 700; margin: 24px 0 8px 0;">
+        <h4 style="color: #202B36; font-size: 1.05rem; font-weight: 700; margin: 24px 0 8px 0;">
             2. Deep Learning Multimodal Risk Scoring
         </h4>
         <div style="display: flex; gap: 16px; margin-bottom: 24px;">
-            <div style="flex: 1; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 16px;">
-                <div style="font-size: 0.78rem; font-weight: 700; color: #1D4ED8; text-transform: uppercase;">TabNet Attentive Output</div>
-                <div style="font-size: 1.85rem; font-weight: 800; color: #1D4ED8; margin: 4px 0;">
+            <div style="flex: 1; background: #EDF4F4; border: 1px solid #D0E3E3; border-radius: 12px; padding: 16px;">
+                <div style="font-size: 0.78rem; font-weight: 700; color: #167C80; text-transform: uppercase;">TabNet Attentive Output</div>
+                <div style="font-size: 1.85rem; font-weight: 800; color: #167C80; margin: 4px 0;">
                     {report_data.get('tabnet_prob', 0) * 100:.1f}%
                 </div>
-                <div style="font-size: 0.82rem; color: #475569;">
+                <div style="font-size: 0.82rem; color: #667085;">
                     Status: <strong>{'ASD Positive' if report_data.get('tabnet_pred') == 1 else 'ASD Negative'}</strong><br>
                     Sequential Sparse Attention
                 </div>
             </div>
 
             <div style="flex: 1; background: #F3E8FF; border: 1px solid #DDD6FE; border-radius: 12px; padding: 16px;">
-                <div style="font-size: 0.78rem; font-weight: 700; color: #7C3AED; text-transform: uppercase;">MLP Neural Net Output</div>
-                <div style="font-size: 1.85rem; font-weight: 800; color: #7C3AED; margin: 4px 0;">
+                <div style="font-size: 0.78rem; font-weight: 700; color: #167C80; text-transform: uppercase;">MLP Neural Net Output</div>
+                <div style="font-size: 1.85rem; font-weight: 800; color: #167C80; margin: 4px 0;">
                     {report_data.get('mlp_prob', 0) * 100:.1f}%
                 </div>
-                <div style="font-size: 0.82rem; color: #475569;">
+                <div style="font-size: 0.82rem; color: #667085;">
                     Status: <strong>{'ASD Positive' if report_data.get('mlp_pred') == 1 else 'ASD Negative'}</strong><br>
                     Calibrated Sigmoid (Cutoff &ge; 0.60)
                 </div>
             </div>
 
-            <div style="flex: 1; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 12px; padding: 16px;">
-                <div style="font-size: 0.78rem; font-weight: 700; color: #0F172A; text-transform: uppercase;">Cumulative Q-CHAT Score</div>
-                <div style="font-size: 1.85rem; font-weight: 800; color: #0F172A; margin: 4px 0;">
+            <div style="flex: 1; background: #F4F6F8; border: 1px solid #C5D0DA; border-radius: 12px; padding: 16px;">
+                <div style="font-size: 0.78rem; font-weight: 700; color: #202B36; text-transform: uppercase;">Cumulative Q-CHAT Score</div>
+                <div style="font-size: 1.85rem; font-weight: 800; color: #202B36; margin: 4px 0;">
                     {report_data.get('aq10_score', 0)} / 10
                 </div>
-                <div style="font-size: 0.82rem; color: #475569;">
+                <div style="font-size: 0.82rem; color: #667085;">
                     Domain A (Social): <strong>{report_data.get('a_domain', 0)}/9</strong><br>
                     Domain B (Repetitive): <strong>{report_data.get('b_domain', 0)}/1</strong>
                 </div>
@@ -936,7 +938,7 @@ def render():
         </div>
 
         <!-- Domain Meter Bars -->
-        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 18px; margin-bottom: 24px;">
+        <div style="background: #FFFFFF; border: 1px solid #E3E8EE; border-radius: 12px; padding: 18px; margin-bottom: 24px;">
             <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
                 <span>Domain A: Social Communication & Reciprocal Interaction ({report_data.get('a_domain', 0)} / 9)</span>
                 <span>{report_data.get('a_domain', 0) / 9 * 100:.0f}%</span>
@@ -955,7 +957,7 @@ def render():
         </div>
 
         <!-- Itemized Matrix Table -->
-        <h4 style="color: #0A192F; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">
+        <h4 style="color: #202B36; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">
             3. Q-CHAT-10 Itemized Behavioral Assessment Matrix
         </h4>
         <table class="report-table">
@@ -1032,18 +1034,18 @@ def render():
         </table>
 
         <!-- Sign-off Block -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; border-top: 1px solid #E2E8F0; padding-top: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; border-top: 1px solid #E3E8EE; padding-top: 24px;">
             <div>
-                <div style="font-size: 0.82rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Evaluating Clinician</div>
-                <div style="font-size: 1.05rem; font-weight: 800; color: #0A192F; margin-top: 2px;">
+                <div style="font-size: 0.82rem; color: #667085; text-transform: uppercase; font-weight: 700;">Evaluating Clinician</div>
+                <div style="font-size: 1.05rem; font-weight: 800; color: #202B36; margin-top: 2px;">
                     {report_data.get('examiner', 'Dr. Sarah Jenkins, MD, FAAP')}
                 </div>
-                <div style="font-size: 0.85rem; color: #64748B;">
+                <div style="font-size: 0.85rem; color: #667085;">
                     Pediatric Neurodevelopmental Specialist &bull; License #PEDI-48291
                 </div>
             </div>
             <div style="text-align: center;">
-                <div style="width: 240px; border-top: 1px solid #0F172A; padding-top: 6px; font-size: 0.85rem; color: #475569;">
+                <div style="width: 240px; border-top: 1px solid #202B36; padding-top: 6px; font-size: 0.85rem; color: #667085;">
                     Authorized Signature & Date
                 </div>
             </div>
@@ -1054,7 +1056,7 @@ def render():
     st.markdown("<br>", unsafe_allow_html=True)
     b_col1, b_col2, b_spacer = st.columns([1.6, 2.0, 3.4])
     with b_col1:
-        if st.button("🏠 Return to Home Page", use_container_width=True, type="primary"):
+        if st.button("Return to Home Page", use_container_width=True, type="primary"):
             st.session_state["nav_target"] = "Home"
             st.rerun()
     with b_col2:
