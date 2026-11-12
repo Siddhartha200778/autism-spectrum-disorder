@@ -199,7 +199,7 @@ def generate_clinical_pdf_report(data: dict) -> bytes:
     ]
     demo_row1 = [
         Paragraph(f"<strong>Patient ID:</strong> {patient_name}", style_body),
-        Paragraph(f"<strong>Chronological Age:</strong> {age_mons} Months", style_body),
+        Paragraph(f"<strong>Chronological Age:</strong> {age_mons // 12}y {age_mons % 12}m ({age_mons} Months)", style_body),
         Paragraph(f"<strong>Biological Sex:</strong> {sex_str}", style_body),
         Paragraph(f"<strong>Ethnicity:</strong> {ethnicity}", style_body)
     ]
@@ -648,7 +648,7 @@ def generate_standalone_html_report(data):
         </tr>
         <tr>
             <td><strong>Child's Name / ID:</strong> {data.get('patient_name', 'Liam Davis')}</td>
-            <td><strong>Chronological Age:</strong> {data.get('Age', 24)} Months</td>
+            <td><strong>Chronological Age:</strong> {data.get('Age', 24) // 12}y {data.get('Age', 24) % 12}m ({data.get('Age', 24)} Months)</td>
             <td><strong>Biological Sex:</strong> {'Male' if data.get('Sex') == 'm' else 'Female'}</td>
             <td><strong>Ethnicity:</strong> {str(data.get('Ethnicity', 'N/A')).title()}</td>
         </tr>
@@ -886,7 +886,7 @@ def render():
         <table class="report-table">
             <tr>
                 <td style="width: 25%;"><strong>Child's Name / ID:</strong> {report_data.get('patient_name', 'Liam Davis')}</td>
-                <td style="width: 25%;"><strong>Age:</strong> {report_data.get('Age', 24)} Months</td>
+                <td style="width: 25%;"><strong>Age:</strong> {report_data.get('Age', 24) // 12}y {report_data.get('Age', 24) % 12}m ({report_data.get('Age', 24)} Months)</td>
                 <td style="width: 25%;"><strong>Biological Sex:</strong> {'Male' if report_data.get('Sex') == 'm' else 'Female'}</td>
                 <td style="width: 25%;"><strong>Ethnicity:</strong> {str(report_data.get('Ethnicity', 'N/A')).title()}</td>
             </tr>

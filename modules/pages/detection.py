@@ -11,6 +11,8 @@ def init_wizard_state(reset=False):
         st.session_state["wiz_patient_name"] = ""
         st.session_state["wiz_guardian_name"] = ""
         st.session_state["wiz_mrn"] = "MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01"
+        st.session_state["wiz_age_years"] = 2
+        st.session_state["wiz_age_months"] = 0
         st.session_state["wiz_age"] = 24
         st.session_state["wiz_sex"] = None
         st.session_state["wiz_ethnicity"] = None
@@ -33,6 +35,10 @@ def init_wizard_state(reset=False):
         st.session_state["wiz_guardian_name"] = ""
     if "wiz_mrn" not in st.session_state:
         st.session_state["wiz_mrn"] = "MRN-ASD-" + datetime.date.today().strftime("%Y%m%d") + "-01"
+    if "wiz_age_years" not in st.session_state:
+        st.session_state["wiz_age_years"] = 2
+    if "wiz_age_months" not in st.session_state:
+        st.session_state["wiz_age_months"] = 0
     if "wiz_age" not in st.session_state:
         st.session_state["wiz_age"] = 24
     if "wiz_sex" not in st.session_state:
@@ -288,34 +294,85 @@ div[data-testid="stTextInput"] input::placeholder {
 <span class="pill-badge pill-blue">Step 2 of 9 &bull; Chronological Age</span>
 </div>
 <div class="med-card-title" style="font-size: 1.35rem; color: #0A192F;">
-What is the child's chronological age in months?
+What is the child's chronological age?
 </div>
 <div class="med-card-body" style="font-size: 1rem; color: #475569;">
-Standardized pediatric screening via the Q-CHAT protocol is calibrated for toddlers between <strong>12 and 36 months</strong> of age. 
-This period represents the golden developmental window of maximal neural plasticity.
+Specify the child's age using both <strong>Years</strong> and <strong>Months</strong> (e.g., 5 Years and 6 Months). Standardized developmental screening via the Q-CHAT protocol evaluates children across key developmental milestones.
 </div>
 </div>""")
 
-        col_input, col_info = st.columns([2, 1.5])
+        curr_total_months = int(st.session_state.get("wiz_age", 24))
+        default_years = int(st.session_state.get("wiz_age_years", curr_total_months // 12))
+        default_months = int(st.session_state.get("wiz_age_months", curr_total_months % 12))
+
+        year_options = [f"{y} Year" if y == 1 else f"{y} Years" for y in range(0, 18)]
+        month_options = [f"{m} Month" if m == 1 else f"{m} Months" for m in range(0, 12)]
+
+        year_idx = min(max(0, default_years), len(year_options) - 1)
+        month_idx = min(max(0, default_months), len(month_options) - 1)
+
+        col_input, col_info = st.columns([2.2, 1.8])
         with col_input:
-            render_html("<p style='font-size: 1.05rem; font-weight: 800; color: #0A192F !important; margin-bottom: 8px;'>Select Child's Age (in Months):</p>")
-            age_val = st.slider(
-                "Select Child's Age (in Months):",
-                min_value=12,
-                max_value=36,
-                value=int(st.session_state.get("wiz_age", 24)),
-                step=1,
-                label_visibility="collapsed",
-                help="Select the exact age in months of the child at the time of screening."
-            )
-            st.session_state["wiz_age"] = age_val
+            render_html("<p style='font-size: 1.05rem; font-weight: 800; color: #0A192F !important; margin-bottom: 12px;'>Select Child's Age:</p>")
+
+            col_yr, col_mo = st.columns(2)
+            with col_yr:
+                sel_years_str = st.selectbox(
+                    "First: Year(s)",
+                    options=year_options,
+                    index=year_idx,
+                    key="wiz_select_years",
+                    help="Select completed years of age (e.g., 5 Years)"
+                )
+                sel_years = int(sel_years_str.split()[0])
+            with col_mo:
+                sel_months_str = st.selectbox(
+                    "Second: Month(s)",
+                    options=month_options,
+                    index=month_idx,
+                    key="wiz_select_months",
+                    help="Select additional months of age (e.g., 6 Months)"
+                )
+                sel_months = int(sel_months_str.split()[0])
+
+            calculated_months = (sel_years * 12) + sel_months
+            total_age_mons = max(1, calculated_months)
+            st.session_state["wiz_age_years"] = sel_years
+            st.session_state["wiz_age_months"] = sel_months
+            st.session_state["wiz_age"] = total_age_mons
+
+            if sel_years == 0 and sel_months == 0:
+                st.caption("ℹ️ *Minimum clinical threshold set to 1 Month for infant screening.*")
 
         with col_info:
-            render_html(f"""<div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 18px; margin-top: 5px;">
-<div style="font-size: 0.8rem; font-weight: 700; color: #1D4ED8; text-transform: uppercase;">Selected Milestone</div>
-<div style="font-size: 2rem; font-weight: 800; color: #1D4ED8; margin: 4px 0;">{age_val} Months</div>
-<div style="font-size: 0.85rem; color: #334155;">
-Approx. <strong>{age_val // 12} year(s) and {age_val % 12} month(s)</strong> old.
+            if sel_years > 0 and sel_months > 0:
+                age_display_title = f"{sel_years} Year{'s' if sel_years > 1 else ''} {sel_months} Month{'s' if sel_months > 1 else ''}"
+            elif sel_years > 0:
+                age_display_title = f"{sel_years} Year{'s' if sel_years > 1 else ''}"
+            else:
+                age_display_title = f"{sel_months} Month{'s' if sel_months > 1 else ''}"
+
+            if total_age_mons <= 36:
+                phase_label = "Toddler Screening Cohort (12–36m)"
+                phase_badge_color = "#1D4ED8"
+                phase_bg = "#EFF6FF"
+            elif total_age_mons <= 72:
+                phase_label = "Early Childhood Phase (3–6 Years)"
+                phase_badge_color = "#0D9488"
+                phase_bg = "#F0FDFA"
+            else:
+                phase_label = "Extended Pediatric Phase (>6 Years)"
+                phase_badge_color = "#4338CA"
+                phase_bg = "#EEF2FF"
+
+            render_html(f"""<div style="background: {phase_bg}; border: 1.5px solid #BFDBFE; border-radius: 14px; padding: 18px 20px; margin-top: 4px; box-shadow: 0 2px 8px rgba(29, 78, 216, 0.05);">
+<div style="font-size: 0.78rem; font-weight: 800; color: {phase_badge_color}; text-transform: uppercase; letter-spacing: 0.05em;">Selected Chronological Age</div>
+<div style="font-size: 1.85rem; font-weight: 800; color: #0A192F; margin: 4px 0 2px 0; line-height: 1.2;">{age_display_title}</div>
+<div style="font-size: 0.95rem; font-weight: 700; color: {phase_badge_color}; margin-bottom: 6px;">
+Total: <strong>{total_age_mons} Months</strong>
+</div>
+<div style="font-size: 0.82rem; color: #475569; border-top: 1px solid #E2E8F0; padding-top: 8px; margin-top: 4px;">
+Clinical Cohort: <strong>{phase_label}</strong>
 </div>
 </div>""")
 
@@ -333,6 +390,8 @@ Approx. <strong>{age_val // 12} year(s) and {age_val % 12} month(s)</strong> old
             if st.button("Next: Biological Sex ➔", type="primary", use_container_width=True):
                 st.session_state["wiz_step"] = 3
                 st.rerun()
+
+
 
     # -------------------------------------------------------------
     # STEP 3: BIOLOGICAL SEX
@@ -744,8 +803,8 @@ Final screening indicators assessing gaze tracking, empathy, speech sounds, comm
 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; font-size: 0.9rem;">
 <div style="background: #F8FAFC; border-radius: 10px; padding: 12px 14px; border: 1px solid #E2E8F0;">
 <div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Chronological Age</div>
-<div style="font-size: 1.15rem; font-weight: 800; color: #0A192F;">{age} Months</div>
-<div style="font-size: 0.76rem; color: #475569;">({age // 12}y {age % 12}m old)</div>
+<div style="font-size: 1.15rem; font-weight: 800; color: #0A192F;">{age // 12}y {age % 12}m</div>
+<div style="font-size: 0.76rem; color: #475569;">({age} Months Total)</div>
 </div>
 <div style="background: #F8FAFC; border-radius: 10px; padding: 12px 14px; border: 1px solid #E2E8F0;">
 <div style="font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Biological Sex</div>
